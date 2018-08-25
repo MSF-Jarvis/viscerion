@@ -70,12 +70,12 @@ public class Interface {
     private String getAddressString() {
         if (addressList.isEmpty())
             return null;
-        return Attribute.iterableToString(addressList);
+        return Attribute.Companion.iterableToString(addressList);
     }
 
     private void setAddressString(@Nullable final String addressString) {
         addressList.clear();
-        addAddresses(Attribute.stringToList(addressString));
+        addAddresses(Attribute.Companion.stringToList(addressString));
     }
 
     public InetNetwork[] getAddresses() {
@@ -86,12 +86,12 @@ public class Interface {
     private String getDnsString() {
         if (dnsList.isEmpty())
             return null;
-        return Attribute.iterableToString(getDnsStrings());
+        return Attribute.Companion.iterableToString(getDnsStrings());
     }
 
     private void setDnsString(@Nullable final String dnsString) {
         dnsList.clear();
-        addDnses(Attribute.stringToList(dnsString));
+        addDnses(Attribute.Companion.stringToList(dnsString));
     }
 
     private List<String> getDnsStrings() {
@@ -109,12 +109,12 @@ public class Interface {
     private String getExcludedApplicationsString() {
         if (excludedApplications.isEmpty())
             return null;
-        return Attribute.iterableToString(excludedApplications);
+        return Attribute.Companion.iterableToString(excludedApplications);
     }
 
     private void setExcludedApplicationsString(@Nullable final String applicationsString) {
         excludedApplications.clear();
-        addExcludedApplications(Attribute.stringToList(applicationsString));
+        addExcludedApplications(Attribute.Companion.stringToList(applicationsString));
     }
 
     public String[] getExcludedApplications() {
@@ -186,7 +186,7 @@ public class Interface {
     }
 
     public void parse(final String line) {
-        final Attribute key = Attribute.match(line);
+        final Attribute key = Attribute.Companion.match(line);
         if (key == null)
             throw new IllegalArgumentException(String.format(context.getString(R.string.tunnel_error_interface_parse_failed), line));
         switch (key) {
@@ -333,7 +333,7 @@ public class Interface {
 
         @Bindable
         public int getExcludedApplicationsCount() {
-            return Attribute.stringToList(excludedApplications).length;
+            return Attribute.Companion.stringToList(excludedApplications).length;
         }
 
         @Nullable
