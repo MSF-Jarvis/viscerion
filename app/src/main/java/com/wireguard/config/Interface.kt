@@ -11,12 +11,11 @@ import com.wireguard.android.R
 import com.wireguard.android.model.GlobalExclusions
 import com.wireguard.crypto.Keypair
 import java.net.InetAddress
-import kotlin.collections.ArrayList
 
 class Interface {
     private val addressList: ArrayList<InetNetwork> = ArrayList()
     private val dnsList: ArrayList<InetAddress> = ArrayList()
-    private val excludedApplications: ArrayList<String> = ArrayList(Arrays.asList(Attribute.stringToList(GlobalExclusions.exclusions)))
+    private val excludedApplications: ArrayList<String> = Attribute.stringToList(GlobalExclusions.exclusions).toCollection(ArrayList())
     private var keypair: Keypair? = null
     private var listenPort: Int = 0
     private var mtu: Int = 0
