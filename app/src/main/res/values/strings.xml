@@ -120,4 +120,6 @@
     <string name="logging_pref_summary_on">Non-identifiable information about your device will be sent to our servers when a crash occurs to allow for debugging and resolution of the issue.</string>
     <string name="logging_pref_summary_off">No crash reports are being sent to the WireGuard bugtracker (Restart the app for this to take effect).</string>
     <string name="logging_pref_title">Log crash reports to ACRA</string>
+    <string name="global_exclusions_title">Global exclusions</string>
+    <string name="global_exclusions_summary">Set global application exclusions</string>
 </resources>
