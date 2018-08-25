@@ -18,7 +18,6 @@ import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.fragment.AppListDialogFragment
-import com.wireguard.android.fragment.TunnelEditorFragment
 import com.wireguard.android.model.GlobalExclusions
 import com.wireguard.config.Attribute
 import java.util.ArrayList
@@ -112,7 +111,5 @@ class SettingsActivity : ThemeChangeAwareActivity() {
         override fun onExcludedAppsSelected(excludedApps: List<String>) {
             GlobalExclusions.exclusions = Attribute.iterableToString(excludedApps)
         }
-
-
     }
 }
