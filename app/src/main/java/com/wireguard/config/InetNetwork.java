@@ -25,7 +25,7 @@ public class InetNetwork {
             rawMask = -1;
             rawAddress = input;
         }
-        address = InetAddresses.parse(rawAddress);
+        address = InetAddresses.INSTANCE.parse(rawAddress);
         final int maxMask = (address instanceof Inet4Address) ? 32 : 128;
         mask = rawMask >= 0 && rawMask <= maxMask ? rawMask : maxMask;
     }

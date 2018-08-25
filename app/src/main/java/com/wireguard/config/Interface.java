@@ -55,7 +55,7 @@ public class Interface {
     private void addDnses(@Nullable final String[] dnses) {
         if (dnses != null && dnses.length > 0) {
             for (final String dns : dnses) {
-                dnsList.add(InetAddresses.parse(dns));
+                dnsList.add(InetAddresses.INSTANCE.parse(dns));
             }
         }
     }
