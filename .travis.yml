@@ -15,7 +15,9 @@ android:
     - ".+"
 
 script:
-  - chmod +x test.sh && ./test.sh
+  - "./gradlew :app:assembleDebug"
+  - "./gradlew :app:assembleRelease"
+  - "./gradlew :app:lint"
 
 notifications:
   email: false
