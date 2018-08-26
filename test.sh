@@ -27,5 +27,6 @@ function generate_changelog {
     fi
 }
 
+git fetch --tags
 generate_changelog
 build "$(cat changelog.txt)"
