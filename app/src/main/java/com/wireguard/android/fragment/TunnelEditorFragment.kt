@@ -143,7 +143,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = TunnelEditorFragmentBinding.inflate(inflater, container, false)
-        binding!!.addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler as android.databinding.Observable.OnPropertyChangedCallback)
+        binding?.addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler)
         breakObjectOrientedLayeringHandlerReceivers.add(binding!!)
         binding!!.executePendingBindings()
         return binding!!.root
@@ -187,10 +187,10 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             R.id.menu_action_save -> {
                 val newConfig = Config()
                 try {
-                    binding!!.config.commitData(newConfig)
+                    binding!!.config?.commitData(newConfig)
                 } catch (e: Exception) {
                     val error = ExceptionLoggers.unwrapMessage(e)
-                    val tunnelName = if (tunnel == null) binding!!.config.name else tunnel!!.getName()
+                    val tunnelName = if (tunnel == null) binding!!.config?.name else tunnel!!.getName()
                     val message = getString(R.string.config_save_error, tunnelName, error)
                     Log.e(TAG, message, e)
                     Lunchbar.make(binding!!.mainContainer, error, Lunchbar.LENGTH_LONG).show()
@@ -199,9 +199,9 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
 
                 when {
                     tunnel == null -> {
-                        Log.d(TAG, "Attempting to create new tunnel " + binding!!.config.name)
+                        Log.d(TAG, "Attempting to create new tunnel " + binding!!.config?.name)
                         val manager = Application.getTunnelManager()
-                        manager.create(binding!!.config.name, newConfig)
+                        manager.create(binding!!.config?.name, newConfig)
                             .whenComplete { newTunnel, throwable ->
                                 this.onTunnelCreated(
                                     newTunnel,
@@ -209,9 +209,9 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                                 )
                             }
                     }
-                    tunnel!!.getName() != binding!!.config.name -> {
-                        Log.d(TAG, "Attempting to rename tunnel to " + binding!!.config.name)
-                        tunnel!!.setName(binding!!.config.name)
+                    tunnel!!.getName() != binding!!.config?.name -> {
+                        Log.d(TAG, "Attempting to rename tunnel to " + binding!!.config?.name)
+                        tunnel!!.setName(binding!!.config!!.name)
                             .whenComplete { _, b -> onTunnelRenamed(tunnel, newConfig, b) }
                     }
                     else -> {
@@ -306,7 +306,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     fun onRequestSetExcludedApplications(view: View) {
         val fragmentManager = fragmentManager
         if (fragmentManager != null && binding != null) {
-            val excludedApps = Attribute.stringToList(binding!!.config.interfaceSection.getExcludedApplications())
+            val excludedApps = Attribute.stringToList(binding!!.config?.interfaceSection?.getExcludedApplications())
             val fragment = AppListDialogFragment.newInstance(excludedApps, this)
             fragment.show(fragmentManager, null)
         }
@@ -317,7 +317,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             binding,
             "Tried to set excluded apps while no view was loaded"
         )
-        binding!!.config.interfaceSection.setExcludedApplications(Attribute.iterableToString(excludedApps))
+        binding!!.config?.interfaceSection?.setExcludedApplications(Attribute.iterableToString(excludedApps))
     }
 
     companion object {
