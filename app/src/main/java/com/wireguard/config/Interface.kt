@@ -9,6 +9,7 @@ import com.wireguard.android.Application
 import com.wireguard.android.BR
 import com.wireguard.android.R
 import com.wireguard.android.model.GlobalExclusions
+import com.wireguard.android.util.addExclusive
 import com.wireguard.crypto.Keypair
 import java.net.InetAddress
 
@@ -43,10 +44,7 @@ class Interface {
 
     private fun addExcludedApplications(applications: Array<String>?) {
         if (applications != null && applications.isNotEmpty()) {
-            for (application: String in applications) {
-                if (application !in GlobalExclusions.exclusionsArray)
-                    excludedApplications.addAll(applications)
-            }
+            excludedApplications.addExclusive(applications)
         }
     }
 
@@ -73,7 +71,7 @@ class Interface {
     }
 
     private fun getExcludedApplicationsString(): String? {
-        return if (excludedApplications.isEmpty()) null else Attribute.iterableToString(excludedApplications.plus(GlobalExclusions.exclusionsArray))
+        return if (excludedApplications.isEmpty()) null else Attribute.iterableToString(excludedApplications.addExclusive(GlobalExclusions.exclusionsArray))
     }
 
     fun getExcludedApplications(): Array<String> {
@@ -170,7 +168,7 @@ class Interface {
         if (!dnsList.isEmpty())
             sb.append(Attribute.DNS.composeWith(getDnsStrings()))
         if (!excludedApplications.isEmpty())
-            sb.append(Attribute.EXCLUDED_APPLICATIONS.composeWith(excludedApplications.plus(GlobalExclusions.exclusionsArray)))
+            sb.append(Attribute.EXCLUDED_APPLICATIONS.composeWith(excludedApplications.addExclusive(GlobalExclusions.exclusionsArray)))
         if (listenPort != 0)
             sb.append(Attribute.LISTEN_PORT.composeWith(listenPort))
         if (mtu != 0)
@@ -193,7 +191,7 @@ class Interface {
 
         val excludedApplicationsCount: Int
             @Bindable
-            get() = Attribute.stringToList(excludedApplications).size
+            get() = Attribute.stringToList(excludedApplications.addExclusive(GlobalExclusions.exclusionsArray)).size
 
         constructor(parent: Interface?) {
             if (parent != null)
