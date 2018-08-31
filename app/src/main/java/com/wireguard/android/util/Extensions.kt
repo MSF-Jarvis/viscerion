@@ -9,6 +9,15 @@ fun <T> ArrayList<T>.addExclusive(otherArray: ArrayList<T>): ArrayList<T> {
     return this
 }
 
+fun <T> ArrayList<T>.addRemoveExclusive(otherArray: Array<T>): ArrayList<T> {
+    for(item: T in otherArray)
+        if (item !in this)
+            this.add(item)
+        else
+            this.remove(item)
+    return this
+}
+
 fun <T> ArrayList<T>.addExclusive(otherArray: Array<T>): ArrayList<T> {
     for(item: T in otherArray)
         if (item !in this)

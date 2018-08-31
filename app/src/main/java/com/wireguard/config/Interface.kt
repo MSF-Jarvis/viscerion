@@ -10,6 +10,7 @@ import com.wireguard.android.BR
 import com.wireguard.android.R
 import com.wireguard.android.model.GlobalExclusions
 import com.wireguard.android.util.addExclusive
+import com.wireguard.android.util.addRemoveExclusive
 import com.wireguard.crypto.Keypair
 import java.net.InetAddress
 
@@ -42,9 +43,9 @@ class Interface {
         }
     }
 
-    private fun addExcludedApplications(applications: Array<String>?) {
+    public fun addExcludedApplications(applications: Array<String>?) {
         if (applications != null && applications.isNotEmpty()) {
-            excludedApplications.addExclusive(applications)
+            excludedApplications.addRemoveExclusive(applications)
         }
     }
 
