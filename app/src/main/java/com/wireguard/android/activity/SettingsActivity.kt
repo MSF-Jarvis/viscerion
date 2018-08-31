@@ -102,7 +102,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
             }
             preferenceManager.findPreference("global_exclusions").setOnPreferenceClickListener {
                 val excludedApps = Attribute.stringToList(GlobalExclusions.exclusions)
-                val fragment = AppListDialogFragment.newInstance(excludedApps, this)
+                val fragment = AppListDialogFragment.newInstance(excludedApps, true, this)
                 fragment.show(fragmentManager, null)
                 true
             }

@@ -18,8 +18,10 @@ import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.databinding.AppListDialogFragmentBinding
 import com.wireguard.android.model.ApplicationData
+import com.wireguard.android.model.GlobalExclusions
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.ObservableKeyedArrayList
+import com.wireguard.config.Attribute
 import java.util.ArrayList
 import java.util.Arrays
 import java.util.Comparator
@@ -27,12 +29,14 @@ import java.util.Comparator
 class AppListDialogFragment : DialogFragment() {
 
     private var currentlyExcludedApps: List<String>? = null
+    private var isGlobalExclusionsDialog = false
     private val appData = ObservableKeyedArrayList<String, ApplicationData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        currentlyExcludedApps = Arrays.asList(*arguments?.getStringArray(KEY_EXCLUDED_APPS)!!)
+        currentlyExcludedApps = Arrays.asList(*arguments!!.getStringArray(KEY_EXCLUDED_APPS)!!)
+        isGlobalExclusionsDialog = arguments!!.getBoolean(KEY_GLOBAL_EXCLUSIONS)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -79,7 +83,8 @@ class AppListDialogFragment : DialogFragment() {
                         resolveInfo.loadIcon(pm),
                         resolveInfo.loadLabel(pm).toString(),
                         packageName,
-                        currentlyExcludedApps!!.contains(packageName)
+                        currentlyExcludedApps!!.contains(packageName),
+                        if (isGlobalExclusionsDialog) false else Attribute.stringToList(GlobalExclusions.exclusions).contains(packageName)
                     )
                 )
             }
@@ -119,13 +124,16 @@ class AppListDialogFragment : DialogFragment() {
     companion object {
 
         private const val KEY_EXCLUDED_APPS = "excludedApps"
+        private const val KEY_GLOBAL_EXCLUSIONS = "globalExclusions"
 
         fun <T> newInstance(
             excludedApps: Array<String>,
+            isGlobalExclusions: Boolean = false,
             target: T
         ): AppListDialogFragment where T : Fragment, T : AppListDialogFragment.AppExclusionListener {
             val extras = Bundle()
             extras.putStringArray(KEY_EXCLUDED_APPS, excludedApps)
+            extras.putBoolean(KEY_GLOBAL_EXCLUSIONS, isGlobalExclusions)
             val fragment = AppListDialogFragment()
             fragment.setTargetFragment(target, 0)
             fragment.arguments = extras

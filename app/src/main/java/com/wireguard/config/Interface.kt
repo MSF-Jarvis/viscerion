@@ -15,7 +15,7 @@ import java.net.InetAddress
 class Interface {
     private val addressList: ArrayList<InetNetwork> = ArrayList()
     private val dnsList: ArrayList<InetAddress> = ArrayList()
-    private val excludedApplications: ArrayList<String> = Attribute.stringToList(GlobalExclusions.exclusions).toCollection(ArrayList())
+    private val excludedApplications: ArrayList<String> = ArrayList()
     private var keypair: Keypair? = null
     private var listenPort: Int = 0
     private var mtu: Int = 0
@@ -43,7 +43,10 @@ class Interface {
 
     private fun addExcludedApplications(applications: Array<String>?) {
         if (applications != null && applications.isNotEmpty()) {
-            excludedApplications.addAll(applications)
+            for (application: String in applications) {
+                if (application !in GlobalExclusions.exclusionsArray)
+                    excludedApplications.addAll(applications)
+            }
         }
     }
 
@@ -70,7 +73,7 @@ class Interface {
     }
 
     private fun getExcludedApplicationsString(): String? {
-        return if (excludedApplications.isEmpty()) null else Attribute.iterableToString(excludedApplications)
+        return if (excludedApplications.isEmpty()) null else Attribute.iterableToString(excludedApplications.plus(GlobalExclusions.exclusionsArray))
     }
 
     fun getExcludedApplications(): Array<String> {
@@ -167,7 +170,7 @@ class Interface {
         if (!dnsList.isEmpty())
             sb.append(Attribute.DNS.composeWith(getDnsStrings()))
         if (!excludedApplications.isEmpty())
-            sb.append(Attribute.EXCLUDED_APPLICATIONS.composeWith(excludedApplications))
+            sb.append(Attribute.EXCLUDED_APPLICATIONS.composeWith(excludedApplications.plus(GlobalExclusions.exclusionsArray)))
         if (listenPort != 0)
             sb.append(Attribute.LISTEN_PORT.composeWith(listenPort))
         if (mtu != 0)
@@ -320,6 +323,7 @@ class Interface {
         }
 
         companion object {
+            @JvmField
             val CREATOR: Parcelable.Creator<Observable> = object : Parcelable.Creator<Observable> {
                 override fun createFromParcel(`in`: Parcel): Observable {
                     return Observable(`in`)
