@@ -15,9 +15,8 @@ android:
     - ".+"
 
 script:
-  - "./gradlew :app:assembleDebug"
-  - "./gradlew :app:assembleRelease"
-  - "./gradlew :app:lint"
+  - "./gradlew :app:assembleDebug :app:assembleRelease :app:lint"
+  - bash ci/notify-test.sh
 
 notifications:
   email: false
