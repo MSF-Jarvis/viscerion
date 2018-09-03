@@ -62,13 +62,24 @@ abstract class ThemeChangeAwareActivity : AppCompatActivity(), SharedPreferences
                 } catch (ignored: Exception) {
                 }
 
-                f = o.javaClass.getDeclaredField("mDrawableCache")
-                f.isAccessible = true
-                o = f.get(o)
                 try {
-                    o.javaClass.getMethod("onConfigurationChange", Int::class.javaPrimitiveType).invoke(o, -1)
+                    f = o.javaClass.getDeclaredField("mDrawableCache")
+                    f.isAccessible = true
+                    o = f.get(o)
+                    try {
+                        o.javaClass.getMethod("onConfigurationChange", Int::class.javaPrimitiveType).invoke(o, -1)
+                    } catch (ignored: Exception) {
+                        o.javaClass.getMethod("clear").invoke(o)
+                    }
                 } catch (ignored: Exception) {
-                    o.javaClass.getMethod("clear").invoke(o)
+                    f = o.javaClass.getDeclaredField("mColorDrawableCache")
+                    f.isAccessible = true
+                    o = f.get(o)
+                    try {
+                        o.javaClass.getMethod("onConfigurationChange", Int::class.javaPrimitiveType).invoke(o, -1)
+                    } catch (ignored: Exception) {
+                        o.javaClass.getMethod("clear").invoke(o)
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to flush drawable cache", e)
