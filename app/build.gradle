@@ -106,6 +106,7 @@ dependencies {
     implementation "androidx.legacy:legacy-preference-v14:$androidXVersion"
     implementation "androidx.annotation:annotation:$androidXVersion"
     implementation "com.google.code.findbugs:jsr305:$jsr305Version"
+    implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
     implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
     implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
