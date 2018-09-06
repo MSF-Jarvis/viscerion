@@ -38,7 +38,7 @@ class ToggleSwitch(context: Context, attrs: AttributeSet?) : Switch(context, att
         isEnabled = true
     }
 
-    fun setOnBeforeCheckedChangeListener(listener: OnBeforeCheckedChangeListener) {
+    fun setOnBeforeCheckedChangeListener(listener: OnBeforeCheckedChangeListener?) {
         this.listener = listener
     }
 
