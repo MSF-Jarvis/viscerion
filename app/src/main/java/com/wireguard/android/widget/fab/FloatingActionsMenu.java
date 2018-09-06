@@ -38,7 +38,6 @@ public class FloatingActionsMenu extends ViewGroup {
     public static final int EXPAND_RIGHT = 3;
 
     public static final int LABELS_ON_LEFT_SIDE = 0;
-    public static final int LABELS_ON_RIGHT_SIDE = 1;
 
     private static final int ANIMATION_DURATION = 300;
     private static final float COLLAPSED_PLUS_ROTATION = 0f;
@@ -66,8 +65,6 @@ public class FloatingActionsMenu extends ViewGroup {
     private int mButtonsCount;
     @Nullable
     private TouchDelegateGroup mTouchDelegateGroup;
-    @Nullable
-    private OnFloatingActionsMenuUpdateListener mListener;
     private float scrollYTranslation;
     private float behaviorYTranslation;
 
@@ -119,17 +116,9 @@ public class FloatingActionsMenu extends ViewGroup {
         setTranslationY(behaviorYTranslation + scrollYTranslation);
     }
 
-    public float getBehaviorYTranslation() {
-        return behaviorYTranslation;
-    }
-
     public void setBehaviorYTranslation(final float behaviorYTranslation) {
         this.behaviorYTranslation = behaviorYTranslation;
         setTranslationY(behaviorYTranslation + scrollYTranslation);
-    }
-
-    public void setOnFloatingActionsMenuUpdateListener(final OnFloatingActionsMenuUpdateListener listener) {
-        mListener = listener;
     }
 
     private boolean expandsHorizontally() {
@@ -167,13 +156,6 @@ public class FloatingActionsMenu extends ViewGroup {
         if (mLabelsStyle != 0) {
             createLabels();
         }
-    }
-
-    public void removeButton(final LabeledFloatingActionButton button) {
-        removeView(button.getLabelView());
-        removeView(button);
-        button.setTag(R.id.fab_label, null);
-        mButtonsCount--;
     }
 
     @Override
@@ -414,24 +396,12 @@ public class FloatingActionsMenu extends ViewGroup {
     }
 
     public void collapse() {
-        collapse(false);
-    }
-
-    public void collapseImmediately() {
-        collapse(true);
-    }
-
-    private void collapse(final boolean immediately) {
         if (mExpanded) {
             mExpanded = false;
             mTouchDelegateGroup.setEnabled(false);
-            mCollapseAnimation.setDuration(immediately ? 0 : ANIMATION_DURATION);
+            mCollapseAnimation.setDuration(ANIMATION_DURATION);
             mCollapseAnimation.start();
             mExpandAnimation.cancel();
-
-            if (mListener != null) {
-                mListener.onMenuCollapsed();
-            }
         }
     }
 
@@ -449,10 +419,6 @@ public class FloatingActionsMenu extends ViewGroup {
             mTouchDelegateGroup.setEnabled(true);
             mCollapseAnimation.cancel();
             mExpandAnimation.start();
-
-            if (mListener != null) {
-                mListener.onMenuExpanded();
-            }
         }
     }
 
@@ -491,12 +457,6 @@ public class FloatingActionsMenu extends ViewGroup {
         } else {
             super.onRestoreInstanceState(state);
         }
-    }
-
-    public interface OnFloatingActionsMenuUpdateListener {
-        void onMenuExpanded();
-
-        void onMenuCollapsed();
     }
 
     private static class RotatingDrawable extends LayerDrawable {
@@ -540,9 +500,9 @@ public class FloatingActionsMenu extends ViewGroup {
                 return new SavedState[size];
             }
         };
-        public boolean mExpanded;
+        boolean mExpanded;
 
-        public SavedState(final Parcelable parcel) {
+        SavedState(final Parcelable parcel) {
             super(parcel);
         }
 
@@ -594,7 +554,7 @@ public class FloatingActionsMenu extends ViewGroup {
             }
         }
 
-        public void setAnimationsTarget(final View view) {
+        void setAnimationsTarget(final View view) {
             mCollapseAlpha.setTarget(view);
             mCollapseDir.setTarget(view);
             mExpandAlpha.setTarget(view);

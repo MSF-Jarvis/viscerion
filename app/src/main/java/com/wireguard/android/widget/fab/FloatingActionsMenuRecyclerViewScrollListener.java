@@ -5,6 +5,7 @@
 
 package com.wireguard.android.widget.fab;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class FloatingActionsMenuRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
@@ -20,7 +21,7 @@ public class FloatingActionsMenuRecyclerViewScrollListener extends RecyclerView.
     }
 
     @Override
-    public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
+    public void onScrolled(@NonNull final RecyclerView recyclerView, final int dx, final int dy) {
         super.onScrolled(recyclerView, dx, dy);
         menu.setScrollYTranslation(bound(0, menu.getScrollYTranslation() + dy * SCALE_FACTOR, menu.getMeasuredHeight() - menu.getTranslationY()));
     }

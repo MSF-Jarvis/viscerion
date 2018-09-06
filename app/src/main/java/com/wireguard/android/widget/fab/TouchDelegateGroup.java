@@ -22,22 +22,15 @@ public class TouchDelegateGroup extends TouchDelegate {
     private TouchDelegate mCurrentTouchDelegate;
     private boolean mEnabled;
 
-    public TouchDelegateGroup(final View uselessHackyView) {
+    TouchDelegateGroup(final View uselessHackyView) {
         super(USELESS_HACKY_RECT, uselessHackyView);
     }
 
-    public void addTouchDelegate(final TouchDelegate touchDelegate) {
+    void addTouchDelegate(final TouchDelegate touchDelegate) {
         mTouchDelegates.add(touchDelegate);
     }
 
-    public void removeTouchDelegate(final TouchDelegate touchDelegate) {
-        mTouchDelegates.remove(touchDelegate);
-        if (mCurrentTouchDelegate == touchDelegate) {
-            mCurrentTouchDelegate = null;
-        }
-    }
-
-    public void clearTouchDelegates() {
+    void clearTouchDelegates() {
         mTouchDelegates.clear();
         mCurrentTouchDelegate = null;
     }
