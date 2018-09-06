@@ -34,7 +34,6 @@ public class FloatingActionButtonBehavior extends CoordinatorLayout.Behavior<Flo
     @Override
     public void onDependentViewRemoved(@NonNull final CoordinatorLayout parent, @NonNull final FloatingActionsMenu child,
                                        @NonNull final View dependency) {
-        // TODO(msf): animate this so it isn't so dramatic when the snackbar is swiped away
         child.setBehaviorYTranslation(0);
     }
 }
