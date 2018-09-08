@@ -12,6 +12,8 @@ import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.wireguard.android.Application
+import com.wireguard.android.R
+import com.wireguard.android.util.ApplicationPreferences
 import timber.log.Timber
 import java.lang.reflect.Field
 
@@ -19,8 +21,20 @@ abstract class ThemeChangeAwareActivity : AppCompatActivity(), SharedPreferences
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        when (ApplicationPreferences.theme) {
+            2 -> theme.applyStyle(R.style.AppThemeBlack, true)
+            else -> theme.applyStyle(R.style.AppTheme, true)
+        }
         Application.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         Timber.tag(TAG)
+    }
+
+    override fun recreate() {
+        when (ApplicationPreferences.theme) {
+            2 -> theme.applyStyle(R.style.AppThemeBlack, true)
+            else -> theme.applyStyle(R.style.AppTheme, true)
+        }
+        super.recreate()
     }
 
     override fun onDestroy() {
@@ -29,15 +43,15 @@ abstract class ThemeChangeAwareActivity : AppCompatActivity(), SharedPreferences
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if ("dark_theme" == key) {
-            val darkMode = sharedPreferences.getBoolean(key, false)
+        if (ApplicationPreferences.appThemeKey == key) {
+            val isDarkTheme = ApplicationPreferences.theme == (1 or 2)
             AppCompatDelegate.setDefaultNightMode(
-                if (sharedPreferences.getBoolean(key, false))
+                if (isDarkTheme)
                     AppCompatDelegate.MODE_NIGHT_YES
                 else
                     AppCompatDelegate.MODE_NIGHT_NO
             )
-            invalidateDrawableCache(resources, darkMode)
+            invalidateDrawableCache(resources, isDarkTheme)
             recreate()
         }
     }
@@ -50,7 +64,7 @@ abstract class ThemeChangeAwareActivity : AppCompatActivity(), SharedPreferences
         private var lastDarkMode: Boolean = false
         @Synchronized
         private fun invalidateDrawableCache(resources: Resources, darkMode: Boolean) {
-            if (resources === lastResources && darkMode == lastDarkMode)
+            if (resources == lastResources && darkMode == lastDarkMode)
                 return
 
             try {
