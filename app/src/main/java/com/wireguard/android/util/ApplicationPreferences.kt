@@ -15,6 +15,6 @@ class ApplicationPreferences {
             }
         var exclusionsArray: ArrayList<String> = Attribute.stringToList(exclusions).toCollection(ArrayList())
 
-        var theme = Application.sharedPreferences.getInt(appThemeKey, 1)
+        var theme: String = Application.sharedPreferences.getString(appThemeKey, "dark") as String
     }
 }

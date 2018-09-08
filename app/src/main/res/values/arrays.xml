@@ -7,9 +7,9 @@
         <item>AMOLED theme</item>
     </string-array>
 
-    <array name="pref_theme_entry_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </array>
+    <string-array name="pref_theme_entry_values">
+        <item>light</item>
+        <item>dark</item>
+        <item>amoled</item>
+    </string-array>
 </resources>

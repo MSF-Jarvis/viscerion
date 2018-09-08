@@ -22,19 +22,10 @@ abstract class ThemeChangeAwareActivity : AppCompatActivity(), SharedPreferences
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         when (ApplicationPreferences.theme) {
-            2 -> theme.applyStyle(R.style.AppThemeBlack, true)
-            else -> theme.applyStyle(R.style.AppTheme, true)
+            "amoled" -> theme.applyStyle(R.style.AppThemeBlack, true)
         }
         Application.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         Timber.tag(TAG)
-    }
-
-    override fun recreate() {
-        when (ApplicationPreferences.theme) {
-            2 -> theme.applyStyle(R.style.AppThemeBlack, true)
-            else -> theme.applyStyle(R.style.AppTheme, true)
-        }
-        super.recreate()
     }
 
     override fun onDestroy() {
@@ -44,13 +35,17 @@ abstract class ThemeChangeAwareActivity : AppCompatActivity(), SharedPreferences
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (ApplicationPreferences.appThemeKey == key) {
-            val isDarkTheme = ApplicationPreferences.theme == (1 or 2)
+            val isDarkTheme = (ApplicationPreferences.theme == "dark" || ApplicationPreferences.theme == "amoled")
             AppCompatDelegate.setDefaultNightMode(
                 if (isDarkTheme)
                     AppCompatDelegate.MODE_NIGHT_YES
                 else
                     AppCompatDelegate.MODE_NIGHT_NO
             )
+            when (ApplicationPreferences.theme) {
+                "amoled" -> theme.applyStyle(R.style.AppThemeBlack, true)
+                else -> theme.applyStyle(R.style.AppTheme, true)
+            }
             invalidateDrawableCache(resources, isDarkTheme)
             recreate()
         }
