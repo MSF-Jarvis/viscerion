@@ -7,14 +7,22 @@ class ApplicationPreferences {
     companion object {
         const val appThemeKey = "app_theme"
         private const val globalExclusionsKey = "global_exclusions"
-        var exclusions: String = Application.sharedPreferences.getString(globalExclusionsKey, "") as String
+        var exclusions: String
+            get() {
+                return Application.sharedPreferences.getString(globalExclusionsKey, "") as String
+            }
             set(value) {
                 Application.sharedPreferences.edit().putString(globalExclusionsKey, value).apply()
                 exclusionsArray = Attribute.stringToList(value).toCollection(ArrayList())
-                field = value
             }
         var exclusionsArray: ArrayList<String> = Attribute.stringToList(exclusions).toCollection(ArrayList())
 
-        var theme: String = Application.sharedPreferences.getString(appThemeKey, "dark") as String
+        var theme: String
+            get() {
+                return Application.sharedPreferences.getString(appThemeKey, "dark") as String
+            }
+            set(value) {
+                Application.sharedPreferences.edit().putString(appThemeKey, value).apply()
+            }
     }
 }
