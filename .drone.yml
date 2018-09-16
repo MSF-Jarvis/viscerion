@@ -16,6 +16,7 @@ pipeline:
       - TRAVIS=true
       - TRAVIS_BUILD_NUMBER=${DRONE_BUILD_NUMBER}
       - TRAVIS_EVENT_TYPE=${DRONE_BUILD_EVENT}
+      - WITH_TRAVIS=true
     commands:
       - ./gradlew :app:assembleDebug :app:lint
 
@@ -23,7 +24,7 @@ pipeline:
   deploy:
     image: lawnchairlauncher/drone-telegram:latest
     secrets: [ bot_token, channel_id, dev_channel_id ]
-    apk_path: app/build/outputs/apk/debug/app-debug.apk
+    apk_path: app/build/outputs/apk/debug/wg-android_TEST.apk
     mapping_path: app/build/outputs/mapping/debug/mapping.txt
     filename: "wg-android"
     sticker: "CAADBAAD8R8AAmSKPgABCOk3mg-Zvf0C"
