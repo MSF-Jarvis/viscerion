@@ -18,7 +18,8 @@ pipeline:
       - TRAVIS_EVENT_TYPE=${DRONE_BUILD_EVENT}
       - WITH_TRAVIS=true
     commands:
-      - ./gradlew :app:assembleDebug :app:lint
+      - bash ./gradlew :app:assembleDebug :app:lint
+      - bash ci/notify-test.sh
 
   # Step 3: Upload to Telegram
   deploy:
