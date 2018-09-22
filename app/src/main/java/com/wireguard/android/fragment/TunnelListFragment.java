@@ -35,6 +35,7 @@ import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ApplicationPreferences;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.widget.MultiselectableRelativeLayout;
+import com.wireguard.android.widget.fab.FloatingActionButtonRecyclerViewScrollListener;
 import com.wireguard.config.Attribute;
 import com.wireguard.config.Config;
 import java9.util.concurrent.CompletableFuture;
@@ -212,6 +213,7 @@ public class TunnelListFragment extends BaseFragment {
 
         binding = TunnelListFragmentBinding.inflate(inflater, container, false);
         binding.createFab.setOnClickListener(view -> dialog.show());
+        binding.tunnelList.setOnScrollListener(new FloatingActionButtonRecyclerViewScrollListener(binding.createFab));
         binding.executePendingBindings();
         return binding.getRoot();
     }
@@ -222,18 +224,18 @@ public class TunnelListFragment extends BaseFragment {
         super.onDestroyView();
     }
 
-    public void onRequestCreateConfig() {
+    private void onRequestCreateConfig() {
         startActivity(new Intent(getActivity(), TunnelCreatorActivity.class));
     }
 
-    public void onRequestImportConfig() {
+    private void onRequestImportConfig() {
         final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         startActivityForResult(intent, REQUEST_IMPORT);
     }
 
-    public void onRequestScanQRCode() {
+    private void onRequestScanQRCode() {
         final IntentIntegrator intentIntegrator = IntentIntegrator.forSupportFragment(this);
         intentIntegrator.setOrientationLocked(false);
         intentIntegrator.setBeepEnabled(false);
