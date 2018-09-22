@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="18dp"
+    app:cardCornerRadius="0dp"
+    android:background="#00000000">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        app:cardBackgroundColor="@color/primary_color"
+        app:cardElevation="0dp"
+        app:cardCornerRadius="0dp">
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_color">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/create_empty"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_sheet_item_height"
+            android:layout_marginStart="@dimen/normal_margin"
+            android:layout_marginBottom="@dimen/extra_margin"
+            android:background="@color/primary_color"
+            android:text="@string/create_empty"
+            android:textAlignment="viewStart"
+            android:textColor="@android:color/white"
+            app:icon="@drawable/ic_action_edit"
+            app:iconPadding="16dp"
+            app:iconTint="@color/accent"
+            app:rippleColor="@color/accent"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/create_from_file"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_sheet_item_height"
+            android:layout_marginStart="@dimen/normal_margin"
+            android:layout_marginBottom="@dimen/extra_margin"
+            android:background="@color/primary_color"
+            android:text="@string/create_from_file"
+            android:textAlignment="viewStart"
+            android:textColor="@android:color/white"
+            app:icon="@drawable/ic_action_open_white"
+            app:iconPadding="16dp"
+            app:iconTint="@color/accent"
+            app:rippleColor="@color/accent"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/scan_qr_code"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_sheet_item_height"
+            android:layout_marginStart="@dimen/normal_margin"
+            android:layout_marginBottom="@dimen/extra_margin"
+            android:background="@color/primary_color"
+            android:text="@string/create_from_qrcode"
+            android:textAlignment="viewStart"
+            android:textColor="@android:color/white"
+            app:icon="@drawable/ic_action_scan_qr_code_white"
+            app:iconPadding="16dp"
+            app:iconTint="@color/accent"
+            app:rippleColor="@color/accent"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
