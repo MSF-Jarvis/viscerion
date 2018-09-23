@@ -196,7 +196,7 @@ public class TunnelListFragment extends BaseFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         Timber.tag(TAG);
 
-        BottomSheetDialog dialog = new BottomSheetDialog(getContext());
+        BottomSheetDialog dialog = new BottomSheetDialog(getContext(), R.style.BottomSheetDialogTheme);
         dialog.setContentView(R.layout.add_tunnels_bottom_sheet);
         dialog.findViewById(R.id.create_empty).setOnClickListener(view -> {
             dialog.dismiss();
