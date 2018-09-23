@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/colorPrimary">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/create_empty"
@@ -14,7 +13,6 @@
         android:layout_marginStart="@dimen/normal_margin"
         android:layout_marginEnd="@dimen/normal_margin"
         android:layout_marginBottom="@dimen/extra_margin"
-        android:background="?android:attr/colorPrimary"
         android:text="@string/create_empty"
         android:textAlignment="viewStart"
         android:textColor="@android:color/white"
@@ -31,7 +29,6 @@
         android:layout_marginStart="@dimen/normal_margin"
         android:layout_marginEnd="@dimen/normal_margin"
         android:layout_marginBottom="@dimen/extra_margin"
-        android:background="?android:attr/colorPrimary"
         android:text="@string/create_from_file"
         android:textAlignment="viewStart"
         android:textColor="@android:color/white"
@@ -48,7 +45,6 @@
         android:layout_marginStart="@dimen/normal_margin"
         android:layout_marginEnd="@dimen/normal_margin"
         android:layout_marginBottom="@dimen/extra_margin"
-        android:background="?android:attr/colorPrimary"
         android:text="@string/create_from_qrcode"
         android:textAlignment="viewStart"
         android:textColor="@android:color/white"
