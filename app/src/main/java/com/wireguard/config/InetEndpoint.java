@@ -10,7 +10,12 @@ import androidx.annotation.Nullable;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 
-import java.net.*;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 
 public class InetEndpoint {
     private final String host;
@@ -54,7 +59,7 @@ public class InetEndpoint {
             if (resolvedHost == null)
                 resolvedHost = candidates[0];
         }
-        return String.format(resolvedHost instanceof Inet4Address ?
+        return String.format(resolvedHost instanceof Inet6Address ?
                 "[%s]:%d" : "%s:%d", resolvedHost.getHostAddress(), port);
     }
 
