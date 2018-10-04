@@ -115,7 +115,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 fragment.show(fragmentManager, null)
                 true
             }
-            if (preferenceManager.findPreference(ApplicationPreferences.forceUserspaceBackendkey).isShown)
+            if (preferenceManager.findPreference(ApplicationPreferences.forceUserspaceBackendkey) != null)
                 preferenceManager.findPreference(ApplicationPreferences.forceUserspaceBackendkey).setOnPreferenceClickListener {
                     context?.restartApplication()
                     true
