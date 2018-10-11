@@ -22,7 +22,6 @@ import com.wireguard.android.R
 import com.wireguard.android.activity.TunnelCreatorActivity
 import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter
 import com.wireguard.android.databinding.TunnelListFragmentBinding
-import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.ExceptionLoggers
@@ -333,12 +332,12 @@ class TunnelListFragment : BaseFragment() {
         }
         binding!!.fragment = this
         Application.tunnelManager.getTunnels().thenAccept { binding!!.tunnels = it }
-        binding!!.rowConfigurationHandler =
-            ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler { binding: TunnelListItemBinding, tunnel: Tunnel, position ->
-                binding.fragment = this
+        binding!!.rowConfigurationHandler = object : ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TunnelListFragmentBinding,Tunnel>{
+            override fun onConfigureRow(binding: TunnelListFragmentBinding, item:Tunnel, position: Int) {
+                binding.fragment = this@TunnelListFragment
                 binding.root.setOnClickListener {
                     if (actionMode == null) {
-                        selectedTunnel = tunnel
+                        selectedTunnel = item
                     } else {
                         actionModeListener.toggleItemChecked(position)
                     }
@@ -353,8 +352,9 @@ class TunnelListFragment : BaseFragment() {
                         actionModeListener.checkedItems.contains(position)
                     )
                 else
-                    (binding.root as MultiselectableRelativeLayout).setSingleSelected(selectedTunnel == tunnel)
+                    (binding.root as MultiselectableRelativeLayout).setSingleSelected(selectedTunnel == item)
             }
+        }
     }
 
     private inner class ActionModeListener : ActionMode.Callback {
