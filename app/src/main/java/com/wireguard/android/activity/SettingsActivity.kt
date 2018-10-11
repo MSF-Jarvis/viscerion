@@ -12,13 +12,16 @@ import android.view.MenuItem
 import androidx.annotation.Nullable
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.transaction
 import androidx.preference.PreferenceFragmentCompat
 import com.wireguard.android.Application
+import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.fragment.AppListDialogFragment
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ApplicationPreferences
+import com.wireguard.android.util.restartApplication
 import com.wireguard.config.Attribute
 import java.util.ArrayList
 import java.util.Arrays
@@ -31,7 +34,10 @@ class SettingsActivity : ThemeChangeAwareActivity() {
     private val permissionRequestCallbacks = SparseArray<(permissions: Array<String>, granted: IntArray) -> Unit>()
     private var permissionRequestCounter: Int = 0
 
-    fun ensurePermissions(permissions: Array<String>, function: (permissions: Array<String>, granted: IntArray) -> Unit) {
+    fun ensurePermissions(
+        permissions: Array<String>,
+        function: (permissions: Array<String>, granted: IntArray) -> Unit
+    ) {
         val needPermissions = ArrayList<String>(permissions.size)
         for (permission in permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED)
@@ -54,9 +60,9 @@ class SettingsActivity : ThemeChangeAwareActivity() {
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (supportFragmentManager.findFragmentById(android.R.id.content) == null) {
-            supportFragmentManager.beginTransaction()
-                .add(android.R.id.content, SettingsFragment())
-                .commit()
+            supportFragmentManager.transaction {
+                add(android.R.id.content, SettingsFragment())
+            }
         }
     }
 
@@ -85,13 +91,20 @@ class SettingsActivity : ThemeChangeAwareActivity() {
     class SettingsFragment : PreferenceFragmentCompat(), AppListDialogFragment.AppExclusionListener {
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
             addPreferencesFromResource(R.xml.preferences)
+            val screen = preferenceScreen
             val wgQuickOnlyPrefs = arrayOf(
                 preferenceManager.findPreference("tools_installer"),
                 preferenceManager.findPreference("restore_on_boot")
             )
+            val debugOnlyPrefs = arrayOf(
+                preferenceManager.findPreference(ApplicationPreferences.forceUserspaceBackendkey)
+            )
+            if (!BuildConfig.DEBUG)
+                debugOnlyPrefs.forEach {
+                    screen.removePreference(it)
+                }
             for (pref in wgQuickOnlyPrefs)
                 pref.isVisible = false
-            val screen = preferenceScreen
             Application.backendAsync.thenAccept { backend ->
                 for (pref in wgQuickOnlyPrefs) {
                     if (backend is WgQuickBackend)
@@ -106,6 +119,11 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 fragment.show(fragmentManager, null)
                 true
             }
+            preferenceManager.findPreference(ApplicationPreferences.forceUserspaceBackendkey)
+                ?.setOnPreferenceClickListener {
+                    context?.restartApplication()
+                    true
+                }
         }
 
         override fun onExcludedAppsSelected(excludedApps: List<String>) {

@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.Observable
 import androidx.databinding.ObservableList
 import com.google.android.material.snackbar.Snackbar
@@ -29,7 +30,6 @@ import com.wireguard.config.Attribute
 import com.wireguard.config.Config
 import com.wireguard.config.Peer
 import timber.log.Timber
-import java.util.ArrayList
 import java.util.Objects
 
 /**
@@ -153,9 +153,10 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     override fun onDestroyView() {
         binding = null
         for (o in breakObjectOrientedLayeringHandlerReceivers) {
+            @Suppress("UNCHECKED_CAST")
             if (o is Observable)
                 o.removeOnPropertyChangedCallback(breakObjectOrientedLayeringHandler)
-            else (o as? ObservableList<Peer.Observable>)?.removeOnListChangedCallback(
+            else (o as ObservableList<Peer.Observable>).removeOnListChangedCallback(
                 breakObjectListOrientedLayeringHandler
             )
         }
@@ -185,6 +186,12 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        activity?.window?.navigationBarColor = ContextCompat.getColor(context!!, R.color.accent_darker)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.menu_action_save -> {
@@ -195,7 +202,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                     val error = ExceptionLoggers.unwrapMessage(e)
                     val tunnelName = if (tunnel == null) binding!!.config?.name else tunnel!!.getName()
                     val message = getString(R.string.config_save_error, tunnelName, error)
-                    Timber.e(e)
+                    Timber.e(message)
                     Snackbar.make(binding!!.mainContainer, error, Snackbar.LENGTH_LONG).show()
                     return false
                 }
@@ -306,6 +313,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
         super.onViewStateRestored(savedInstanceState)
     }
 
+    @Suppress("Unused", "UNUSED_PARAMETER")
     fun onRequestSetExcludedApplications(view: View) {
         val fragmentManager = fragmentManager
         if (fragmentManager != null && binding != null) {

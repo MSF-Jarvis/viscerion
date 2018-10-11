@@ -15,8 +15,8 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.RequiresApi
-import androidx.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
@@ -120,7 +120,7 @@ class Application : android.app.Application() {
                 synchronized(app.futureBackend) {
                     if (app.backend == null) {
                         var backend: Backend? = null
-                        if (File("/sys/module/wireguard").exists()) {
+                        if (File("/sys/module/wireguard").exists() && !ApplicationPreferences.forceUserspaceBackend) {
                             try {
                                 app.rootShell.start()
                                 backend = WgQuickBackend(app.applicationContext)
