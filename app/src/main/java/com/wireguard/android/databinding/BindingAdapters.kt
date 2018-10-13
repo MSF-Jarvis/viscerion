@@ -75,7 +75,7 @@ fun <K, E : Keyed<out K>> setItems(
     oldRowConfigurationHandler: ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<ViewDataBinding,E>? = null,
     newList: ObservableKeyedList<K, E>?,
     newLayoutId: Int,
-    newRowConfigurationHandler: ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<ViewDataBinding,E>
+    newRowConfigurationHandler: ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<ViewDataBinding,E>? =null
 ) {
     if (view.layoutManager == null)
         view.layoutManager = LinearLayoutManager(view.context, RecyclerView.VERTICAL, false)

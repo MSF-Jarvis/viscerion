@@ -31,7 +31,7 @@ class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal construct
     private val callback = OnListChangedCallback(this)
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
     private var list: ObservableKeyedList<K, E>? = null
-    private lateinit var rowConfigurationHandler: RowConfigurationHandler<ViewDataBinding,E>
+    private var rowConfigurationHandler: RowConfigurationHandler<ViewDataBinding,E>? = null
 
     init {
         setList(list)
@@ -67,7 +67,7 @@ class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal construct
 
         val item = getItem(position)
         if (item != null) {
-            rowConfigurationHandler.onConfigureRow(holder.binding, item, position)
+            rowConfigurationHandler?.onConfigureRow(holder.binding, item, position)
         }
     }
 
@@ -81,7 +81,7 @@ class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal construct
         notifyDataSetChanged()
     }
 
-    internal fun setRowConfigurationHandler(rowConfigurationHandler: RowConfigurationHandler<ViewDataBinding, E>) {
+    internal fun setRowConfigurationHandler(rowConfigurationHandler: RowConfigurationHandler<ViewDataBinding, E>?) {
         this.rowConfigurationHandler = rowConfigurationHandler
     }
 
