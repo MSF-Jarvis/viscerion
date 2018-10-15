@@ -333,7 +333,7 @@ class TunnelListFragment : BaseFragment() {
         }
         binding!!.fragment = this
         Application.tunnelManager.getTunnels().thenAccept { binding!!.tunnels = it }
-        binding!!.rowConfigurationHandler = object : ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TunnelListItemBinding,Tunnel>{
+        binding!!.rowConfigurationHandler = object : ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TunnelListItemBinding, Tunnel> {
             override fun onConfigureRow(binding: TunnelListItemBinding, tunnel: Tunnel, position: Int) {
                 binding.fragment = this@TunnelListFragment
                 binding.root.setOnClickListener {

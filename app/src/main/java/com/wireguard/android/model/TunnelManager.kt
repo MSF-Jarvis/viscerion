@@ -13,7 +13,6 @@ import com.wireguard.android.BR
 import com.wireguard.android.R
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.model.Tunnel.Statistics
-import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.KotlinCompanions
 import com.wireguard.android.util.ObservableSortedKeyedArrayList
@@ -158,7 +157,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     }
 
     internal fun setTunnelConfig(tunnel: Tunnel, config: Config): CompletionStage<Config> {
-        return Application.asyncWorker.supplyAsync{
+        return Application.asyncWorker.supplyAsync {
             val appliedConfig = Application.backend.applyConfig(tunnel, config)
             configStore.save(tunnel.getName(), appliedConfig!!)
         }.thenApply(tunnel::onConfigChanged)

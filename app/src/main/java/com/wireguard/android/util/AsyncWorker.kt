@@ -6,13 +6,10 @@
 package com.wireguard.android.util
 
 import android.os.Handler
-import android.os.WorkSource
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
 
-
 import java.util.concurrent.Executor
-import kotlin.reflect.KClass
 
 /**
  * Helper class for running asynchronous tasks and ensuring they are completed on the main thread.
@@ -20,7 +17,7 @@ import kotlin.reflect.KClass
 
 class AsyncWorker(private val executor: Executor, private val handler: Handler) {
 
-    fun runAsync(run:()->Unit): CompletionStage<Void> {
+    fun runAsync(run: () -> Unit): CompletionStage<Void> {
         val future = CompletableFuture<Void>()
         executor.execute {
             try {
@@ -33,7 +30,7 @@ class AsyncWorker(private val executor: Executor, private val handler: Handler) 
         return future
     }
 
-    fun <T> supplyAsync(get:()->T?): CompletionStage<T> {
+    fun <T> supplyAsync(get: () -> T?): CompletionStage<T> {
         val future = CompletableFuture<T>()
         executor.execute {
             try {
@@ -45,7 +42,4 @@ class AsyncWorker(private val executor: Executor, private val handler: Handler) 
         }
         return future
     }
-
-
-
 }

@@ -24,14 +24,15 @@ import java.lang.ref.WeakReference
  */
 
 class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal constructor(
-    context: Context, private val layoutId: Int,
+    context: Context,
+    private val layoutId: Int,
     list: ObservableKeyedList<K, E>
 ) : Adapter<ObservableKeyedRecyclerViewAdapter.ViewHolder>() {
 
     private val callback = OnListChangedCallback(this)
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
     private var list: ObservableKeyedList<K, E>? = null
-    private var rowConfigurationHandler: RowConfigurationHandler<ViewDataBinding,E>? = null
+    private var rowConfigurationHandler: RowConfigurationHandler<ViewDataBinding, E>? = null
 
     init {
         setList(list)
@@ -83,7 +84,7 @@ class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal construct
     }
 
     interface RowConfigurationHandler<B : ViewDataBinding, T> {
-        fun onConfigureRow(binding: B, item: T, position: Int)
+        fun onConfigureRow(binding: B, tunnel: T, position: Int)
     }
 
     private class OnListChangedCallback<E : Keyed<*>> constructor(adapter: ObservableKeyedRecyclerViewAdapter<*, E>) :
@@ -100,28 +101,33 @@ class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal construct
         }
 
         override fun onItemRangeChanged(
-            sender: ObservableList<E>, positionStart: Int,
+            sender: ObservableList<E>,
+            positionStart: Int,
             itemCount: Int
         ) {
             onChanged(sender)
         }
 
         override fun onItemRangeInserted(
-            sender: ObservableList<E>, positionStart: Int,
+            sender: ObservableList<E>,
+            positionStart: Int,
             itemCount: Int
         ) {
             onChanged(sender)
         }
 
         override fun onItemRangeMoved(
-            sender: ObservableList<E>, fromPosition: Int,
-            toPosition: Int, itemCount: Int
+            sender: ObservableList<E>,
+            fromPosition: Int,
+            toPosition: Int,
+            itemCount: Int
         ) {
             onChanged(sender)
         }
 
         override fun onItemRangeRemoved(
-            sender: ObservableList<E>, positionStart: Int,
+            sender: ObservableList<E>,
+            positionStart: Int,
             itemCount: Int
         ) {
             onChanged(sender)
