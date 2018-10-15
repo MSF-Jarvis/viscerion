@@ -38,11 +38,11 @@ class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal construct
     }
 
     override fun getItemCount(): Int {
-        return if (list != null) list!!.size else 0
+        return list?.size ?: 0
     }
 
     private fun getItem(position: Int): E? {
-        return if (list == null || position < 0 || position >= list!!.size) null else list!![position]
+        return if (list == null || position < 0 || position >= (list?.size ?: 0)) null else list!![position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -72,12 +72,9 @@ class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal construct
     }
 
     internal fun setList(newList: ObservableKeyedList<K, E>?) {
-        if (list != null)
-            list!!.removeOnListChangedCallback(callback)
+        list?.removeOnListChangedCallback(callback)
         list = newList
-        if (list != null) {
-            list!!.addOnListChangedCallback(callback)
-        }
+        list?.addOnListChangedCallback(callback)
         notifyDataSetChanged()
     }
 
