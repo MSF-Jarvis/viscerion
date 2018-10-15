@@ -24,6 +24,7 @@ branches:
     - master
 
 script:
+  - source ci/style-check.sh
   - "./gradlew :app:assembleDebug :app:lint"
   - bash ci/notify-test.sh
 
