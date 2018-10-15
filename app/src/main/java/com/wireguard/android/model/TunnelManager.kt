@@ -106,7 +106,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     fun onCreate() {
         Application.asyncWorker.supplyAsync { configStore.enumerate() }
             .thenAcceptBoth(
-                Application.asyncWorker.supplyAsync { Application.backend.enumerate()!! }
+                Application.asyncWorker.supplyAsync { Application.backend.enumerate() }
             ) { present, running -> this.onTunnelsLoaded(present, running) }
             .whenComplete(ExceptionLoggers.E)
     }
