@@ -36,4 +36,3 @@ cache:
     - "$HOME/.m2"
     - "$HOME/.gradle"
     - "$ANDROID_HOME"
-    - "/usr/local/android-sdk/"
