@@ -334,11 +334,11 @@ class TunnelListFragment : BaseFragment() {
         binding!!.fragment = this
         Application.tunnelManager.getTunnels().thenAccept { binding!!.tunnels = it }
         binding!!.rowConfigurationHandler = object : ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TunnelListItemBinding,Tunnel>{
-            override fun onConfigureRow(binding: TunnelListItemBinding, item:Tunnel, position: Int) {
+            override fun onConfigureRow(binding: TunnelListItemBinding, tunnel: Tunnel, position: Int) {
                 binding.fragment = this@TunnelListFragment
                 binding.root.setOnClickListener {
                     if (actionMode == null) {
-                        selectedTunnel = item
+                        selectedTunnel = tunnel
                     } else {
                         actionModeListener.toggleItemChecked(position)
                     }
@@ -353,7 +353,7 @@ class TunnelListFragment : BaseFragment() {
                         actionModeListener.checkedItems.contains(position)
                     )
                 else
-                    (binding.root as MultiselectableRelativeLayout).setSingleSelected(selectedTunnel == item)
+                    (binding.root as MultiselectableRelativeLayout).setSingleSelected(selectedTunnel == tunnel)
             }
         }
     }
