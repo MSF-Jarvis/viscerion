@@ -36,3 +36,6 @@ cache:
     - "$HOME/.m2"
     - "$HOME/.gradle"
     - "$ANDROID_HOME"
+
+before_install
+ - yes | sdkmanager "ndk-bundle"
