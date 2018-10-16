@@ -41,14 +41,7 @@ public final class KotlinCompanions {
     private static CompletionStage<Tunnel.State> setTunnelState(final Tunnel tunnel, final TunnelManager tunnelManager) {
         // Ensure the configuration is loaded before trying to use it.
         return tunnel.getConfigAsync().thenCompose(x ->
-                Application.Companion.getAsyncWorker().supplyAsync(() -> {
-                    try {
-                        return Application.Companion.getBackend().setState(tunnel, Tunnel.State.UP);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                })
+                Application.Companion.getAsyncWorker().supplyAsync(() -> Application.Companion.getBackend().setState(tunnel, Tunnel.State.UP))
         ).whenComplete((newState, e) -> {
             // Ensure onStateChanged is always called (failure or not), and with the correct state.
             tunnel.onStateChanged(e == null ? newState : tunnel.getState());
