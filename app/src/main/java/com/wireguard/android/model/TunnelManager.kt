@@ -86,10 +86,10 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         lastUsedTunnel = tunnel
         notifyPropertyChanged(BR.lastUsedTunnel)
         Application.sharedPreferences.edit {
-            if (tunnel != null)
-                putString(KEY_LAST_USED_TUNNEL, tunnel.getName())
-            else
-                remove(KEY_LAST_USED_TUNNEL)
+            when {
+                tunnel != null -> putString(KEY_LAST_USED_TUNNEL, tunnel.getName())
+                else -> remove(KEY_LAST_USED_TUNNEL)
+            }
         }
     }
 
