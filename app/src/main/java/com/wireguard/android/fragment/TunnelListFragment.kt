@@ -234,21 +234,24 @@ class TunnelListFragment : BaseFragment() {
         intentIntegrator.initiateScan(listOf(IntentIntegrator.QR_CODE))
     }
 
-    private fun viewForTunnel(tunnel: Tunnel?, tunnels: List<*>): MultiselectableRelativeLayout? {
-        return if (binding != null && binding!!.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(tunnel)) != null)
-            binding!!.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(tunnel))!!.itemView as MultiselectableRelativeLayout
-        else
-            null
+    private fun viewForTunnel(tunnel: Tunnel, tunnels: List<Tunnel>): MultiselectableRelativeLayout? {
+        var view: MultiselectableRelativeLayout? = null
+        binding?.let {
+            view = it.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(tunnel))?.itemView as MultiselectableRelativeLayout
+        }
+        return view
     }
 
     override fun onSelectedTunnelChanged(oldTunnel: Tunnel?, newTunnel: Tunnel?) {
         if (binding == null)
             return
         Application.tunnelManager.getTunnels().thenAccept { tunnels ->
-            if (newTunnel != null)
-                viewForTunnel(newTunnel, tunnels)!!.setSingleSelected(true)
-            if (oldTunnel != null)
-                viewForTunnel(oldTunnel, tunnels)!!.setSingleSelected(false)
+            newTunnel?.let {
+                viewForTunnel(it, tunnels)?.setSingleSelected(true)
+            }
+            oldTunnel?.let {
+                viewForTunnel(it, tunnels)?.setSingleSelected(false)
+            }
         }
     }
 
