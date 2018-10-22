@@ -20,6 +20,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.activity.TunnelCreatorActivity
+import com.wireguard.android.configStore.FileConfigStore.Companion.CONFIGURATION_FILE_SUFFIX
 import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter
 import com.wireguard.android.databinding.TunnelListFragmentBinding
 import com.wireguard.android.databinding.TunnelListItemBinding
@@ -88,8 +89,8 @@ class TunnelListFragment : BaseFragment() {
                 name = name.substring(idx + 1)
             }
             val isZip = name.toLowerCase().endsWith(".zip")
-            if (name.toLowerCase().endsWith(".conf"))
-                name = name.substring(0, name.length - ".conf".length)
+            if (name.toLowerCase().endsWith(CONFIGURATION_FILE_SUFFIX))
+                name = name.substring(0, name.length - CONFIGURATION_FILE_SUFFIX.length)
             else if (!isZip)
                 throw IllegalArgumentException("File must be .conf or .zip")
 
@@ -108,8 +109,8 @@ class TunnelListFragment : BaseFragment() {
                                 continue
                             name = name.substring(name.lastIndexOf('/') + 1)
                         }
-                        if (name.toLowerCase().endsWith(".conf"))
-                            name = name.substring(0, name.length - ".conf".length)
+                        if (name.toLowerCase().endsWith(CONFIGURATION_FILE_SUFFIX))
+                            name = name.substring(0, name.length - CONFIGURATION_FILE_SUFFIX.length)
                         else
                             continue
                         var config: Config? = null
