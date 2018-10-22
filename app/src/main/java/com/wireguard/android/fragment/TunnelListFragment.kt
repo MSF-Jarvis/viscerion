@@ -276,7 +276,7 @@ class TunnelListFragment : BaseFragment() {
     }
 
     private fun onTunnelImportFinished(tunnels: List<Tunnel>, throwables: Collection<Throwable>) {
-        var message: String? = null
+        var message = ""
 
         for (throwable in throwables) {
             val error = ExceptionLoggers.unwrapMessage(throwable)
@@ -313,7 +313,8 @@ class TunnelListFragment : BaseFragment() {
         }
 
         binding?.let {
-            Snackbar.make(it.mainContainer, message!!, Snackbar.LENGTH_LONG).show()
+            if (message.isNotEmpty())
+                Snackbar.make(it.mainContainer, message, Snackbar.LENGTH_LONG).show()
         }
     }
 
