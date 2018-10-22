@@ -243,7 +243,7 @@ class TunnelListFragment : BaseFragment() {
     private fun viewForTunnel(tunnel: Tunnel, tunnels: List<Tunnel>): MultiselectableRelativeLayout? {
         var view: MultiselectableRelativeLayout? = null
         binding?.let {
-            view = it.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(tunnel))?.itemView as MultiselectableRelativeLayout
+            view = it.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(tunnel))?.itemView as? MultiselectableRelativeLayout
         }
         return view
     }
