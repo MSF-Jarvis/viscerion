@@ -5,7 +5,6 @@
 
 package com.wireguard.android.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -16,6 +15,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import androidx.databinding.Observable
 import androidx.databinding.ObservableList
 import com.google.android.material.snackbar.Snackbar
@@ -170,9 +170,8 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
         val activity = activity ?: return
         val focusedView = activity.currentFocus
         focusedView?.let {
-            val service = activity.getSystemService(Context.INPUT_METHOD_SERVICE)
-            val inputManager = service as InputMethodManager
-            inputManager.hideSoftInputFromWindow(
+            val inputManager = context?.getSystemService<InputMethodManager>()
+            inputManager?.hideSoftInputFromWindow(
                 it.windowToken,
                 InputMethodManager.HIDE_NOT_ALWAYS
             )
