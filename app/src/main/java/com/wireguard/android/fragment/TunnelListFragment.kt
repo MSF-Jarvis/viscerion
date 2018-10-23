@@ -47,6 +47,7 @@ class TunnelListFragment : BaseFragment() {
     private val actionModeListener = ActionModeListener()
     private var actionMode: ActionMode? = null
     private var binding: TunnelListFragmentBinding? = null
+    lateinit var dialog: BottomSheetDialog
 
     private fun importTunnel(configText: String) {
         try {
@@ -74,11 +75,9 @@ class TunnelListFragment : BaseFragment() {
             val columns = arrayOf(OpenableColumns.DISPLAY_NAME)
             var name = ""
             @Suppress("Recycle")
-            contentResolver.query(uri, columns, null, null, null).use { cursor ->
-                cursor?.let {
-                    if (cursor.moveToFirst() && !cursor.isNull(0))
-                        name = cursor.getString(0)
-                }
+            contentResolver.query(uri, columns, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst() && !cursor.isNull(0))
+                    name = cursor.getString(0)
             }
             if (name.isEmpty())
                 name = Uri.decode(uri.lastPathSegment)
@@ -191,19 +190,21 @@ class TunnelListFragment : BaseFragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         Timber.tag(TAG)
 
-        val dialog = BottomSheetDialog(context!!, R.style.BottomSheetDialogTheme)
-        dialog.setContentView(R.layout.add_tunnels_bottom_sheet)
-        dialog.findViewById<MaterialButton>(R.id.create_empty)?.setOnClickListener {
-            dialog.dismiss()
-            onRequestCreateConfig()
-        }
-        dialog.findViewById<MaterialButton>(R.id.create_from_file)?.setOnClickListener {
-            dialog.dismiss()
-            onRequestImportConfig()
-        }
-        dialog.findViewById<MaterialButton>(R.id.scan_qr_code)?.setOnClickListener {
-            dialog.dismiss()
-            onRequestScanQRCode()
+        context?.let {
+            dialog = BottomSheetDialog(it, R.style.BottomSheetDialogTheme)
+            dialog.setContentView(R.layout.add_tunnels_bottom_sheet)
+            dialog.findViewById<MaterialButton>(R.id.create_empty)?.setOnClickListener { _ ->
+                dialog.dismiss()
+                onRequestCreateConfig()
+            }
+            dialog.findViewById<MaterialButton>(R.id.create_from_file)?.setOnClickListener { _ ->
+                dialog.dismiss()
+                onRequestImportConfig()
+            }
+            dialog.findViewById<MaterialButton>(R.id.scan_qr_code)?.setOnClickListener { _ ->
+                dialog.dismiss()
+                onRequestScanQRCode()
+            }
         }
 
         binding = TunnelListFragmentBinding.inflate(inflater, container, false)
