@@ -124,11 +124,11 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         }
         restoreState(true).whenComplete { v, t ->
             toComplete?.let {
-                for (f in it) {
+                it.forEach { future ->
                     if (t == null)
-                        f.complete(v)
+                        future.complete(v)
                     else
-                        f.completeExceptionally(t)
+                        future.completeExceptionally(t)
                 }
             }
         }
