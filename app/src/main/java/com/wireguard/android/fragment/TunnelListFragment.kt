@@ -155,7 +155,7 @@ class TunnelListFragment : BaseFragment() {
                         }
 
                         tunnel?.let {
-                            tunnels.add(tunnel)
+                            tunnels.add(it)
                         }
                     }
                     onTunnelImportFinished(tunnels, throwables)
@@ -331,8 +331,9 @@ class TunnelListFragment : BaseFragment() {
         savedInstanceState?.let { bundle ->
             val checkedItems = bundle.getIntegerArrayList("CHECKED_ITEMS")
             checkedItems?.let {
-                for (i in it)
-                    actionModeListener.setItemChecked(i!!, true)
+                it.forEach { checkedItem ->
+                    actionModeListener.setItemChecked(checkedItem, true)
+                }
             }
         }
     }
