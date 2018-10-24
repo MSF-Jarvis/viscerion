@@ -125,7 +125,6 @@ class Tunnel internal constructor(
         UP;
 
         companion object {
-
             fun of(running: Boolean): State {
                 return if (running) UP else DOWN
             }
