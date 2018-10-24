@@ -286,7 +286,7 @@ class TunnelListFragment : BaseFragment() {
         }
 
         if (tunnels.size == 1 && throwables.isEmpty())
-            message = getString(R.string.import_success, tunnels[0].getName())
+            message = getString(R.string.import_success, tunnels[0].name)
         else if (tunnels.isEmpty() && throwables.size == 1)
         else if (throwables.isEmpty())
             message = resources.getQuantityString(
@@ -307,7 +307,7 @@ class TunnelListFragment : BaseFragment() {
                     it.getInterface()
                         .addExcludedApplications(Attribute.stringToList(ApplicationPreferences.exclusions))
                     tunnel.setConfig(it)
-                    if (tunnel.getState() == Tunnel.State.UP)
+                    if (tunnel.state == Tunnel.State.UP)
                         tunnel.setState(Tunnel.State.DOWN).whenComplete { _, _ -> tunnel.setState(Tunnel.State.UP) }
                 }
             }

@@ -135,7 +135,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                         oldConfig?.let {
                             it.`interface`.addExcludedApplications(Attribute.stringToList(ApplicationPreferences.exclusions))
                             tunnel.setConfig(it)
-                            if (tunnel.getState() == Tunnel.State.UP)
+                            if (tunnel.state == Tunnel.State.UP)
                                 tunnel.setState(Tunnel.State.DOWN).whenComplete { _, _ -> tunnel.setState(Tunnel.State.UP) }
                         }
                     }

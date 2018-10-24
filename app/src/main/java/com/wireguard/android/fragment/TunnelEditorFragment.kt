@@ -113,13 +113,13 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     ) {
         val message: String
         if (throwable == null) {
-            message = getString(R.string.config_save_success, savedTunnel.getName())
+            message = getString(R.string.config_save_success, savedTunnel.name)
             Timber.d(message)
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             onFinished()
         } else {
             val error = ExceptionLoggers.unwrapMessage(throwable)
-            message = getString(R.string.config_save_error, savedTunnel.getName(), error)
+            message = getString(R.string.config_save_error, savedTunnel.name, error)
             Timber.e(throwable)
             binding?.let { Snackbar.make(it.mainContainer, message, Snackbar.LENGTH_LONG).show() }
         }
@@ -201,7 +201,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                     binding?.config?.commitData(newConfig)
                 } catch (e: Exception) {
                     val error = ExceptionLoggers.unwrapMessage(e)
-                    val tunnelName = if (tunnel == null) binding?.config?.name else tunnel?.getName()
+                    val tunnelName = if (tunnel == null) binding?.config?.name else tunnel?.name
                     val message = getString(R.string.config_save_error, tunnelName, error)
                     Timber.e(message)
                     binding?.let { Snackbar.make(it.mainContainer, error, Snackbar.LENGTH_LONG).show() }
@@ -220,7 +220,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                                 )
                             }
                     }
-                    tunnel?.getName() != binding?.config?.name -> {
+                    tunnel?.name != binding?.config?.name -> {
                         tunnel?.let {
                             Timber.d("Attempting to rename tunnel to %s", binding?.config?.name)
                             it.setName(binding?.config?.name!!).whenComplete { _, b -> onTunnelRenamed(it, newConfig, b) }
@@ -228,7 +228,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                     }
                     else -> {
                         tunnel?.let {
-                            Timber.d("Attempting to save config of %s", it.getName())
+                            Timber.d("Attempting to save config of %s", it.name)
                             it.setConfig(newConfig).whenComplete { _, b -> onConfigSaved(it, b) }
                         }
                     }
@@ -241,7 +241,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(KEY_LOCAL_CONFIG, binding?.config)
-        outState.putString(KEY_ORIGINAL_NAME, tunnel?.getName())
+        outState.putString(KEY_ORIGINAL_NAME, tunnel?.name)
         super.onSaveInstanceState(outState)
     }
 
@@ -251,7 +251,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             return
         binding?.config = Config.Observable(null, null)
         tunnel?.let {
-            it.configAsync.thenAccept { a -> onConfigLoaded(it.getName(), a) }
+            it.configAsync.thenAccept { a -> onConfigLoaded(it.name, a) }
         }
     }
 
@@ -259,7 +259,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
         val message: String
         if (throwable == null) {
             tunnel = newTunnel
-            message = getString(R.string.tunnel_create_success, tunnel?.getName())
+            message = getString(R.string.tunnel_create_success, tunnel?.name)
             Timber.d(message)
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             onFinished()
@@ -278,10 +278,10 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     ) {
         val message: String
         if (throwable == null) {
-            message = getString(R.string.tunnel_rename_success, renamedTunnel?.getName())
+            message = getString(R.string.tunnel_rename_success, renamedTunnel?.name)
             Timber.d(message)
             // Now save the rest of configuration changes.
-            Timber.d("Attempting to save config of renamed tunnel %s", tunnel?.getName())
+            Timber.d("Attempting to save config of renamed tunnel %s", tunnel?.name)
             renamedTunnel?.setConfig(newConfig)?.whenComplete { _, b -> onConfigSaved(renamedTunnel, b) }
         } else {
             val error = ExceptionLoggers.unwrapMessage(throwable)
@@ -304,7 +304,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             tunnel = selectedTunnel
             val config = savedInstanceState.getParcelable<Config.Observable>(KEY_LOCAL_CONFIG)
             val originalName = savedInstanceState.getString(KEY_ORIGINAL_NAME)
-            if (tunnel != null && tunnel?.getName() != originalName)
+            if (tunnel != null && tunnel?.name != originalName)
                 onSelectedTunnelChanged(null, tunnel)
             else
                 binding?.config = config
