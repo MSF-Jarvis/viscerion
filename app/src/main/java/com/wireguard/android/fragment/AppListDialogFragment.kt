@@ -93,7 +93,7 @@ class AppListDialogFragment : DialogFragment() {
                         resolveInfo.loadIcon(pm),
                         resolveInfo.loadLabel(pm).toString(),
                         packageName,
-                        currentlyExcludedApps?.contains(packageName) == true,
+                        currentlyExcludedApps?.contains(packageName) ?: false,
                         if (isGlobalExclusionsDialog) false else ApplicationPreferences.exclusionsArray.contains(
                             packageName
                         )
@@ -119,7 +119,7 @@ class AppListDialogFragment : DialogFragment() {
     private fun setExclusionsAndDismiss() {
         val excludedApps = ArrayList<String>()
         for (data in appData) {
-            if (data.isExcludedFromTunnel == true) {
+            if (data.isExcludedFromTunnel ?: false) {
                 excludedApps.add(data.packageName)
             }
         }

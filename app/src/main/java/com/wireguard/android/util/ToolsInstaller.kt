@@ -75,7 +75,7 @@ class ToolsInstaller(context: Context) {
                     }
                 }
             }
-            if (areToolsAvailable == false)
+            if (areToolsAvailable ?: false)
                 throw FileNotFoundException("Required tools unavailable")
         }
     }
