@@ -93,7 +93,7 @@ class AppListDialogFragment : DialogFragment() {
                         resolveInfo.loadIcon(pm),
                         resolveInfo.loadLabel(pm).toString(),
                         packageName,
-                        currentlyExcludedApps?.contains(packageName),
+                        currentlyExcludedApps?.contains(packageName) == true,
                         if (isGlobalExclusionsDialog) false else ApplicationPreferences.exclusionsArray.contains(
                             packageName
                         )
