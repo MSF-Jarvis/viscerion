@@ -13,7 +13,6 @@ import com.wireguard.android.BR
 import com.wireguard.android.R
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.model.Tunnel.Statistics
-import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.KotlinCompanions
 import com.wireguard.android.util.ObservableSortedKeyedArrayList
 import com.wireguard.android.util.ObservableSortedKeyedList
@@ -21,6 +20,7 @@ import com.wireguard.config.Config
 import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
+import kotlinx.coroutines.experimental.async
 import java.util.ArrayList
 
 class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
@@ -102,15 +102,17 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         return completableTunnels
     }
 
-    fun onCreate() {
-        Application.asyncWorker.supplyAsync<Set<String>> { configStore.enumerate() }
-            .thenAcceptBoth(
-                Application.asyncWorker.supplyAsync<Set<String>> { Application.backend.enumerate() }
-            ) { present, running -> this.onTunnelsLoaded(present, running) }
-            .whenComplete(ExceptionLoggers.E)
+    suspend fun onCreate() {
+        Application.coroutinesWorker.async {
+            val configTunnels = async { configStore.enumerate() }.await()
+            val backendTunnels = async { Application.backend.enumerate() }.await()
+            backendTunnels?.let {
+                onTunnelsLoaded(configTunnels, backendTunnels)
+            }
+        }
     }
 
-    private fun onTunnelsLoaded(present: Iterable<String>, running: Collection<String>) {
+    private fun onTunnelsLoaded(present: Iterable<String>, running: Set<String>) {
         for (name in present)
             addToList(name, null, if (running.contains(name)) Tunnel.State.UP else Tunnel.State.DOWN)
         val lastUsedName = Application.sharedPreferences.getString(KEY_LAST_USED_TUNNEL, null)
