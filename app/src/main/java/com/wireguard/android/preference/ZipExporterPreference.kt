@@ -20,6 +20,10 @@ import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.getPrefActivity
 import com.wireguard.config.Config
 import java9.util.concurrent.CompletableFuture
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.android.Main
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -38,10 +42,10 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
     private var exportedFilePath: String? = null
 
     private fun exportZip() {
-        Application.tunnelManager.completableTunnels.thenAccept { this.exportZip(it) }
+        Application.tunnelManager.completableTunnels.thenAccept { GlobalScope.launch { exportZip(it) } }
     }
 
-    private fun exportZip(tunnels: List<Tunnel>) {
+    private suspend fun exportZip(tunnels: List<Tunnel>) {
         val futureConfigs = ArrayList<CompletableFuture<Config>>(tunnels.size)
         for (tunnel in tunnels)
             futureConfigs.add(tunnel.configAsync.toCompletableFuture())
@@ -51,29 +55,32 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
         }
         CompletableFuture.allOf(*futureConfigs.toTypedArray())
             .whenComplete { _, exception ->
-                Application.asyncWorker.supplyAsync {
-                    if (exception != null)
-                        throw exception
-                    val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                    val file = File(path, "wireguard-export.zip")
-                    if (!path.isDirectory && !path.mkdirs())
-                        throw IOException("Cannot create output directory")
-                    try {
-                        ZipOutputStream(FileOutputStream(file)).use { zip ->
-                            for (i in futureConfigs.indices) {
-                                zip.putNextEntry(ZipEntry(tunnels[i].name + ".conf"))
-                                zip.write(futureConfigs[i].getNow(null).toString().toByteArray(StandardCharsets.UTF_8))
+                GlobalScope.launch(Dispatchers.Main) {
+                    val job = Application.coroutinesWorker.async {
+                        if (exception != null)
+                            throw exception
+                        val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                        val file = File(path, "wireguard-export.zip")
+                        if (!path.isDirectory && !path.mkdirs())
+                            throw IOException("Cannot create output directory")
+                        try {
+                            ZipOutputStream(FileOutputStream(file)).use { zip ->
+                                for (i in futureConfigs.indices) {
+                                    zip.putNextEntry(ZipEntry(tunnels[i].name + ".conf"))
+                                    zip.write(futureConfigs[i].getNow(null).toString().toByteArray(StandardCharsets.UTF_8))
+                                }
+                                zip.closeEntry()
                             }
-                            zip.closeEntry()
+                        } catch (e: Exception) {
+
+                            file.delete()
+                            throw e
                         }
-                    } catch (e: Exception) {
 
-                        file.delete()
-                        throw e
+                        file.absolutePath
                     }
-
-                    file.absolutePath
-                }.whenComplete(this::exportZipComplete)
+                    exportZipComplete(job.await(), job.getCompletionExceptionOrNull())
+                }
             }
     }
 

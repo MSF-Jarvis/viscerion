@@ -28,6 +28,8 @@ import com.wireguard.android.util.CoroutinesWorker
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
 import java9.util.concurrent.CompletableFuture
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import java.io.File
 import java.lang.ref.WeakReference
@@ -92,7 +94,7 @@ class Application : android.app.Application() {
         )
 
         tunnelManager = TunnelManager(FileConfigStore(applicationContext))
-        tunnelManager.onCreate()
+        GlobalScope.launch { tunnelManager.onCreate() }
 
         asyncWorker.supplyAsync<Backend> { backend }.thenAccept { backend ->
             futureBackend.complete(backend)
