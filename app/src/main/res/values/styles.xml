@@ -17,7 +17,7 @@
     </style>
 
     <style name="BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
-        <item name="android:background">@drawable/bg_bottom_sheet_dialog_fragment</item>
+        <item name="android:background">@drawable/bottom_sheet_dialog_fragment_bg</item>
     </style>
 
     <style name="BaseBottomSheetDialog" parent="Theme.MaterialComponents.BottomSheetDialog">
