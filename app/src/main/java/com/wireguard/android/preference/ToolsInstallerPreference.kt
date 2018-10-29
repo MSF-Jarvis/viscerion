@@ -40,9 +40,9 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preferen
             setState(State.INITIAL)
         else if (state and ToolsInstaller.YES == ToolsInstaller.YES)
             setState(State.ALREADY)
-        else if (state and (ToolsInstaller.MAGISK or ToolsInstaller.NO) == (ToolsInstaller.MAGISK or ToolsInstaller.NO))
+        else if ((state and (ToolsInstaller.MAGISK or ToolsInstaller.NO)) == (ToolsInstaller.MAGISK or ToolsInstaller.NO))
             setState(State.INITIAL_MAGISK)
-        else if (state and (ToolsInstaller.SYSTEM or ToolsInstaller.NO) == (ToolsInstaller.SYSTEM or ToolsInstaller.NO))
+        else if ((state and (ToolsInstaller.SYSTEM or ToolsInstaller.NO)) == (ToolsInstaller.SYSTEM or ToolsInstaller.NO))
             setState(State.INITIAL_SYSTEM)
         else
             setState(State.INITIAL)
