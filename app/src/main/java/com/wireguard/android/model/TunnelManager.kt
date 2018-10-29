@@ -132,7 +132,6 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
                 }
             }
         }
-
         completableTunnels.complete(tunnels)
     }
 
