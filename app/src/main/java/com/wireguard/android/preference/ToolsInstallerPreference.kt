@@ -52,7 +52,7 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preferen
         setState(State.WORKING)
         Application.asyncWorker.supplyAsync<Int>
         { Application.toolsInstaller.install() }
-            .whenComplete { result, throwable -> this.onInstallResult(result, throwable) }
+            .whenComplete(this::onInstallResult)
     }
 
     private fun onInstallResult(result: Int, throwable: Throwable?) {
