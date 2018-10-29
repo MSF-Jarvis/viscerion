@@ -32,7 +32,7 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preferen
         super.onAttached()
         Application.asyncWorker.supplyAsync<Int>
         { Application.toolsInstaller.areInstalled() }
-            .whenComplete { state, throwable -> this.onCheckResult(state, throwable) }
+            .whenComplete(this::onCheckResult)
     }
 
     private fun onCheckResult(state: Int, throwable: Throwable?) {
