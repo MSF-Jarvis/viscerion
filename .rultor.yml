@@ -1,0 +1,10 @@
+architect:
+  - MSF-Jarvis
+
+install:
+    - "sudo apt-get install aria2"
+ 
+merge:
+    script:
+    - source ci/style-check.sh
+    - "./gradlew :app:assembleDebug :app:lint"
