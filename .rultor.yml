@@ -2,9 +2,13 @@ architect:
   - MSF-Jarvis
 
 install:
-    - "sudo apt-get install aria2"
- 
+    - "sudo apt-get install aria2 openjdk-8-jre openjdk-8-jdk"
+
+env:
+    - ANDROID_HOME: "/home/r/Android/Sdk"
+
 merge:
     script:
+    - source ci/setup-android-env.sh
     - source ci/style-check.sh
     - "./gradlew :app:assembleDebug :app:lint"
