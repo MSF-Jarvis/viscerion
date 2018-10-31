@@ -20,6 +20,7 @@ add_custom_target(libwg-go.so WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib
     ANDROID_SYSROOT=${ANDROID_SYSROOT}
     ANDROID_PACKAGE_NAME=${ANDROID_PACKAGE_NAME}
     CFLAGS=${CMAKE_C_FLAGS}\ -Wno-unused-command-line-argument
+    LDFLAGS=${CMAKE_SHARED_LINKER_FLAGS}
     DESTDIR=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
 )
 # Hack to make it actually build as part of the default target
