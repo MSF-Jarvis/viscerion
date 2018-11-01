@@ -124,4 +124,7 @@
     <string name="force_userspace_backend_summary">Useful for debugging Go userspace issues when device has a kernel
         module installed. Application will restart upon toggling this.
     </string>
+    <string name="transfer">Transfer</string>
+    <string name="transfer_received">Received</string>
+    <string name="transfer_sent">Sent</string>
 </resources>

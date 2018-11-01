@@ -89,6 +89,46 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/endpoint_label"
                 android:text="@{item.endpoint}" />
+
+            <TextView
+                android:id="@+id/transfer_received_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/endpoint_text"
+                android:layout_marginTop="8dp"
+                android:labelFor="@+id/transfer_received_text"
+                android:text="@string/transfer_received" />
+
+            <TextView
+                android:id="@+id/transfer_received_text"
+                style="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/transfer_received_label"
+                android:contentDescription="@string/public_key_description"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{item.receivedTransfer}" />
+
+            <TextView
+                android:id="@+id/transfer_sent_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/transfer_received_label"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="8dp"
+                android:labelFor="@+id/transfer_sent_text"
+                android:text="@string/transfer_sent" />
+
+            <TextView
+                android:id="@+id/transfer_sent_text"
+                style="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/transfer_received_text"
+                android:layout_marginStart="120dp"
+                android:text="@{item.sentTransfer}" />
+
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>

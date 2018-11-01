@@ -14,9 +14,12 @@ import androidx.databinding.Bindable;
 import com.wireguard.android.Application;
 import com.wireguard.android.BR;
 import com.wireguard.android.R;
+import com.wireguard.android.backend.WgQuickBackend;
+import com.wireguard.android.util.RootShell;
 import com.wireguard.crypto.KeyEncoding;
 import java9.lang.Iterables;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.*;
 
@@ -180,6 +183,7 @@ public class Peer {
     }
 
     public static class Observable extends BaseObservable implements Parcelable {
+        private final boolean showTransfer = Application.Companion.getBackend() instanceof WgQuickBackend;
         public static final Creator<Observable> CREATOR = new Creator<Observable>() {
             @Override
             public Observable createFromParcel(final Parcel in) {
@@ -198,9 +202,18 @@ public class Peer {
         @Nullable private String publicKey;
         private final List<String> interfaceDNSRoutes = new ArrayList<>();
         private int numSiblings;
+        private String sentTransfer = "";
+        private String receivedTransfer = "";
 
         public Observable(final Peer parent) {
             loadData(parent);
+            refreshTransfer();
+            new Timer().scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    refreshTransfer();
+                }
+            }, 5000, 1000);
         }
 
         private Observable(final Parcel in) {
@@ -288,6 +301,17 @@ public class Peer {
             return publicKey;
         }
 
+        @Bindable
+        public String getSentTransfer() {
+            return sentTransfer;
+        }
+
+        @Bindable
+        public String getReceivedTransfer() {
+            return receivedTransfer;
+        }
+
+
         private void loadData(final Peer parent) {
             allowedIPs = parent.getAllowedIPsString();
             endpoint = parent.getEndpointString();
@@ -343,6 +367,26 @@ public class Peer {
             notifyPropertyChanged(BR.canToggleExcludePrivateIPs);
             notifyPropertyChanged(BR.isExcludePrivateIPsOn);
         }
+
+        private void refreshTransfer() {
+            if (showTransfer) {
+                final ArrayList<String> output = new ArrayList<>();
+                try {
+                    Application.Companion.getRootShell().run(output, "wg show");
+                    for (int i = 0; i < output.size(); i++) {
+                        if (output.get(i).contains("transfer")) {
+                            final String[] line = output.get(i).replace("  transfer", "").split(" ");
+                            receivedTransfer = String.format("%s %s", line[1], line[2]);
+                            sentTransfer = String.format("%s %s", line[4], line[5]);
+                        }
+                    }
+                    notifyPropertyChanged(BR.sentTransfer);
+                    notifyPropertyChanged(BR.receivedTransfer);
+                } catch (IOException | RootShell.NoRootException | IndexOutOfBoundsException ignored) {
+                }
+            }
+        }
+
 
         @Override
         public void writeToParcel(final Parcel dest, final int flags) {
