@@ -34,15 +34,14 @@
 
         <TextView
             android:id="@+id/tunnel_name"
-            style="?android:attr/textAppearanceMedium"
+            style="@style/TextAppearance.CustomFont.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{key}"
-            android:fontFamily="@font/actor"/>
+            android:text="@{key}"/>
 
         <com.wireguard.android.widget.ToggleSwitch
             android:id="@+id/tunnel_switch"

@@ -31,4 +31,15 @@
     </style>
 
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
+
+    <style name="TextAppearance.CustomFont.HeadLine5" parent="@style/TextAppearance.MaterialComponents.Headline5">
+        <item name="android:fontFamily">@font/actor</item>
+    </style>
+
+    <style name="TextAppearance.CustomFont.Medium" parent="@android:style/TextAppearance.DeviceDefault.Medium">
+        <item name="android:fontFamily">@font/actor</item>
+    </style>
+    <style name="Widget.MaterialComponents.Button.TextButton.Icon.CustomFont" parent="@style/Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="android:fontFamily">@font/actor</item>
+    </style>
 </resources>
