@@ -41,7 +41,8 @@
             android:layout_alignParentTop="true"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{key}" />
+            android:text="@{key}"
+            android:fontFamily="@font/actor"/>
 
         <com.wireguard.android.widget.ToggleSwitch
             android:id="@+id/tunnel_switch"

@@ -45,7 +45,8 @@
             android:maxLines="1"
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
-            android:text="@{key}" />
+            android:text="@{key}"
+            android:fontFamily="@font/actor"/>
 
         <CheckBox
             android:id="@+id/excluded_checkbox"

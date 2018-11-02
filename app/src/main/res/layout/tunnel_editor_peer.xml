@@ -39,7 +39,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="@string/peer"/>
+                android:text="@string/peer"
+                android:fontFamily="@font/actor"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/public_key_label_layout"

@@ -55,7 +55,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
-                        android:text="@string/interface_title" />
+                        android:text="@string/interface_title"
+                        android:fontFamily="@font/actor"/>
 
                     <com.wireguard.android.widget.ToggleSwitch
                         android:id="@+id/tunnel_switch"
