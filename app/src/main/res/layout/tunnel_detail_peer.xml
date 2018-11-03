@@ -33,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:text="@string/peer"/>
+                android:text="@string/peer" />
 
             <TextView
                 android:id="@+id/public_key_label"
