@@ -233,7 +233,7 @@
         </ScrollView>
 
         <TextView
-            style="@style/TextAppearance.MaterialComponents.Button"
+            style="@style/TextAppearance.MaterialComponents.Button.CustomFont"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
@@ -243,7 +243,6 @@
             android:onClick="@{() -> config.peers.add(Peer.Observable.newInstance())}"
             android:text="@string/add_peer"
             android:textColor="#fff"
-            android:fontFamily="@font/actor"
             app:layout_anchorGravity="bottom"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

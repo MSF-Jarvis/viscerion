@@ -42,4 +42,7 @@
     <style name="Widget.MaterialComponents.Button.TextButton.Icon.CustomFont" parent="@style/Widget.MaterialComponents.Button.TextButton.Icon">
         <item name="android:fontFamily">@font/actor</item>
     </style>
+    <style name="TextAppearance.MaterialComponents.Button.CustomFont" parent="@style/TextAppearance.MaterialComponents.Button">
+        <item name="android:fontFamily">@font/actor</item>
+    </style>
 </resources>
