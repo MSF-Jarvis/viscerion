@@ -69,6 +69,7 @@ class Application : android.app.Application() {
             NotificationManager.IMPORTANCE_DEFAULT
         )
         notificationChannel.description = getString(R.string.notification_channel_wgquick_desc)
+        notificationChannel.setShowBadge(false)
         notificationManager.createNotificationChannel(notificationChannel)
     }
 
@@ -83,7 +84,7 @@ class Application : android.app.Application() {
         toolsInstaller = ToolsInstaller(applicationContext)
 
         AppCompatDelegate.setDefaultNightMode(
-            if (ApplicationPreferences.isDarkTheme)
+            if (ApplicationPreferences.theme in ApplicationPreferences.darkAppThemeValues)
                 AppCompatDelegate.MODE_NIGHT_YES
             else
                 AppCompatDelegate.MODE_NIGHT_NO
