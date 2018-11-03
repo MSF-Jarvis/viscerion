@@ -9,7 +9,7 @@
         <item name="android:navigationBarColor">@color/primary_color</item>
         <item name="android:statusBarColor">@color/primary_color</item>
         <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="android:fontFamily">@font/actor</item>
+        <item name="android:fontFamily">@font/pt_sans</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Base.Theme.MaterialComponents.Dialog">
@@ -33,16 +33,16 @@
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
 
     <style name="TextAppearance.CustomFont.HeadLine5" parent="@style/TextAppearance.MaterialComponents.Headline5">
-        <item name="android:fontFamily">@font/actor</item>
+        <item name="android:fontFamily">@font/pt_sans</item>
     </style>
 
     <style name="TextAppearance.CustomFont.Medium" parent="@android:style/TextAppearance.DeviceDefault.Medium">
-        <item name="android:fontFamily">@font/actor</item>
+        <item name="android:fontFamily">@font/pt_sans</item>
     </style>
     <style name="Widget.MaterialComponents.Button.TextButton.Icon.CustomFont" parent="@style/Widget.MaterialComponents.Button.TextButton.Icon">
-        <item name="android:fontFamily">@font/actor</item>
+        <item name="android:fontFamily">@font/pt_sans</item>
     </style>
     <style name="TextAppearance.MaterialComponents.Button.CustomFont" parent="@style/TextAppearance.MaterialComponents.Button">
-        <item name="android:fontFamily">@font/actor</item>
+        <item name="android:fontFamily">@font/pt_sans</item>
     </style>
 </resources>
