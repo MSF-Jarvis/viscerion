@@ -11,14 +11,24 @@ import androidx.preference.Preference
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.util.ToolsInstaller
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Preference implementing a button that asynchronously runs `ToolsInstaller` and displays the
  * result as the preference summary.
  */
 
-class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
+class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), CoroutineScope {
     private var state = State.INITIAL
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.Main
 
     override fun getSummary(): CharSequence {
         return context.getString(state.messageResourceId)
@@ -28,11 +38,11 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preferen
         return context.getString(R.string.tools_installer_title)
     }
 
+    @ExperimentalCoroutinesApi
     override fun onAttached() {
         super.onAttached()
-        Application.asyncWorker.supplyAsync<Int>
-        { Application.toolsInstaller.areInstalled() }
-            .whenComplete(this::onCheckResult)
+        val job = async { Application.toolsInstaller.areInstalled() }
+        launch { onCheckResult(job.await(), job.getCompletionExceptionOrNull()) }
     }
 
     private fun onCheckResult(state: Int, throwable: Throwable?) {
@@ -48,11 +58,11 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preferen
             setState(State.INITIAL)
     }
 
+    @ExperimentalCoroutinesApi
     override fun onClick() {
         setState(State.WORKING)
-        Application.asyncWorker.supplyAsync<Int>
-        { Application.toolsInstaller.install() }
-            .whenComplete(this::onInstallResult)
+        val job = async { Application.toolsInstaller.install() }
+        launch { onInstallResult(job.await(), job.getCompletionExceptionOrNull()) }
     }
 
     private fun onInstallResult(result: Int, throwable: Throwable?) {
