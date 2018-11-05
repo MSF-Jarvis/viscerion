@@ -13,6 +13,7 @@ import com.wireguard.android.BR
 import com.wireguard.android.R
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.model.Tunnel.Statistics
+import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.KotlinCompanions
 import com.wireguard.android.util.ObservableSortedKeyedArrayList
 import com.wireguard.android.util.ObservableSortedKeyedList
@@ -20,23 +21,14 @@ import com.wireguard.config.Config
 import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import java.util.ArrayList
-import kotlin.coroutines.CoroutineContext
 
-class TunnelManager(private var configStore: ConfigStore) : BaseObservable(), CoroutineScope {
+class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     private val context = Application.get()
     val completableTunnels = CompletableFuture<ObservableSortedKeyedList<String, Tunnel>>()
     private val tunnels = ObservableSortedKeyedArrayList<String, Tunnel>(COMPARATOR)
     private val delayedLoadRestoreTunnels = ArrayList<CompletableFuture<Void>>()
     private var haveLoaded: Boolean = false
-    val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.IO
 
     private fun addToList(name: String, config: Config?, state: Tunnel.State): Tunnel {
         val tunnel = Tunnel(this, name, config, state)
@@ -111,14 +103,14 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable(), Co
     }
 
     fun onCreate() {
-        val configTunnels = async { configStore.enumerate() }
-        val backendTunnels = async { Application.backend.enumerate() }
-        launch {
-            backendTunnels.await()?.let { onTunnelsLoaded(configTunnels.await(), it) }
-        }
+        Application.asyncWorker.supplyAsync<Set<String>> { configStore.enumerate() }
+            .thenAcceptBoth(
+                Application.asyncWorker.supplyAsync<Set<String>> { Application.backend.enumerate() }
+            ) { present, running -> this.onTunnelsLoaded(present, running) }
+            .whenComplete(ExceptionLoggers.E)
     }
 
-    private fun onTunnelsLoaded(present: Iterable<String>, running: Set<String>) {
+    private fun onTunnelsLoaded(present: Iterable<String>, running: Collection<String>) {
         for (name in present)
             addToList(name, null, if (running.contains(name)) Tunnel.State.UP else Tunnel.State.DOWN)
         val lastUsedName = Application.sharedPreferences.getString(KEY_LAST_USED_TUNNEL, null)
