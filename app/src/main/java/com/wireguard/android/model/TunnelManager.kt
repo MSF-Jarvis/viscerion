@@ -20,15 +20,22 @@ import com.wireguard.config.Config
 import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
-import kotlinx.coroutines.async
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.ArrayList
+import kotlin.coroutines.CoroutineContext
 
-class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
+class TunnelManager(private var configStore: ConfigStore) : BaseObservable(), CoroutineScope {
     private val context = Application.get()
     val completableTunnels = CompletableFuture<ObservableSortedKeyedList<String, Tunnel>>()
     private val tunnels = ObservableSortedKeyedArrayList<String, Tunnel>(COMPARATOR)
     private val delayedLoadRestoreTunnels = ArrayList<CompletableFuture<Void>>()
     private var haveLoaded: Boolean = false
+    val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
 
     private fun addToList(name: String, config: Config?, state: Tunnel.State): Tunnel {
         val tunnel = Tunnel(this, name, config, state)
@@ -102,10 +109,10 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         return completableTunnels
     }
 
-    suspend fun onCreate() {
-        Application.coroutinesWorker.async {
-            val configTunnels = async { configStore.enumerate() }.await()
-            val backendTunnels = async { Application.backend.enumerate() }.await()
+    fun onCreate() {
+        launch {
+            val configTunnels = configStore.enumerate()
+            val backendTunnels = Application.backend.enumerate()
             backendTunnels?.let {
                 onTunnelsLoaded(configTunnels, backendTunnels)
             }
