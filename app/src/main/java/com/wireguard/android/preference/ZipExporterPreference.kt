@@ -20,10 +20,9 @@ import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.getPrefActivity
 import com.wireguard.config.Config
 import java9.util.concurrent.CompletableFuture
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream

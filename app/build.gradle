@@ -22,7 +22,6 @@ final def gitHash = { ->
     }
 }
 
-kotlin.experimental.coroutines "enable"
 android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

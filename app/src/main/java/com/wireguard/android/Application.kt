@@ -28,8 +28,8 @@ import com.wireguard.android.util.CoroutinesWorker
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
 import java9.util.concurrent.CompletableFuture
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
 import java.lang.ref.WeakReference

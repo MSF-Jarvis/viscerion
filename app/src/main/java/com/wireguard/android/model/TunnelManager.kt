@@ -20,7 +20,7 @@ import com.wireguard.config.Config
 import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.async
 import java.util.ArrayList
 
 class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
