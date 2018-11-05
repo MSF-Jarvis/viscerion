@@ -48,7 +48,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
         get() = job + Dispatchers.Main
 
     private fun exportZip() {
-        Application.tunnelManager.completableTunnels.thenAccept { launch { exportZip(it) } }
+        Application.tunnelManager.completableTunnels.thenAccept { exportZip(it) }
     }
 
     @ExperimentalCoroutinesApi
