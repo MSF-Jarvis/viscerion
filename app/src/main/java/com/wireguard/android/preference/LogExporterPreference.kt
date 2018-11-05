@@ -18,6 +18,7 @@ import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.getPrefActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -40,6 +41,7 @@ class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.IO
 
+    @ExperimentalCoroutinesApi
     private fun exportLog() {
         val job = async {
             val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)

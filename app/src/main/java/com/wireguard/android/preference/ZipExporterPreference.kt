@@ -22,6 +22,7 @@ import com.wireguard.config.Config
 import java9.util.concurrent.CompletableFuture
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -50,6 +51,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
         Application.tunnelManager.completableTunnels.thenAccept { launch { exportZip(it) } }
     }
 
+    @ExperimentalCoroutinesApi
     private fun exportZip(tunnels: List<Tunnel>) {
         val futureConfigs = ArrayList<CompletableFuture<Config>>(tunnels.size)
         for (tunnel in tunnels)
