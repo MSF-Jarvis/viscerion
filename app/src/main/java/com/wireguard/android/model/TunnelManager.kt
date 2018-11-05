@@ -23,6 +23,7 @@ import java9.util.concurrent.CompletionStage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.ArrayList
 import kotlin.coroutines.CoroutineContext
@@ -110,12 +111,10 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable(), Co
     }
 
     fun onCreate() {
+        val configTunnels = async { configStore.enumerate() }
+        val backendTunnels = async { Application.backend.enumerate() }
         launch {
-            val configTunnels = configStore.enumerate()
-            val backendTunnels = Application.backend.enumerate()
-            backendTunnels?.let {
-                onTunnelsLoaded(configTunnels, backendTunnels)
-            }
+            backendTunnels.await()?.let { onTunnelsLoaded(configTunnels.await(), it) }
         }
     }
 
