@@ -24,7 +24,6 @@ import com.wireguard.android.configStore.FileConfigStore
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
-import com.wireguard.android.util.CoroutinesWorker
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
 import java9.util.concurrent.CompletableFuture
@@ -111,7 +110,6 @@ class Application : android.app.Application() {
         val sharedPreferences by lazy { get().sharedPreferences }
         val toolsInstaller by lazy { get().toolsInstaller }
         val tunnelManager by lazy { get().tunnelManager }
-        val coroutinesWorker = CoroutinesWorker()
 
         fun get(): Application {
             return weakSelf.get() as Application

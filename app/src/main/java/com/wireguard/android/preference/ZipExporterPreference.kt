@@ -20,8 +20,11 @@ import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.getPrefActivity
 import com.wireguard.config.Config
 import java9.util.concurrent.CompletableFuture
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
@@ -31,20 +34,24 @@ import java.nio.charset.StandardCharsets
 import java.util.ArrayList
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Preference implementing a button that asynchronously exports config zips.
  */
 
-class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
+class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), CoroutineScope {
 
     private var exportedFilePath: String? = null
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.Main
 
     private fun exportZip() {
         Application.tunnelManager.completableTunnels.thenAccept { GlobalScope.launch { exportZip(it) } }
     }
 
-    private suspend fun exportZip(tunnels: List<Tunnel>) {
+    private fun exportZip(tunnels: List<Tunnel>) {
         val futureConfigs = ArrayList<CompletableFuture<Config>>(tunnels.size)
         for (tunnel in tunnels)
             futureConfigs.add(tunnel.configAsync.toCompletableFuture())
@@ -54,32 +61,30 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
         }
         CompletableFuture.allOf(*futureConfigs.toTypedArray())
             .whenComplete { _, exception ->
-                GlobalScope.launch(Dispatchers.Main) {
-                    val job = Application.coroutinesWorker.async {
-                        if (exception != null)
-                            throw exception
-                        val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                        val file = File(path, "wireguard-export.zip")
-                        if (!path.isDirectory && !path.mkdirs())
-                            throw IOException("Cannot create output directory")
-                        try {
-                            ZipOutputStream(FileOutputStream(file)).use { zip ->
-                                for (i in futureConfigs.indices) {
-                                    zip.putNextEntry(ZipEntry(tunnels[i].name + ".conf"))
-                                    zip.write(futureConfigs[i].getNow(null).toString().toByteArray(StandardCharsets.UTF_8))
-                                }
-                                zip.closeEntry()
+                val job = async {
+                    if (exception != null)
+                        throw exception
+                    val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                    val file = File(path, "wireguard-export.zip")
+                    if (!path.isDirectory && !path.mkdirs())
+                        throw IOException("Cannot create output directory")
+                    try {
+                        ZipOutputStream(FileOutputStream(file)).use { zip ->
+                            for (i in futureConfigs.indices) {
+                                zip.putNextEntry(ZipEntry(tunnels[i].name + ".conf"))
+                                zip.write(futureConfigs[i].getNow(null).toString().toByteArray(StandardCharsets.UTF_8))
                             }
-                        } catch (e: Exception) {
-
-                            file.delete()
-                            throw e
+                            zip.closeEntry()
                         }
+                    } catch (e: Exception) {
 
-                        file.absolutePath
+                        file.delete()
+                        throw e
                     }
-                    exportZipComplete(job.await(), job.getCompletionExceptionOrNull())
+
+                    file.absolutePath
                 }
+                launch { exportZipComplete(job.await(), job.getCompletionExceptionOrNull()) }
             }
     }
 
