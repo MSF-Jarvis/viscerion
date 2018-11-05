@@ -13,27 +13,35 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.preference.Preference
 import com.google.android.material.snackbar.Snackbar
-import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.getPrefActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Preference implementing a button that asynchronously exports logs.
  */
 
-class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
+class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), CoroutineScope {
 
     private var exportedFilePath: String? = null
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
 
     private fun exportLog() {
-        Application.asyncWorker.supplyAsync {
+        val job = async {
             val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             val file = File(path, "wireguard-log.txt")
             if (!path.isDirectory && !path.mkdirs())
@@ -62,7 +70,8 @@ class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(
             }
 
             file.absolutePath
-        }.whenComplete(this::exportLogComplete)
+        }
+        launch { exportLogComplete(job.await(), job.getCompletionExceptionOrNull()) }
     }
 
     private fun exportLogComplete(filePath: String, throwable: Throwable?) {
