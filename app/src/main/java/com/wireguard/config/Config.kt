@@ -129,7 +129,7 @@ class Config {
             val config = Config()
             val context = Application.get()
             var currentPeer: Peer? = null
-            var line: String
+            var line: String?
             var inInterfaceSection = false
             while (true) {
                 line = reader.readLine()
