@@ -100,11 +100,11 @@ class Interface {
     }
 
     fun getPrivateKey(): String? {
-        return keypair?.privateKey
+        return keypair?.getPrivateKey()
     }
 
     fun getPublicKey(): String? {
-        return keypair?.publicKey
+        return keypair?.getPublicKey()
     }
 
     fun parse(line: String) {
@@ -239,8 +239,8 @@ class Interface {
 
         fun generateKeypair() {
             val keypair = Keypair()
-            privateKey = keypair.privateKey
-            publicKey = keypair.publicKey
+            privateKey = keypair.getPrivateKey()
+            publicKey = keypair.getPublicKey()
             notifyPropertyChanged(BR.privateKey)
             notifyPropertyChanged(BR.publicKey)
         }
@@ -315,7 +315,7 @@ class Interface {
             this.privateKey = privateKey
 
             publicKey = try {
-                Keypair(privateKey).publicKey
+                Keypair(privateKey).getPublicKey()
             } catch (ignored: IllegalArgumentException) {
                 ""
             }
