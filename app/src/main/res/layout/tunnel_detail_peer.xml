@@ -101,7 +101,7 @@
 
             <TextView
                 android:id="@+id/transfer_received_text"
-                style="?android:attr/textAppearanceMedium"
+                style="@style/TextAppearance.CustomFont.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/transfer_received_label"
@@ -122,7 +122,7 @@
 
             <TextView
                 android:id="@+id/transfer_sent_text"
-                style="?android:attr/textAppearanceMedium"
+                style="@style/TextAppearance.CustomFont.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/transfer_received_text"
