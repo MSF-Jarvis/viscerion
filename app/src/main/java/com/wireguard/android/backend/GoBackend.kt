@@ -236,6 +236,12 @@ class GoBackend(context: Context) : Backend {
             }
             return super.onStartCommand(intent, flags, startId)
         }
+
+        companion object {
+            fun prepare(context: Context): Intent? {
+                return android.net.VpnService.prepare(context)
+            }
+        }
     }
 
     companion object {

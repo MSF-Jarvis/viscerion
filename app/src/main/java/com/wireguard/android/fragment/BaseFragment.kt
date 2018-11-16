@@ -7,7 +7,6 @@ package com.wireguard.android.fragment
 
 import android.content.Context
 import android.content.Intent
-import android.net.VpnService
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -88,7 +87,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
 
         Application.backendAsync.thenAccept { backend ->
             if (backend is GoBackend) {
-                val intent = VpnService.prepare(view.context)
+                val intent = GoBackend.VpnService.prepare(view.context)
                 intent?.let {
                     pendingTunnel = tunnel
                     pendingTunnelUp = checked
