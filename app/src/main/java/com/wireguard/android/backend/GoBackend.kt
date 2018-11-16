@@ -40,7 +40,7 @@ class GoBackend(context: Context) : Backend {
     }
 
     override fun applyConfig(tunnel: Tunnel?, config: Config?): Config? {
-        if (tunnel?.getState() === Tunnel.State.UP) {
+        if (tunnel?.state == Tunnel.State.UP) {
             // Restart the tunnel to apply the new config.
             setStateInternal(tunnel, tunnel.getConfig(), Tunnel.State.DOWN)
             try {
@@ -55,9 +55,9 @@ class GoBackend(context: Context) : Backend {
     }
 
     override fun enumerate(): Set<String>? {
-        if (currentTunnel != null) {
+        currentTunnel?.let {
             val runningTunnels = ArraySet<String>()
-            runningTunnels.add(currentTunnel!!.getName())
+            runningTunnels.add(it.name)
             return runningTunnels
         }
         return emptySet()
@@ -80,7 +80,7 @@ class GoBackend(context: Context) : Backend {
             return originalState
         if (state == Tunnel.State.UP && currentTunnel != null)
             throw IllegalStateException("Only one userspace tunnel can run at a time")
-        Timber.tag(TAG).d("Changing tunnel %s to state %s ", tunnel?.getName(), finalState)
+        Timber.tag(TAG).d("Changing tunnel %s to state %s ", tunnel?.name, finalState)
         setStateInternal(tunnel, tunnel?.getConfig(), finalState)
         return getState(tunnel)
     }
@@ -95,7 +95,7 @@ class GoBackend(context: Context) : Backend {
 
     @Throws(Exception::class)
     private fun setStateInternal(tunnel: Tunnel?, config: Config?, state: Tunnel.State?) {
-        if (state === Tunnel.State.UP) {
+        if (state == Tunnel.State.UP) {
             Timber.tag(TAG).i("Bringing tunnel up")
 
             Objects.requireNonNull<Config>(config, "Trying to bring up a tunnel with no config")
@@ -116,7 +116,7 @@ class GoBackend(context: Context) : Backend {
             }
 
             // Build config
-            val iface = config!!.getInterface()
+            val iface = config!!.`interface`
             var goConfig = ""
             Formatter(StringBuilder()).use { fmt ->
                 fmt.format("replace_peers=true\n")
@@ -126,8 +126,8 @@ class GoBackend(context: Context) : Backend {
                         KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(iface.getPrivateKey()!!))
                     )
                 if (iface.getListenPort() != 0)
-                    fmt.format("listen_port=%d\n", config.getInterface().getListenPort())
-                for (peer in config.peers) {
+                    fmt.format("listen_port=%d\n", config.`interface`.getListenPort())
+                for (peer in config.getPeers()) {
                     if (peer.publicKey != null)
                         fmt.format("public_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.publicKey!!)))
                     if (peer.preSharedKey != null)
@@ -148,27 +148,27 @@ class GoBackend(context: Context) : Backend {
 
             // Create the vpn tunnel with android API
             val builder = service.getBuilder()
-            builder.setSession(tunnel?.getName())
+            builder.setSession(tunnel?.name)
 
             val configureIntent = Intent(context, MainActivity::class.java)
             configureIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             builder.setConfigureIntent(PendingIntent.getActivity(context, 0, configureIntent, 0))
 
-            for (excludedApplication in config.getInterface().getExcludedApplications())
+            for (excludedApplication in config.`interface`.getExcludedApplications())
                 builder.addDisallowedApplication(excludedApplication)
 
-            for (addr in config.getInterface().getAddresses())
+            for (addr in config.`interface`.getAddresses())
                 builder.addAddress(addr.address, addr.mask)
 
-            for (addr in config.getInterface().getDnses())
+            for (addr in config.`interface`.getDnses())
                 builder.addDnsServer(addr.hostAddress)
 
-            for (peer in config.peers) {
+            for (peer in config.getPeers()) {
                 for (addr in peer.allowedIPs)
                     builder.addRoute(addr.address, addr.mask)
             }
 
-            var mtu = config.getInterface().getMtu()
+            var mtu = config.`interface`.getMtu()
             if (mtu == 0)
                 mtu = 1280
             builder.setMtu(mtu)
@@ -178,7 +178,7 @@ class GoBackend(context: Context) : Backend {
                 if (tun == null)
                     throw Exception("Unable to create tun device")
                 Timber.tag(TAG).d("Go backend v%s", wgVersion())
-                currentTunnelHandle = wgTurnOn(tunnel!!.getName(), tun.detachFd(), goConfig)
+                currentTunnelHandle = wgTurnOn(tunnel!!.name, tun.detachFd(), goConfig)
             }
             if (currentTunnelHandle < 0)
                 throw Exception("Unable to turn tunnel on (wgTurnOn return " + currentTunnelHandle + ')'.toString())
@@ -219,7 +219,7 @@ class GoBackend(context: Context) : Backend {
         override fun onDestroy() {
             Application.tunnelManager.getTunnels().thenAccept { tunnels ->
                 for (tunnel in tunnels) {
-                    if (tunnel != null && tunnel.getState() !== Tunnel.State.DOWN)
+                    if (tunnel != null && tunnel.state !== Tunnel.State.DOWN)
                         tunnel.setState(Tunnel.State.DOWN)
                 }
             }
