@@ -19,7 +19,6 @@ import com.wireguard.android.util.getPrefActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -34,14 +33,13 @@ import kotlin.coroutines.CoroutineContext
  * Preference implementing a button that asynchronously exports logs.
  */
 
+@ExperimentalCoroutinesApi
 class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), CoroutineScope {
 
     private var exportedFilePath: String? = null
-    private val job = Job()
     override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.IO
+        get() = Dispatchers.IO
 
-    @ExperimentalCoroutinesApi
     private fun exportLog() {
         val job = async {
             val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)

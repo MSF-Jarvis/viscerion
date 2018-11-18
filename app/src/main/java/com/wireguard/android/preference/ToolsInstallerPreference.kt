@@ -14,7 +14,6 @@ import com.wireguard.android.util.ToolsInstaller
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
@@ -24,11 +23,11 @@ import kotlin.coroutines.CoroutineContext
  * result as the preference summary.
  */
 
+@ExperimentalCoroutinesApi
 class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), CoroutineScope {
     private var state = State.INITIAL
-    private val job = Job()
     override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
+        get() = Dispatchers.Main
 
     override fun getSummary(): CharSequence {
         return context.getString(state.messageResourceId)
@@ -38,7 +37,6 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preferen
         return context.getString(R.string.tools_installer_title)
     }
 
-    @ExperimentalCoroutinesApi
     override fun onAttached() {
         super.onAttached()
         val job = async { Application.toolsInstaller.areInstalled() }
@@ -58,7 +56,6 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preferen
             setState(State.INITIAL)
     }
 
-    @ExperimentalCoroutinesApi
     override fun onClick() {
         setState(State.WORKING)
         val job = async { Application.toolsInstaller.install() }
