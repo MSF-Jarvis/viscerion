@@ -40,7 +40,7 @@ class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO
 
-    private fun exportLog() {
+    private suspend fun exportLog() {
         val job = async {
             val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             val file = File(path, "wireguard-log.txt")
@@ -71,7 +71,7 @@ class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(
 
             file.absolutePath
         }
-        launch { exportLogComplete(job.await(), job.getCompletionExceptionOrNull()) }
+        exportLogComplete(job.await(), job.getCompletionExceptionOrNull())
     }
 
     private fun exportLogComplete(filePath: String, throwable: Throwable?) {
@@ -106,7 +106,7 @@ class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(
         ) { _, granted ->
             if (granted.isNotEmpty() && granted[0] == PackageManager.PERMISSION_GRANTED) {
                 isEnabled = false
-                exportLog()
+                launch { exportLog() }
             }
         }
     }
