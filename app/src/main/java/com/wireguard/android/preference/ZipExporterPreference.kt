@@ -44,7 +44,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
 
     private var exportedFilePath: String? = null
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
+        get() = Dispatchers.IO
 
     private fun exportZip() {
         Application.tunnelManager.completableTunnels.thenAccept { exportZip(it) }
