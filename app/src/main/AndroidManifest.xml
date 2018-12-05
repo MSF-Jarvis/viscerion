@@ -22,7 +22,6 @@
         android:extractNativeLibs="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
@@ -64,6 +63,13 @@
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".model.TunnelManager$IntentReceiver"
+                  android:permission="${applicationId}.permission.CONTROL_TUNNELS">
+            <intent-filter>
+                <action android:name="com.wireguard.android.action.REFRESH_TUNNEL_STATES" />
             </intent-filter>
         </receiver>
 

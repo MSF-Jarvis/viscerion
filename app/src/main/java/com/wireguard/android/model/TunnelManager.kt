@@ -5,6 +5,9 @@
 
 package com.wireguard.android.model
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import androidx.core.content.edit
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
@@ -103,9 +106,9 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     }
 
     fun onCreate() {
-        Application.asyncWorker.supplyAsync<Set<String>> { configStore.enumerate() }
+        Application.asyncWorker.supplyAsync { configStore.enumerate() }
             .thenAcceptBoth(
-                Application.asyncWorker.supplyAsync<Set<String>> { Application.backend.enumerate() }
+                Application.asyncWorker.supplyAsync { Application.backend.enumerate() }
             ) { present, running -> this.onTunnelsLoaded(present, running) }
             .whenComplete(ExceptionLoggers.E)
     }
@@ -133,6 +136,16 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
             }
         }
         completableTunnels.complete(tunnels)
+    }
+
+    fun refreshTunnelStates() {
+        Application.asyncWorker.supplyAsync { Application.backend.enumerate() }
+            .thenAccept { running ->
+                tunnels.forEach { tunnel ->
+                    tunnel.onStateChanged(if (running?.contains(tunnel.name) == true) Tunnel.State.UP else Tunnel.State.DOWN)
+                }
+            }
+            .whenComplete(ExceptionLoggers.E)
     }
 
     fun restoreState(force: Boolean): CompletionStage<Void> {
@@ -199,7 +212,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     fun setTunnelState(tunnel: Tunnel, state: Tunnel.State): CompletionStage<Tunnel.State> {
         // Ensure the configuration is loaded before trying to use it.
         return tunnel.configAsync.thenCompose {
-            Application.asyncWorker.supplyAsync<Tunnel.State> {
+            Application.asyncWorker.supplyAsync {
                 Application.backend.setState(
                     tunnel,
                     state
@@ -214,6 +227,17 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         }
     }
 
+    class IntentReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val manager = Application.tunnelManager
+            if (intent == null || intent.action == null)
+                return
+            if ("com.wireguard.android.action.REFRESH_TUNNEL_STATES" == intent.action) {
+                manager.refreshTunnelStates()
+            }
+        }
+    }
+
     companion object {
         const val NOTIFICATION_CHANNEL_ID = "wg-quick_tunnels"
         private val COMPARATOR = Comparators.thenComparing(
@@ -223,7 +247,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         private const val KEY_RESTORE_ON_BOOT = "restore_on_boot"
         private const val KEY_RUNNING_TUNNELS = "enabled_configs"
         internal fun getTunnelState(tunnel: Tunnel): CompletionStage<Tunnel.State> {
-            return Application.asyncWorker.supplyAsync<Tunnel.State> { Application.backend.getState(tunnel) }
+            return Application.asyncWorker.supplyAsync { Application.backend.getState(tunnel) }
                 .thenApply(tunnel::onStateChanged)
         }
 

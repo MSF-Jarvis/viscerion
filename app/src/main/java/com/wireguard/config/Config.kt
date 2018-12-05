@@ -61,7 +61,8 @@ class Config {
 
         private constructor(parcel: Parcel) {
             name = parcel.readString()
-            interfaceSection = parcel.readParcelable(Interface.Observable::class.java.classLoader) as Interface.Observable
+            interfaceSection =
+                parcel.readParcelable(Interface.Observable::class.java.classLoader) as Interface.Observable
             peers = ObservableArrayList<Peer.Observable>()
             parcel.readTypedList(peers, Peer.Observable.CREATOR)
         }
@@ -120,7 +121,7 @@ class Config {
         }
 
         @Throws(IOException::class)
-        fun from(stream: InputStream): Config {
+        fun from(stream: InputStream?): Config {
             return from(BufferedReader(InputStreamReader(stream, StandardCharsets.UTF_8)))
         }
 
@@ -153,7 +154,12 @@ class Config {
                     }
                     inInterfaceSection -> config.`interface`.parse(line)
                     currentPeer != null -> currentPeer.parse(line)
-                    else -> throw IllegalArgumentException(context.getString(R.string.tunnel_error_invalid_config_line, line))
+                    else -> throw IllegalArgumentException(
+                        context.getString(
+                            R.string.tunnel_error_invalid_config_line,
+                            line
+                        )
+                    )
                 }
             }
             if (!inInterfaceSection && currentPeer == null) {

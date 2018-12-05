@@ -15,7 +15,7 @@ import androidx.preference.Preference
 import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.R
 import com.wireguard.android.util.ExceptionLoggers
-import com.wireguard.android.util.getPrefActivity
+import com.wireguard.android.util.parentActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -79,7 +79,7 @@ class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(
             val error = ExceptionLoggers.unwrapMessage(throwable)
             val message = context.getString(R.string.log_export_error, error)
             Timber.tag(TAG).e(throwable)
-            getPrefActivity()?.findViewById<View>(android.R.id.content)?.let {
+            parentActivity?.findViewById<View>(android.R.id.content)?.let {
                 Snackbar.make(it, message, Snackbar.LENGTH_LONG).show()
             }
             isEnabled = true
@@ -101,7 +101,7 @@ class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(
     }
 
     override fun onClick() {
-        getPrefActivity()?.ensurePermissions(
+        parentActivity?.ensurePermissions(
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         ) { _, granted ->
             if (granted.isNotEmpty() && granted[0] == PackageManager.PERMISSION_GRANTED) {
