@@ -1,4 +1,3 @@
-import com.android.build.gradle.api.ApplicationVariant
 import java.io.FileInputStream
 import java.util.Properties
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -25,11 +24,6 @@ fun gitHash(): String {
 android {
     compileSdkVersion(28)
     dataBinding.isEnabled = true
-    applicationVariants.all(object : Action<ApplicationVariant> {
-        override fun execute(variant: ApplicationVariant) {
-            // variant.outputFileName = "wg-android_${gitHash()}.apk"
-        }
-    })
     defaultConfig {
         applicationId = "me.msfjarvis.wgandroid"
         minSdkVersion(21)
@@ -37,6 +31,7 @@ android {
         versionCode = 1001
         versionName = "1.0.1"
         buildConfigField("int", "MIN_SDK_VERSION", "21")
+        setProperty("archivesBaseName", "wg-android_${gitHash()}")
     }
     compileOptions {
         setSourceCompatibility(JavaVersion.VERSION_1_8)
