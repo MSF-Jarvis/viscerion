@@ -14,12 +14,14 @@ import androidx.preference.Preference
 import com.wireguard.android.Application
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 class VersionPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
     private var versionSummary: String? = null
 
     init {
-        Application.backendAsync.thenAccept { backend ->
+        Application.backendAsync.getCompleted().let { backend ->
             versionSummary =
                 getContext().getString(R.string.version_summary_checking, backend.getTypeName().toLowerCase())
             Application.asyncWorker.supplyAsync { backend.getVersion() }

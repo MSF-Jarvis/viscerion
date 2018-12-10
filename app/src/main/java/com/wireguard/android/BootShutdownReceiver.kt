@@ -10,24 +10,32 @@ import android.content.Context
 import android.content.Intent
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.util.ExceptionLoggers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
+@ExperimentalCoroutinesApi
 class BootShutdownReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         Timber.tag(TAG)
         intent.action ?: return
-        Application.backendAsync.thenAccept { backend ->
+        Application.backendAsync.getCompleted().let { backend ->
             if (backend !is WgQuickBackend)
-                return@thenAccept
+                return
             val action = intent.action
             val tunnelManager = Application.tunnelManager
-            if (Intent.ACTION_BOOT_COMPLETED == action) {
-                Timber.i("Broadcast receiver restoring state (boot)")
-                tunnelManager.restoreState(false).whenComplete(ExceptionLoggers.D)
-            } else if (Intent.ACTION_SHUTDOWN == action) {
-                Timber.i("Broadcast receiver saving state (shutdown)")
-                tunnelManager.saveState()
+            when (action) {
+                Intent.ACTION_BOOT_COMPLETED -> {
+                    Timber.i("Broadcast receiver restoring state (boot)")
+                    tunnelManager.restoreState(false).whenComplete(ExceptionLoggers.D)
+                }
+                Intent.ACTION_SHUTDOWN -> {
+                    Timber.i("Broadcast receiver saving state (shutdown)")
+                    tunnelManager.saveState()
+                }
+                else -> {
+                    Timber.i("Invalid intent action received.")
+                }
             }
         }
     }

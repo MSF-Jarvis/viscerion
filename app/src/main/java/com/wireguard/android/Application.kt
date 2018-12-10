@@ -26,7 +26,7 @@ import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
-import java9.util.concurrent.CompletableFuture
+import kotlinx.coroutines.CompletableDeferred
 import timber.log.Timber
 import java.io.File
 import java.lang.ref.WeakReference
@@ -40,7 +40,7 @@ class Application : android.app.Application() {
     private lateinit var toolsInstaller: ToolsInstaller
     private lateinit var tunnelManager: TunnelManager
     private var backend: Backend? = null
-    private val futureBackend = CompletableFuture<Backend>()
+    private val deferredBackend = CompletableDeferred<Backend>()
 
     init {
         Application.weakSelf = WeakReference(this)
@@ -94,7 +94,7 @@ class Application : android.app.Application() {
         tunnelManager.onCreate()
 
         asyncWorker.supplyAsync { backend }.thenAccept { backend ->
-            futureBackend.complete(backend)
+            deferredBackend.complete(backend)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -105,7 +105,7 @@ class Application : android.app.Application() {
 
         private lateinit var weakSelf: WeakReference<Application>
         val asyncWorker by lazy { get().asyncWorker }
-        val backendAsync by lazy { get().futureBackend }
+        val backendAsync by lazy { get().deferredBackend }
         val rootShell by lazy { get().rootShell }
         val sharedPreferences by lazy { get().sharedPreferences }
         val toolsInstaller by lazy { get().toolsInstaller }
@@ -119,7 +119,7 @@ class Application : android.app.Application() {
         val backend: Backend
             get() {
                 val app = get()
-                synchronized(app.futureBackend) {
+                synchronized(app.deferredBackend) {
                     if (app.backend == null) {
                         var backend: Backend? = null
                         if (File("/sys/module/wireguard").exists()) {

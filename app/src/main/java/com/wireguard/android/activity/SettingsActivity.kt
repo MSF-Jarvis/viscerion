@@ -22,6 +22,7 @@ import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.restartApplication
 import com.wireguard.config.Attribute
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.ArrayList
 import java.util.Arrays
 
@@ -87,6 +88,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
         }
     }
 
+    @ExperimentalCoroutinesApi
     class SettingsFragment : PreferenceFragmentCompat(), AppListDialogFragment.AppExclusionListener {
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
             addPreferencesFromResource(R.xml.preferences)
@@ -104,7 +106,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 }
             for (pref in wgQuickOnlyPrefs)
                 pref.isVisible = false
-            Application.backendAsync.thenAccept { backend ->
+            Application.backendAsync.getCompleted().let { backend ->
                 for (pref in wgQuickOnlyPrefs) {
                     if (backend is WgQuickBackend)
                         pref.isVisible = true

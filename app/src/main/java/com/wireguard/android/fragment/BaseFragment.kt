@@ -24,6 +24,7 @@ import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.State
 import com.wireguard.android.util.ExceptionLoggers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
 /**
@@ -31,6 +32,7 @@ import timber.log.Timber
  * attached to a `BaseActivity`.
  */
 
+@ExperimentalCoroutinesApi
 abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
 
     private var activity: BaseActivity? = null
@@ -85,14 +87,14 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
         if (tunnel == null)
             return
 
-        Application.backendAsync.thenAccept { backend ->
+        Application.backendAsync.getCompleted().let { backend ->
             if (backend is GoBackend) {
                 val intent = GoBackend.VpnService.prepare(view.context)
                 intent?.let {
                     pendingTunnel = tunnel
                     pendingTunnelUp = checked
                     startActivityForResult(it, REQUEST_CODE_VPN_PERMISSION)
-                    return@thenAccept
+                    return
                 }
             }
 
