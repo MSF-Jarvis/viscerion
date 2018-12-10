@@ -83,7 +83,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
 
                     file.absolutePath
                 }
-                launch { exportZipComplete(job.await(), job.getCompletionExceptionOrNull()) }
+                launch(Dispatchers.Main) { exportZipComplete(job.await(), job.getCompletionExceptionOrNull()) }
             }
     }
 

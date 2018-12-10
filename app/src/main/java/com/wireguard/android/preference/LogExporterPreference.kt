@@ -71,7 +71,7 @@ class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(
 
             file.absolutePath
         }
-        exportLogComplete(job.await(), job.getCompletionExceptionOrNull())
+        launch(Dispatchers.Main) { exportLogComplete(job.await(), job.getCompletionExceptionOrNull()) }
     }
 
     private fun exportLogComplete(filePath: String, throwable: Throwable?) {
