@@ -30,8 +30,8 @@ android {
         applicationId = "me.msfjarvis.wgandroid"
         minSdkVersion(21)
         targetSdkVersion(28)
-        versionCode = 1001
-        versionName = "1.0.1"
+        versionCode = 1002
+        versionName = "1.0.2"
         buildConfigField("int", "MIN_SDK_VERSION", "21")
         setProperty("archivesBaseName", "wg-android_${gitHash()}")
     }
@@ -98,7 +98,7 @@ dependencies {
     implementation("com.journeyapps:zxing-android-embedded:3.6.0")
     implementation("net.sourceforge.streamsupport:android-retrofuture:1.7.0")
     implementation("net.sourceforge.streamsupport:android-retrostreams:1.7.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.10")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${rootProject.extra.get("kotlinVersion")}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1")
 }
