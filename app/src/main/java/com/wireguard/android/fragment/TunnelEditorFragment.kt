@@ -29,6 +29,7 @@ import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.config.Attribute
 import com.wireguard.config.Config
 import com.wireguard.config.Peer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 import java.util.Objects
 
@@ -36,6 +37,7 @@ import java.util.Objects
  * Fragment for editing a WireGuard configuration.
  */
 
+@ExperimentalCoroutinesApi
 class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     private val breakObjectOrientedLayeringHandlerReceivers = ArrayList<Any>()
     private var binding: TunnelEditorFragmentBinding? = null

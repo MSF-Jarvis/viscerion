@@ -16,11 +16,13 @@ import com.wireguard.android.databinding.TunnelDetailFragmentBinding
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.resolveAttribute
 import com.wireguard.config.Config
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * Fragment that shows details about a specific tunnel.
  */
 
+@ExperimentalCoroutinesApi
 class TunnelDetailFragment : BaseFragment() {
     private var binding: TunnelDetailFragmentBinding? = null
 
