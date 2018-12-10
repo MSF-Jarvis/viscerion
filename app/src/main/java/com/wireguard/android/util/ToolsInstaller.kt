@@ -27,6 +27,10 @@ class ToolsInstaller(context: Context) {
     private var areToolsAvailable: Boolean? = null
     private var installAsMagiskModule: Boolean? = null
 
+    init {
+        Timber.tag(TAG)
+    }
+
     @Throws(NoRootException::class)
     fun areInstalled(): Int {
         if (INSTALL_DIR == null)
@@ -61,15 +65,15 @@ class ToolsInstaller(context: Context) {
             val ret = symlink()
             areToolsAvailable = when (ret) {
                 OsConstants.EALREADY -> {
-                    Timber.tag(TAG).d("Tools were already symlinked into our private binary dir")
+                    Timber.d("Tools were already symlinked into our private binary dir")
                     true
                 }
                 OsConstants.EXIT_SUCCESS -> {
-                    Timber.tag(TAG).d("Tools are now symlinked into our private binary dir")
+                    Timber.d("Tools are now symlinked into our private binary dir")
                     true
                 }
                 else -> {
-                    Timber.tag(TAG).e("For some reason, wg and wg-quick are not available at all")
+                    Timber.e("For some reason, wg and wg-quick are not available at all")
                     false
                 }
             }
