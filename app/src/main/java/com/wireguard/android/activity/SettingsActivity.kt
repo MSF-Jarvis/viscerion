@@ -20,6 +20,7 @@ import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.fragment.AppListDialogFragment
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ApplicationPreferences
+import com.wireguard.android.util.completed
 import com.wireguard.android.util.restartApplication
 import com.wireguard.config.Attribute
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -106,7 +107,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 }
             for (pref in wgQuickOnlyPrefs)
                 pref.isVisible = false
-            Application.backendAsync.getCompleted().let { backend ->
+            Application.backendAsync.completed.let { backend ->
                 for (pref in wgQuickOnlyPrefs) {
                     if (backend is WgQuickBackend)
                         pref.isVisible = true

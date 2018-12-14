@@ -21,6 +21,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.config.Attribute
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 fun <T> ArrayList<T>.addExclusive(otherArray: ArrayList<T>): ArrayList<T> {
     otherArray.forEach {
@@ -87,3 +89,7 @@ fun copyTextView(view: View) {
     service.primaryClip = ClipData.newPlainText(description, text)
     Snackbar.make(view, description.toString() + " copied to clipboard", Snackbar.LENGTH_LONG).show()
 }
+
+@ExperimentalCoroutinesApi
+val <T> CompletableDeferred<T>.completed
+    get() = getCompleted()

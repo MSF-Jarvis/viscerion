@@ -14,6 +14,7 @@ import androidx.preference.Preference
 import com.wireguard.android.Application
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
+import com.wireguard.android.util.completed
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
@@ -21,7 +22,7 @@ class VersionPreference(context: Context, attrs: AttributeSet) : Preference(cont
     private var versionSummary: String? = null
 
     init {
-        Application.backendAsync.getCompleted().let { backend ->
+        Application.backendAsync.completed.let { backend ->
             versionSummary =
                 getContext().getString(R.string.version_summary_checking, backend.getTypeName().toLowerCase())
             Application.asyncWorker.supplyAsync { backend.getVersion() }
