@@ -10,7 +10,7 @@ import android.content.Context
 import android.content.Intent
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.util.ExceptionLoggers
-import com.wireguard.android.util.completed
+import com.wireguard.android.util.thenAccept
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
@@ -20,7 +20,7 @@ class BootShutdownReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Timber.tag(TAG)
         intent.action ?: return
-        Application.backendAsync.completed.let { backend ->
+        Application.backendAsync.thenAccept { backend ->
             if (backend !is WgQuickBackend)
                 return
             val action = intent.action

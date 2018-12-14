@@ -24,7 +24,7 @@ import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.State
 import com.wireguard.android.util.ExceptionLoggers
-import com.wireguard.android.util.completed
+import com.wireguard.android.util.thenAccept
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
@@ -88,7 +88,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
         if (tunnel == null)
             return
 
-        Application.backendAsync.completed.let { backend ->
+        Application.backendAsync.thenAccept { backend ->
             if (backend is GoBackend) {
                 val intent = GoBackend.VpnService.prepare(view.context)
                 intent?.let {

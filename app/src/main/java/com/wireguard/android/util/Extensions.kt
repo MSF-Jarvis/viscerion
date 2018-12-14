@@ -91,5 +91,8 @@ fun copyTextView(view: View) {
 }
 
 @ExperimentalCoroutinesApi
-val <T> CompletableDeferred<T>.completed
-    get() = getCompleted()
+inline fun <T> CompletableDeferred<T>.thenAccept(
+    action: (T) -> Unit
+) {
+    action(this.getCompleted())
+}
