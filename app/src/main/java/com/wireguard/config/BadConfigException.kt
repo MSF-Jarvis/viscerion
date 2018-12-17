@@ -23,30 +23,26 @@ class BadConfigException private constructor(
         location: Location,
         reason: Reason,
         @Nullable text: CharSequence
-    ) : this(section, location, reason, text, null) {
-    }
+    ) : this(section, location, reason, text, null)
 
     constructor(
         section: Section,
         location: Location,
         cause: KeyFormatException
-    ) : this(section, location, Reason.INVALID_KEY, null, cause) {
-    }
+    ) : this(section, location, Reason.INVALID_KEY, null, cause)
 
     constructor(
         section: Section,
         location: Location,
         @Nullable text: CharSequence,
         cause: NumberFormatException
-    ) : this(section, location, Reason.INVALID_NUMBER, text, cause) {
-    }
+    ) : this(section, location, Reason.INVALID_NUMBER, text, cause)
 
     constructor(
         section: Section,
         location: Location,
         cause: ParseException
-    ) : this(section, location, Reason.INVALID_VALUE, cause.getText(), cause) {
-    }
+    ) : this(section, location, Reason.INVALID_VALUE, cause.text, cause)
 
     enum class Location private constructor(val name: String) {
         TOP_LEVEL(""),
