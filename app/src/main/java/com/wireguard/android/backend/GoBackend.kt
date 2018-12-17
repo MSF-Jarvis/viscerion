@@ -11,17 +11,14 @@ import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.SharedLibraryLoader
 import com.wireguard.config.Config
-import com.wireguard.crypto.KeyEncoding
 import java9.util.concurrent.CompletableFuture
 import timber.log.Timber
-import java.util.Formatter
 import java.util.Objects
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-class GoBackend(context: Context) : Backend {
+class GoBackend(private var context: Context) : Backend {
 
-    private var context: Context
     private var currentTunnel: Tunnel? = null
     private var currentTunnelHandle = -1
 
@@ -37,7 +34,6 @@ class GoBackend(context: Context) : Backend {
 
     init {
         SharedLibraryLoader.loadSharedLibrary(context, "wg-go")
-        this.context = context
         Timber.tag(TAG)
     }
 
@@ -81,7 +77,7 @@ class GoBackend(context: Context) : Backend {
         if (state == originalState)
             return originalState
         if (state == Tunnel.State.UP && currentTunnel != null)
-            throw IllegalStateException("Only one userspace tunnel can run at a time")
+            throw IllegalStateException(context.getString(R.string.multiple_tunnels_error))
         Timber.d("Changing tunnel %s to state %s ", tunnel?.name, finalState)
         setStateInternal(tunnel, tunnel?.getConfig(), finalState)
         return getState(tunnel)
@@ -100,7 +96,10 @@ class GoBackend(context: Context) : Backend {
         if (state == Tunnel.State.UP) {
             Timber.i("Bringing tunnel up")
 
-            Objects.requireNonNull<Config>(config, "Trying to bring up a tunnel with no config")
+            Objects.requireNonNull<Config>(config, context.getString(R.string.no_config_error))
+
+            if (VpnService.prepare(this.context) != null)
+                throw Exception(context.getString(R.string.vpn_not_authorized_error))
 
             val service: VpnService
             if (!vpnService.isDone)
@@ -109,7 +108,7 @@ class GoBackend(context: Context) : Backend {
             try {
                 service = vpnService.get(2, TimeUnit.SECONDS)
             } catch (e: TimeoutException) {
-                throw Exception("Unable to start Android VPN service", e)
+                throw Exception(context.getString(R.string.vpn_start_error), e)
             }
 
             if (currentTunnelHandle != -1) {
@@ -118,40 +117,7 @@ class GoBackend(context: Context) : Backend {
             }
 
             // Build config
-            val iface = config!!.`interface`
-            var goConfig = ""
-            Formatter(StringBuilder()).use { fmt ->
-                fmt.format("replace_peers=true\n")
-                iface.getPrivateKey()?.let {
-                    fmt.format(
-                        "private_key=%s\n",
-                        KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(it))
-                    )
-                }
-                if (iface.getListenPort() != 0) {
-                    fmt.format("listen_port=%d\n", iface.getListenPort())
-                }
-                config.getPeers().forEach { peer ->
-                    peer.publicKey?.let {
-                        fmt.format("public_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(it)))
-                    }
-                    peer.preSharedKey?.let {
-                        fmt.format(
-                            "preshared_key=%s\n",
-                            KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(it))
-                        )
-                    }
-                    peer.endpoint?.let {
-                        fmt.format("endpoint=%s\n", peer.resolvedEndpointString)
-                    }
-                    if (peer.persistentKeepalive != 0)
-                        fmt.format("persistent_keepalive_interval=%d\n", peer.persistentKeepalive)
-                    peer.allowedIPs.forEach {
-                        fmt.format("allowed_ip=%s\n", it.toString())
-                    }
-                }
-                goConfig = fmt.toString()
-            }
+            val goConfig = config.toWgUserspaceString()
 
             // Create the vpn tunnel with android API
             val builder = service.getBuilder()
@@ -169,7 +135,7 @@ class GoBackend(context: Context) : Backend {
                 builder.addAddress(addr.address, addr.mask)
             }
 
-            config.`interface`.getDnses().forEach { dns ->
+            config.`interface`.getDnsServers().forEach { dns ->
                 builder.addDnsServer(dns.hostAddress)
             }
 
@@ -185,12 +151,12 @@ class GoBackend(context: Context) : Backend {
             builder.setBlocking(true)
             builder.establish().use { tun ->
                 if (tun == null)
-                    throw Exception("Unable to create tun device")
+                    throw Exception(context.getString(R.string.tun_create_error))
                 Timber.d("Go backend v%s", wgVersion())
                 currentTunnelHandle = wgTurnOn(tunnel!!.name, tun.detachFd(), goConfig)
             }
             if (currentTunnelHandle < 0)
-                throw Exception("Unable to turn tunnel on (wgTurnOn return $currentTunnelHandle)")
+                throw Exception(context.getString(R.string.tunnel_on_error, currentTunnelHandle))
 
             currentTunnel = tunnel
 

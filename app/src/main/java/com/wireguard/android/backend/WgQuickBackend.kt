@@ -25,21 +25,17 @@ import java.io.File
 import java.io.FileOutputStream
 import java.nio.charset.StandardCharsets
 import java.util.ArrayList
+import java.util.Locale
 import java.util.Objects
 
 /**
  * WireGuard backend that uses `wg-quick` to implement tunnel configuration.
  */
 
-class WgQuickBackend(context: Context) : Backend {
+class WgQuickBackend(private var context: Context) : Backend {
 
     private val localTemporaryDir: File = File(context.cacheDir, "tmp")
     private var notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(context)
-    private var context: Context
-
-    init {
-        this.context = context
-    }
 
     @Throws(Exception::class)
     override fun getVersion(): String {
@@ -47,7 +43,7 @@ class WgQuickBackend(context: Context) : Backend {
         if (Application.rootShell
                 .run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty()
         )
-            throw Exception("Unable to determine kernel module version")
+            throw Exception(context.getString(R.string.module_version_error))
         return output[0]
     }
 
@@ -117,10 +113,10 @@ class WgQuickBackend(context: Context) : Backend {
         FileOutputStream(
             tempFile,
             false
-        ).use { stream -> stream.write(config?.toString()?.toByteArray(StandardCharsets.UTF_8)) }
+        ).use { stream -> stream.write(config?.toWgQuickString()?.toByteArray(StandardCharsets.UTF_8)) }
         var command = String.format(
             "wg-quick %s '%s'",
-            state.toString().toLowerCase(), tempFile.absolutePath
+            state.toString().toLowerCase(Locale.ENGLISH), tempFile.absolutePath
         )
         if (state == State.UP)
             command = "cat /sys/module/wireguard/version && $command"
@@ -129,7 +125,7 @@ class WgQuickBackend(context: Context) : Backend {
         tempFile.delete()
         when (result) {
             0 -> postNotification(state, tunnel)
-            else -> throw Exception("Unable to configure tunnel (wg-quick returned $result)")
+            else -> throw Exception(context.getString(R.string.tunnel_config_error))
         }
     }
 
