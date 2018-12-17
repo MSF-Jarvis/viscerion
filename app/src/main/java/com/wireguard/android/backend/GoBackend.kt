@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.collection.ArraySet
 import com.wireguard.android.Application
+import com.wireguard.android.R
 import com.wireguard.android.activity.MainActivity
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ExceptionLoggers
@@ -90,8 +91,8 @@ class GoBackend(context: Context) : Backend {
         return wgVersion()
     }
 
-    override fun getTypeName(): String {
-        return "Go userspace"
+    override fun getTypePrettyName(): String {
+        return context.getString(R.string.type_name_go_userspace)
     }
 
     @Throws(Exception::class)

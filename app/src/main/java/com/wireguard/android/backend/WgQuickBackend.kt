@@ -35,7 +35,11 @@ class WgQuickBackend(context: Context) : Backend {
 
     private val localTemporaryDir: File = File(context.cacheDir, "tmp")
     private var notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(context)
-    private var cachedContext: Context = context
+    private var context: Context
+
+    init {
+        this.context = context
+    }
 
     @Throws(Exception::class)
     override fun getVersion(): String {
@@ -47,8 +51,8 @@ class WgQuickBackend(context: Context) : Backend {
         return output[0]
     }
 
-    override fun getTypeName(): String {
-        return "Kernel module"
+    override fun getTypePrettyName(): String {
+        return context.getString(R.string.type_name_kernel_module)
     }
 
     @Throws(Exception::class)
@@ -133,14 +137,14 @@ class WgQuickBackend(context: Context) : Backend {
         if (tunnel == null || state == null)
             return
         if (state == State.UP) {
-            val intent = Intent(cachedContext, MainActivity::class.java)
+            val intent = Intent(context, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-            val pendingIntent = PendingIntent.getActivity(cachedContext, 0, intent, 0)
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
             val builder = NotificationCompat.Builder(
-                cachedContext,
+                context,
                 TunnelManager.NOTIFICATION_CHANNEL_ID
             )
-            builder.setContentTitle(cachedContext.getString(R.string.notification_channel_wgquick_title))
+            builder.setContentTitle(context.getString(R.string.notification_channel_wgquick_title))
                 .setContentText(tunnel.name)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
