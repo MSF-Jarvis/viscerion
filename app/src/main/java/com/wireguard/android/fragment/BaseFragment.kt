@@ -15,7 +15,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.Application
-import com.wireguard.android.R
 import com.wireguard.android.activity.BaseActivity
 import com.wireguard.android.activity.BaseActivity.OnSelectedTunnelChangedListener
 import com.wireguard.android.backend.GoBackend
@@ -23,7 +22,7 @@ import com.wireguard.android.databinding.TunnelDetailFragmentBinding
 import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.State
-import com.wireguard.android.util.ExceptionLoggers
+import com.wireguard.android.util.ErrorMessages
 import timber.log.Timber
 
 /**
@@ -103,7 +102,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
     private fun setTunnelStateWithPermissionsResult(tunnel: Tunnel, checked: Boolean) {
         tunnel.setState(State.of(checked)).whenComplete { _, throwable ->
             if (throwable == null) return@whenComplete
-            val error = ExceptionLoggers.unwrapMessage(throwable)
+            val error = ErrorMessages[throwable]
             val messageResId = if (checked) R.string.error_up else R.string.error_down
             val message = context?.getString(messageResId, error)
             val view = view

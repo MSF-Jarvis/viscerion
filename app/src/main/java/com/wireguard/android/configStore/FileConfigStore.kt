@@ -6,6 +6,7 @@
 package com.wireguard.android.configStore
 
 import android.content.Context
+import com.wireguard.android.R
 import com.wireguard.config.Config
 import timber.log.Timber
 import java.io.File
@@ -26,11 +27,11 @@ class FileConfigStore(private val context: Context) : ConfigStore {
         Timber.tag(TAG).d("Creating configuration for tunnel $name")
         val file = fileFor(name)
         if (!file.createNewFile())
-            throw IOException("Configuration file ${file.name} already exists")
+            throw IOException(context.getString(R.string.config_file_exists_error, file.name))
         FileOutputStream(
             file,
             false
-        ).use { stream -> stream.write(config.toString().toByteArray(StandardCharsets.UTF_8)) }
+        ).use { stream -> stream.write(config.toWgQuickString().toByteArray(StandardCharsets.UTF_8)) }
         return config
     }
 
@@ -39,7 +40,7 @@ class FileConfigStore(private val context: Context) : ConfigStore {
         Timber.tag(TAG).d("Deleting configuration for tunnel $name")
         val file = fileFor(name)
         if (!file.delete())
-            throw IOException("Cannot delete configuration file ${file.name}")
+            throw IOException(context.getString(R.string.config_delete_error, file.name))
     }
 
     override fun enumerate(): Set<String> {
@@ -64,11 +65,11 @@ class FileConfigStore(private val context: Context) : ConfigStore {
         val file = fileFor(name)
         val replacementFile = fileFor(replacement)
         if (!replacementFile.createNewFile())
-            throw IOException("Configuration for $replacement already exists")
+            throw IOException(context.getString(R.string.config_exists_error, replacement))
         if (!file.renameTo(replacementFile)) {
             if (!replacementFile.delete())
                 Timber.tag(TAG).w("Couldn't delete marker file for new name $replacement")
-            throw IOException("Cannot rename configuration file ${file.name}")
+            throw IOException(context.getString(R.string.config_rename_error, file.name))
         }
     }
 
@@ -77,11 +78,11 @@ class FileConfigStore(private val context: Context) : ConfigStore {
         Timber.tag(TAG).d("Saving configuration for tunnel $name")
         val file = fileFor(name)
         if (!file.isFile)
-            throw FileNotFoundException("Configuration file ${file.name} not found")
+            throw FileNotFoundException(context.getString(R.string.config_not_found_error, file.getName()))
         FileOutputStream(
             file,
             false
-        ).use { stream -> stream.write(config.toString().toByteArray(StandardCharsets.UTF_8)) }
+        ).use { stream -> stream.write(config.toWgQuickString().toByteArray(StandardCharsets.UTF_8)) }
         return config
     }
 

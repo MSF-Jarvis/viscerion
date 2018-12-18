@@ -8,9 +8,12 @@
 package com.wireguard.android.databinding
 
 import android.text.InputFilter
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.Nullable
 import androidx.databinding.BindingAdapter
+import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableList
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.adapters.ListenerUtil
@@ -21,6 +24,10 @@ import com.wireguard.android.util.ObservableKeyedList
 import com.wireguard.android.widget.ToggleSwitch
 import com.wireguard.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener
 import com.wireguard.util.Keyed
+import com.wireguard.config.InetNetwork
+import androidx.databinding.adapters.TextViewBindingAdapter.setText
+import com.wireguard.config.Attribute
+import java9.util.Optional
 
 /**
  * Static methods for use by generated code in the Android data binding library.
@@ -34,6 +41,29 @@ fun setChecked(view: ToggleSwitch, checked: Boolean) {
 @BindingAdapter("filter")
 fun setFilter(view: TextView, filter: InputFilter) {
     view.filters = arrayOf(filter)
+}
+
+@BindingAdapter("items", "layout")
+fun <E> setItems(
+    view: LinearLayout,
+    oldList: Iterable<E>?,
+    oldLayoutId: Int,
+    newList: Iterable<E>?,
+    newLayoutId: Int
+) {
+    if (oldList == newList && oldLayoutId == newLayoutId)
+        return
+    view.removeAllViews()
+    if (newList == null)
+        return
+    val layoutInflater = LayoutInflater.from(view.context)
+    newList.forEach { item ->
+        val binding: ViewDataBinding = DataBindingUtil.inflate(layoutInflater, newLayoutId, view, false)
+        binding.setVariable(BR.collection, newList)
+        binding.setVariable(BR.item, item)
+        binding.executePendingBindings()
+        view.addView(binding.root)
+    }
 }
 
 @BindingAdapter("items", "layout")
@@ -108,4 +138,18 @@ fun setOnBeforeCheckedChanged(
     listener: OnBeforeCheckedChangeListener? = null
 ) {
     view.setOnBeforeCheckedChangeListener(listener)
+}
+
+@BindingAdapter("android:text")
+fun setText(view: TextView, text: Optional<*>) {
+    view.text = try {
+        text.toString()
+    } catch (ignored: Exception) {
+        ""
+    }
+}s
+
+@BindingAdapter("android:text")
+fun setText(view: TextView, @Nullable networks: Iterable<InetNetwork>?) {
+    view.text = if (networks != null) Attribute.join(networks) else ""
 }
