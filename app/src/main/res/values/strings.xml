@@ -161,4 +161,13 @@
     <string name="zip_export_title">Export tunnels to zip file</string>
     <string name="key_length_error">Incorrect key length</string>
     <string name="key_contents_error">Bad characters in key</string>
+    <string name="notification_channel_wgquick_title">wg-quick tunnel enabled</string>
+    <string name="notification_channel_wgquick_desc">Persistent, disableable notification to denote when a wg-quick tunnel is up</string>
+    <string name="global_exclusions_title">Global exclusions</string>
+    <string name="global_exclusions_summary">Select applications to be excluded from all WireGuard tunnels by default</string>
+    <string name="applist_dialog_success">Saved successfully</string>
+    <string name="force_userspace_backend_title">Force userspace backend</string>
+    <string name="force_userspace_backend_summary">Useful for debugging Go userspace issues when device has a kernel
+        module installed. Application will restart upon toggling this.
+    </string>
 </resources>
