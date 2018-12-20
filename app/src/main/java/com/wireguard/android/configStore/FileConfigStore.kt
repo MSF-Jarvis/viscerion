@@ -7,6 +7,7 @@ package com.wireguard.android.configStore
 
 import android.content.Context
 import com.wireguard.android.R
+import com.wireguard.config.BadConfigException
 import com.wireguard.config.Config
 import timber.log.Timber
 import java.io.File
@@ -54,9 +55,9 @@ class FileConfigStore(private val context: Context) : ConfigStore {
         return File(context.filesDir, "$name.conf")
     }
 
-    @Throws(IOException::class)
+    @Throws(IOException::class, BadConfigException::class)
     override fun load(name: String): Config {
-        FileInputStream(fileFor(name)).use { stream -> return Config.from(stream) }
+        FileInputStream(fileFor(name)).use { stream -> return Config.parse(stream) }
     }
 
     @Throws(IOException::class)
@@ -78,7 +79,7 @@ class FileConfigStore(private val context: Context) : ConfigStore {
         Timber.tag(TAG).d("Saving configuration for tunnel $name")
         val file = fileFor(name)
         if (!file.isFile)
-            throw FileNotFoundException(context.getString(R.string.config_not_found_error, file.getName()))
+            throw FileNotFoundException(context.getString(R.string.config_not_found_error, file.name))
         FileOutputStream(
             file,
             false

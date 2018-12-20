@@ -26,6 +26,7 @@ import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
+import com.jakewharton.threetenabp.AndroidThreeTen
 import java9.util.concurrent.CompletableFuture
 import timber.log.Timber
 import java.io.File
@@ -99,6 +100,7 @@ class Application : android.app.Application() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannel()
+        AndroidThreeTen.init(this)
     }
 
     companion object {

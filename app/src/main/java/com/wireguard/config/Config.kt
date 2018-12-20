@@ -143,7 +143,7 @@ class Config private constructor(builder: Builder) {
          * @return a `Config` instance representing the supplied configuration
          */
         @Throws(IOException::class, BadConfigException::class)
-        fun parse(stream: InputStream): Config {
+        fun parse(stream: InputStream?): Config {
             return parse(BufferedReader(InputStreamReader(stream)))
         }
 

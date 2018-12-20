@@ -5,7 +5,6 @@
 
 package com.wireguard.config
 
-import com.wireguard.crypto.ParseException
 import java9.util.Optional
 import java.net.Inet4Address
 import java.net.InetAddress
@@ -94,13 +93,13 @@ class InetEndpoint private constructor(val host: String, private val isResolved:
 
             if (uri.port < 0 || uri.port > 65535)
                 throw ParseException(InetEndpoint::class.java, endpoint, "Missing/invalid port number")
-            try {
+            return try {
                 InetAddresses.parse(uri.host)
                 // Parsing ths host as a numeric address worked, so we don't need to do DNS lookups.
-                return InetEndpoint(uri.host, true, uri.port)
+                InetEndpoint(uri.host, true, uri.port)
             } catch (ignored: ParseException) {
                 // Failed to parse the host as a numeric address, so it must be a DNS hostname/FQDN.
-                return InetEndpoint(uri.host, false, uri.port)
+                InetEndpoint(uri.host, false, uri.port)
             }
         }
     }

@@ -13,7 +13,6 @@ import com.wireguard.android.util.SharedLibraryLoader
 import com.wireguard.config.Config
 import java9.util.concurrent.CompletableFuture
 import timber.log.Timber
-import java.util.Objects
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
@@ -96,7 +95,8 @@ class GoBackend(private var context: Context) : Backend {
         if (state == Tunnel.State.UP) {
             Timber.i("Bringing tunnel up")
 
-            Objects.requireNonNull<Config>(config, context.getString(R.string.no_config_error))
+            if (config == null)
+                throw NullPointerException(context.getString(R.string.no_config_error))
 
             if (VpnService.prepare(this.context) != null)
                 throw Exception(context.getString(R.string.vpn_not_authorized_error))
@@ -127,26 +127,25 @@ class GoBackend(private var context: Context) : Backend {
             configureIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             builder.setConfigureIntent(PendingIntent.getActivity(context, 0, configureIntent, 0))
 
-            config.`interface`.getExcludedApplications().forEach { excludedApplication ->
+            config.`interface`.excludedApplications.forEach { excludedApplication ->
                 builder.addDisallowedApplication(excludedApplication)
             }
 
-            config.`interface`.getAddresses().forEach { addr ->
+            config.`interface`.addresses.forEach { addr ->
                 builder.addAddress(addr.address, addr.mask)
             }
 
-            config.`interface`.getDnsServers().forEach { dns ->
+            config.`interface`.dnsServers.forEach { dns ->
                 builder.addDnsServer(dns.hostAddress)
             }
 
-            config.getPeers().forEach { peer ->
-                peer.allowedIPs.forEach { addr ->
+            config.peers.forEach { peer ->
+                peer.allowedIps.forEach { addr ->
                     builder.addRoute(addr.address, addr.mask)
                 }
             }
 
-            val mtu = if (config.`interface`.getMtu() != 0) config.`interface`.getMtu() else 1280
-            builder.setMtu(mtu)
+            builder.setMtu(config.`interface`.mtu.orElse(1280))
 
             builder.setBlocking(true)
             builder.establish().use { tun ->

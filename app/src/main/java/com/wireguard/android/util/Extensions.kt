@@ -13,6 +13,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.SystemClock
+import android.text.TextUtils
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.View
@@ -20,8 +21,9 @@ import androidx.preference.Preference
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.wireguard.android.activity.SettingsActivity
-import com.wireguard.config.Attribute
+import com.wireguard.config.Attribute.Companion.LIST_SEPARATOR
 
+/*
 fun <T> ArrayList<T>.addExclusive(otherArray: ArrayList<T>): ArrayList<T> {
     otherArray.forEach {
         if (it !in this)
@@ -45,6 +47,17 @@ fun String?.addExclusive(otherArray: ArrayList<String>): String {
             stringCopy.add(it)
     }
     return Attribute.iterableToString(stringCopy)
+}
+*/
+
+fun String.toList(): List<String> {
+    if (TextUtils.isEmpty(this))
+        return emptyList()
+    return LIST_SEPARATOR.split(this.trim()).toList()
+}
+
+fun <T> List<T>.asString(): String {
+    return TextUtils.join(", ", this)
 }
 
 fun Context.restartApplication() {

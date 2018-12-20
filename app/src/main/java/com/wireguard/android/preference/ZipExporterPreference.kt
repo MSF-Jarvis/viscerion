@@ -99,7 +99,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
     }
 
     override fun getTitle(): CharSequence {
-        return context.getString(R.string.zip_exporter_title)
+        return context.getString(R.string.zip_export_title)
     }
 
     override fun onClick() {

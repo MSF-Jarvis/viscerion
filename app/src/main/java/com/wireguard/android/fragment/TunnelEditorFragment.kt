@@ -16,8 +16,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
-import androidx.databinding.Observable
-import androidx.databinding.ObservableList
 import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.Application
 import com.wireguard.android.R
@@ -25,13 +23,10 @@ import com.wireguard.android.databinding.TunnelEditorFragmentBinding
 import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ErrorMessages
-import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.android.widget.KeyInputFilter
 import com.wireguard.android.widget.NameInputFilter
-import com.wireguard.config.Attribute
 import com.wireguard.config.Config
-import com.wireguard.config.Peer
 import timber.log.Timber
 import java.util.Objects
 
@@ -128,7 +123,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.menu_action_save -> {
-                val newConfig: Config
+                val newConfig: Config?
                 try {
                     newConfig = binding?.config?.resolve()
                 } catch (e: Exception) {
@@ -156,13 +151,13 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                         tunnel?.let {
                             Timber.d("Attempting to rename tunnel to %s", binding?.name)
                             it.setName(binding?.name ?: "")
-                                .whenComplete { _, b -> onTunnelRenamed(it, newConfig, b) }
+                                .whenComplete { _, b -> onTunnelRenamed(it, newConfig!!, b) }
                         }
                     }
                     else -> {
                         tunnel?.let {
                             Timber.d("Attempting to save config of %s", it.name)
-                            it.setConfig(newConfig).whenComplete { _, b -> onConfigSaved(it, b) }
+                            it.setConfig(newConfig!!).whenComplete { _, b -> onConfigSaved(it, b) }
                         }
                     }
                 }
@@ -252,7 +247,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     fun onRequestSetExcludedApplications(view: View) {
         val fragmentManager = fragmentManager
         if (fragmentManager != null && binding != null) {
-            val excludedApps = binding?.config?.`interface`?.getExcludedApplications()
+            val excludedApps = ArrayList<String>(binding?.config?.`interface`?.getExcludedApplications())
             val fragment = AppListDialogFragment.newInstance(excludedApps, target = this)
             fragment.show(fragmentManager, null)
         }
@@ -264,8 +259,8 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             "Tried to set excluded apps while no view was loaded"
         )
         val excludedApplications = binding?.config?.`interface`?.getExcludedApplications()
-        excludedApplications.clear()
-        excludedApplications.addAll(excludedApps)
+        excludedApplications?.clear()
+        excludedApplications?.addAll(excludedApps)
     }
 
     companion object {

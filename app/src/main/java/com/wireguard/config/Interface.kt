@@ -51,7 +51,7 @@ class Interface private constructor(builder: Builder) {
      * @return a set of package names
      */
     // The collection is already immutable.
-    val excludedApplications: Set<String>
+    var excludedApplications: Set<String>
     /**
      * Returns the public/private key pair used by the interface.
      *

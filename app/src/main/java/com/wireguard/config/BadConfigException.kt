@@ -43,7 +43,7 @@ class BadConfigException private constructor(
         cause: ParseException
     ) : this(section, location, Reason.INVALID_VALUE, cause.text, cause)
 
-    enum class Location(val name: String) {
+    enum class Location(val title: String) {
         TOP_LEVEL(""),
         ADDRESS("Address"),
         ALLOWED_IPS("AllowedIPs"),
@@ -70,9 +70,11 @@ class BadConfigException private constructor(
         UNKNOWN_SECTION
     }
 
-    enum class Section(val name: String) {
+    enum class Section(val title: String) {
         CONFIG("Config"),
         INTERFACE("Interface"),
         PEER("Peer")
+
+
     }
 }

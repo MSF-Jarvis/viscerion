@@ -19,14 +19,14 @@ import androidx.databinding.ViewDataBinding
 import androidx.databinding.adapters.ListenerUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.wireguard.android.BR
 import com.wireguard.android.R
 import com.wireguard.android.util.ObservableKeyedList
 import com.wireguard.android.widget.ToggleSwitch
 import com.wireguard.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener
-import com.wireguard.util.Keyed
-import com.wireguard.config.InetNetwork
-import androidx.databinding.adapters.TextViewBindingAdapter.setText
 import com.wireguard.config.Attribute
+import com.wireguard.config.InetNetwork
+import com.wireguard.util.Keyed
 import java9.util.Optional
 
 /**
