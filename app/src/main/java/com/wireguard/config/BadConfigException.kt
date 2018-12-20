@@ -7,7 +7,6 @@ package com.wireguard.config
 
 import androidx.annotation.Nullable
 import com.wireguard.crypto.KeyFormatException
-import com.wireguard.crypto.ParseException
 
 class BadConfigException private constructor(
     val section: Section,
@@ -44,7 +43,7 @@ class BadConfigException private constructor(
         cause: ParseException
     ) : this(section, location, Reason.INVALID_VALUE, cause.text, cause)
 
-    enum class Location private constructor(val name: String) {
+    enum class Location(val name: String) {
         TOP_LEVEL(""),
         ADDRESS("Address"),
         ALLOWED_IPS("AllowedIPs"),
@@ -71,7 +70,7 @@ class BadConfigException private constructor(
         UNKNOWN_SECTION
     }
 
-    enum class Section private constructor(val name: String) {
+    enum class Section(val name: String) {
         CONFIG("Config"),
         INTERFACE("Interface"),
         PEER("Peer")

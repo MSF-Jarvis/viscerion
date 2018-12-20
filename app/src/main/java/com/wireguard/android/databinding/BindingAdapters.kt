@@ -147,7 +147,7 @@ fun setText(view: TextView, text: Optional<*>) {
     } catch (ignored: Exception) {
         ""
     }
-}s
+}
 
 @BindingAdapter("android:text")
 fun setText(view: TextView, @Nullable networks: Iterable<InetNetwork>?) {

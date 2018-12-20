@@ -18,7 +18,6 @@ import com.wireguard.config.BadConfigException
 import com.wireguard.config.Peer
 import java9.util.Lists
 import java9.util.Sets
-import java9.util.stream.Collectors
 import java9.util.stream.Stream
 import java.lang.ref.WeakReference
 import java.util.ArrayList
@@ -42,7 +41,7 @@ class PeerProxy : BaseObservable, Parcelable {
     private var totalPeers: Int = 0
 
     private val allowedIpsSet: Set<String>
-        get() = LinkedHashSet(Lists.of(Attribute.split(allowedIps)))
+        get() = LinkedHashSet(Attribute.split(allowedIps.toString()).toSet())
 
     val isAbleToExcludePrivateIps: Boolean
         @Bindable
@@ -96,10 +95,10 @@ class PeerProxy : BaseObservable, Parcelable {
     }
 
     constructor(other: Peer) {
-        allowedIps = Attribute.join(other.getAllowedIps())
-//        endpoint = other.endpoint!!.map(???({ it.toString() })).orElse("")
-//        persistentKeepalive = other.persistentKeepalive.map(???({ valueOf() })).orElse("")
-//        preSharedKey = other.preSharedKey!!.map(???({ it.toBase64() })).orElse("")
+        allowedIps = Attribute.join(other.allowedIps)
+        endpoint = other.endpoint?.map { it.toString() }?.orElse("")
+        persistentKeepalive = other.persistentKeepalive?.map { it.toString() }?.orElse("")
+        preSharedKey = other.preSharedKey?.map { it.toBase64() }?.orElse("")
         publicKey = other.publicKey!!.toBase64()
     }
 
@@ -121,27 +120,26 @@ class PeerProxy : BaseObservable, Parcelable {
         if (peerListListener == null)
             peerListListener = PeerListListener(this)
         peers.addOnListChangedCallback(peerListListener)
-        setTotalPeers(peers.size())
+        setTotalPeers(peers.size)
         this.owner = owner
     }
 
     private fun calculateAllowedIpsState() {
         val newState: AllowedIpsState
-        if (totalPeers == 1) {
+        newState = if (totalPeers == 1) {
             // String comparison works because we only care if allowedIps is a superset of one of
             // the above sets of (valid) *networks*. We are not checking for a superset based on
             // the individual addresses in each set.
             val networkStrings = allowedIpsSet
             // If allowedIps contains both the wildcard and the public networks, then private
             // networks aren't excluded!
-            if (networkStrings.containsAll(IPV4_WILDCARD))
-                newState = AllowedIpsState.CONTAINS_IPV4_WILDCARD
-            else if (networkStrings.containsAll(IPV4_PUBLIC_NETWORKS))
-                newState = AllowedIpsState.CONTAINS_IPV4_PUBLIC_NETWORKS
-            else
-                newState = AllowedIpsState.OTHER
+            when {
+                networkStrings.containsAll(IPV4_WILDCARD) -> AllowedIpsState.CONTAINS_IPV4_WILDCARD
+                networkStrings.containsAll(IPV4_PUBLIC_NETWORKS) -> AllowedIpsState.CONTAINS_IPV4_PUBLIC_NETWORKS
+                else -> AllowedIpsState.OTHER
+            }
         } else {
-            newState = AllowedIpsState.INVALID
+            AllowedIpsState.INVALID
         }
         if (newState != allowedIpsState) {
             allowedIpsState = newState
@@ -207,9 +205,9 @@ class PeerProxy : BaseObservable, Parcelable {
     }
 
     private fun setInterfaceDns(dnsServers: CharSequence?) {
-        val newDnsRoutes = Stream.of(Attribute.split(dnsServers))
-            .map({ server -> server + "/32" })
-            .collect(Collectors.toUnmodifiableList<T>())
+        val newDnsRoutes: Array<String> = Stream.of(Attribute.split(dnsServers ?: ""))
+            .map { server -> server + "/32" }
+            .toArray() as Array<String>
         if (allowedIpsState == AllowedIpsState.CONTAINS_IPV4_PUBLIC_NETWORKS) {
             val input = allowedIpsSet
             val output = LinkedHashSet<String>(input.size + 1)
@@ -279,7 +277,7 @@ class PeerProxy : BaseObservable, Parcelable {
         OTHER
     }
 
-    private class InterfaceDnsListener private constructor(peerProxy: PeerProxy) :
+    private class InterfaceDnsListener (peerProxy: PeerProxy) :
         Observable.OnPropertyChangedCallback() {
         private val weakPeerProxy: WeakReference<PeerProxy> = WeakReference(peerProxy)
 
@@ -298,7 +296,7 @@ class PeerProxy : BaseObservable, Parcelable {
         }
     }
 
-    private class PeerListListener private constructor(peerProxy: PeerProxy) :
+    private class PeerListListener (peerProxy: PeerProxy) :
         ObservableList.OnListChangedCallback<ObservableList<PeerProxy>>() {
         private val weakPeerProxy: WeakReference<PeerProxy> = WeakReference(peerProxy)
 

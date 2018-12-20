@@ -22,16 +22,16 @@ import com.wireguard.crypto.KeyPair
 
 import java9.util.stream.Collectors
 import java9.util.stream.StreamSupport
+import java.net.InetAddress
 
 class InterfaceProxy : BaseObservable, Parcelable {
 
-    val excludedApplications: ObservableList<String> = ObservableArrayList()
+    private val excludedApplications: ObservableList<String> = ObservableArrayList()
     private var addresses: String? = null
     private var dnsServers: String? = null
     private var listenPort: String? = null
     private var mtu: String? = null
     private var privateKey: String? = null
-    @get:Bindable
     var publicKey: String? = null
         private set
 
@@ -46,17 +46,17 @@ class InterfaceProxy : BaseObservable, Parcelable {
     }
 
     constructor(other: Interface) {
-        addresses = Attribute.join(other.getAddresses())
-        val dnsServerStrings = StreamSupport.stream(other.getDnsServers())
-            .map(Function<T, R> { it.getHostAddress() })
+        addresses = Attribute.join(other.addresses)
+        val dnsServerStrings = StreamSupport.stream(other.dnsServers)
+            .map(InetAddress::getHostAddress)
             .collect(Collectors.toUnmodifiableList<Any>())
         dnsServers = Attribute.join(dnsServerStrings)
-        excludedApplications.addAll(other.getExcludedApplications())
-//       listenPort = other.getListenPort().map(???({ valueOf() })).orElse("")
-//        mtu = other.getMtu().map(???({ valueOf() })).orElse("")
-        val keyPair = other.getKeyPair()
-        privateKey = keyPair.getPrivateKey().toBase64()
-        publicKey = keyPair.getPublicKey().toBase64()
+        excludedApplications.addAll(other.excludedApplications)
+        listenPort = other.listenPort.map { toString() }.orElse("")
+        mtu = other.mtu.map { toString() }.orElse("")
+        val keyPair = other.keyPair
+        privateKey = keyPair.privateKey.toBase64()
+        publicKey = keyPair.publicKey.toBase64()
     }
 
     constructor() {
@@ -74,8 +74,8 @@ class InterfaceProxy : BaseObservable, Parcelable {
 
     fun generateKeyPair() {
         val keyPair = KeyPair()
-        privateKey = keyPair.getPrivateKey().toBase64()
-        publicKey = keyPair.getPublicKey().toBase64()
+        privateKey = keyPair.privateKey.toBase64()
+        publicKey = keyPair.publicKey.toBase64()
         notifyPropertyChanged(BR.privateKey)
         notifyPropertyChanged(BR.publicKey)
     }
@@ -88,6 +88,10 @@ class InterfaceProxy : BaseObservable, Parcelable {
     @Bindable
     fun getDnsServers(): String? {
         return dnsServers
+    }
+
+    fun getExcludedApplications(): ObservableList<String> {
+        return excludedApplications
     }
 
     @Bindable
@@ -109,17 +113,17 @@ class InterfaceProxy : BaseObservable, Parcelable {
     fun resolve(): Interface {
         val builder = Interface.Builder()
         if (!addresses!!.isEmpty())
-            builder.parseAddresses(addresses)
+            builder.parseAddresses(addresses!!)
         if (!dnsServers!!.isEmpty())
-            builder.parseDnsServers(dnsServers)
+            builder.parseDnsServers(dnsServers!!)
         if (!excludedApplications.isEmpty())
             builder.excludeApplications(excludedApplications)
         if (!listenPort!!.isEmpty())
-            builder.parseListenPort(listenPort)
+            builder.parseListenPort(listenPort!!)
         if (!mtu!!.isEmpty())
-            builder.parseMtu(mtu)
+            builder.parseMtu(mtu!!)
         if (!privateKey!!.isEmpty())
-            builder.parsePrivateKey(privateKey)
+            builder.parsePrivateKey(privateKey!!)
         return builder.build()
     }
 
@@ -145,10 +149,10 @@ class InterfaceProxy : BaseObservable, Parcelable {
 
     fun setPrivateKey(privateKey: String) {
         this.privateKey = privateKey
-        try {
-            publicKey = KeyPair(Key.fromBase64(privateKey)).getPublicKey().toBase64()
+        publicKey = try {
+            KeyPair(Key.fromBase64(privateKey)).publicKey.toBase64()
         } catch (ignored: KeyFormatException) {
-            publicKey = ""
+            ""
         }
 
         notifyPropertyChanged(BR.privateKey)
@@ -170,12 +174,13 @@ class InterfaceProxy : BaseObservable, Parcelable {
             return InterfaceProxy(`in`)
         }
 
-        override fun newArray(size: Int): Array<InterfaceProxy> {
+        override fun newArray(size: Int): Array<InterfaceProxy?> {
             return arrayOfNulls(size)
         }
     }
 
     companion object {
+        @JvmField
         val CREATOR: Parcelable.Creator<InterfaceProxy> = InterfaceProxyCreator()
     }
 }

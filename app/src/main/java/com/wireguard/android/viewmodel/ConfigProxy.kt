@@ -30,7 +30,7 @@ class ConfigProxy : Parcelable {
 
     constructor(other: Config) {
         `interface` = InterfaceProxy(other.`interface`)
-        for (peer in other.getPeers()) {
+        for (peer in other.peers) {
             val proxy = PeerProxy(peer)
             peers.add(proxy)
             proxy.bind(this)
@@ -65,7 +65,7 @@ class ConfigProxy : Parcelable {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeParcelable(`interface`, flags)
-        dest.writeTypedList<Parcelable>(peers)
+        dest.writeTypedList<Parcelable>(peers as List<Parcelable>?)
     }
 
     private class ConfigProxyCreator : Parcelable.Creator<ConfigProxy> {

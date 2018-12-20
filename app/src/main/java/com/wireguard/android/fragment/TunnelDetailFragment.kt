@@ -24,10 +24,6 @@ import com.wireguard.config.Config
 class TunnelDetailFragment : BaseFragment() {
     private var binding: TunnelDetailFragmentBinding? = null
 
-    private fun onConfigLoaded(name: String, config: Config) {
-        binding?.config = Config.Observable(config, name)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -59,7 +55,7 @@ class TunnelDetailFragment : BaseFragment() {
         if (newTunnel == null)
             binding?.config = null
         else
-            newTunnel.configAsync.thenAccept { a -> onConfigLoaded(newTunnel.name, a) }
+            newTunnel.configAsync.thenAccept { a -> binding?.setConfig(a) }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

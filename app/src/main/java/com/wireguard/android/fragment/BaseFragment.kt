@@ -15,6 +15,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.Application
+import com.wireguard.android.R
 import com.wireguard.android.activity.BaseActivity
 import com.wireguard.android.activity.BaseActivity.OnSelectedTunnelChangedListener
 import com.wireguard.android.backend.GoBackend
