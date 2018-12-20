@@ -14,7 +14,6 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.Arrays
 
 /**
  * Helper to install WireGuard tools to the system partition.
@@ -84,7 +83,7 @@ class ToolsInstaller(context: Context) {
 
     @Synchronized
     private fun willInstallAsMagiskModule(): Boolean {
-        val magiskDirectory = getMagiskDirectory
+        val magiskDirectory = getMagiskDirectory()
         if (installAsMagiskModule == null) {
             installAsMagiskModule = try {
                 Application.rootShell.run(
@@ -123,7 +122,7 @@ class ToolsInstaller(context: Context) {
     @Throws(NoRootException::class)
     private fun installMagisk(): Int {
         val script = StringBuilder("set -ex; ")
-        val magiskDirectory = "$getMagiskDirectory/img/wireguard"
+        val magiskDirectory = "${getMagiskDirectory()}/img/wireguard"
 
         script.append("trap 'rm -rf $magiskDirectory' INT TERM EXIT; ")
         script.append(
@@ -210,19 +209,19 @@ class ToolsInstaller(context: Context) {
         private val installDir: File?
             get() {
                 val path = System.getenv("PATH") ?: return INSTALL_DIRS[0]
-                val paths = Arrays.asList(*path.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
+                val paths = path.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toList()
                 for (dir in INSTALL_DIRS) {
                     if (paths.contains(dir.path) && dir.isDirectory)
                         return dir
                 }
                 return null
             }
-        private val getMagiskDirectory: String
-            get() {
+        private fun getMagiskDirectory(): String {
                 val output = ArrayList<String>()
                 Application.rootShell.run(output, "su --version | cut -d ':' -f 1")
-                return when (output[0]) {
-                    "18.0" -> "/sbin/.magisk"
+                val magiskVer = output[0]
+                return when {
+                    magiskVer.startsWith("18.") -> "/sbin/.magisk"
                     else -> "/sbin/.core"
                 }
             }

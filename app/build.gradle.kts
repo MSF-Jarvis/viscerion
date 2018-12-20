@@ -1,7 +1,8 @@
 import java.io.FileInputStream
-import java.util.Properties
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.IOException
+import java.util.Properties
+import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.application")
@@ -30,8 +31,8 @@ android {
         applicationId = "me.msfjarvis.wgandroid"
         minSdkVersion(21)
         targetSdkVersion(28)
-        versionCode = 1001
-        versionName = "1.0.1"
+        versionCode = 1002
+        versionName = "1.0.2"
         buildConfigField("int", "MIN_SDK_VERSION", "21")
         setProperty("archivesBaseName", "wg-android_${gitHash()}")
     }
@@ -51,7 +52,7 @@ android {
             create(buildTypeRelease) {
                 keyAlias = keystoreProperties["keyAlias"].toString()
                 keyPassword = keystoreProperties["keyPassword"].toString()
-                storeFile = rootProject.file(keystoreProperties["storeFile"].toString())
+                storeFile = file(keystoreProperties["storeFile"].toString())
                 storePassword = keystoreProperties["storePassword"].toString()
             }
         }
@@ -98,7 +99,7 @@ dependencies {
     implementation("com.journeyapps:zxing-android-embedded:3.6.0")
     implementation("net.sourceforge.streamsupport:android-retrofuture:1.7.0")
     implementation("net.sourceforge.streamsupport:android-retrostreams:1.7.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.10")
+    implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
 }
 
 repositories {
@@ -112,4 +113,8 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+kapt {
+    useBuildCache = true
 }
