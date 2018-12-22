@@ -43,7 +43,7 @@ object ErrorMessages {
     )
 
     private val PE_CLASS_MAP = mapOf<Class<*>, Int>(
-        InetAddress::class.java to  R.string.parse_error_inet_address,
+        InetAddress::class.java to R.string.parse_error_inet_address,
         InetEndpoint::class.java to R.string.parse_error_inet_endpoint,
         InetNetwork::class.java to R.string.parse_error_inet_network,
         Int::class.java to R.string.parse_error_integer

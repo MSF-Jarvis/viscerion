@@ -271,7 +271,7 @@ class PeerProxy : BaseObservable, Parcelable {
         OTHER
     }
 
-    private class InterfaceDnsListener (peerProxy: PeerProxy) :
+    private class InterfaceDnsListener(peerProxy: PeerProxy) :
         Observable.OnPropertyChangedCallback() {
         private val weakPeerProxy: WeakReference<PeerProxy> = WeakReference(peerProxy)
 
@@ -290,7 +290,7 @@ class PeerProxy : BaseObservable, Parcelable {
         }
     }
 
-    private class PeerListListener (peerProxy: PeerProxy) :
+    private class PeerListListener(peerProxy: PeerProxy) :
         ObservableList.OnListChangedCallback<ObservableList<PeerProxy>>() {
         private val weakPeerProxy: WeakReference<PeerProxy> = WeakReference(peerProxy)
 

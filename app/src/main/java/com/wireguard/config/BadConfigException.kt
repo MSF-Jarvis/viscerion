@@ -74,7 +74,5 @@ class BadConfigException private constructor(
         CONFIG("Config"),
         INTERFACE("Interface"),
         PEER("Peer")
-
-
     }
 }

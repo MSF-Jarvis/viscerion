@@ -11,8 +11,9 @@ import com.wireguard.config.BadConfigException.Section
 import com.wireguard.crypto.Key
 import com.wireguard.crypto.KeyFormatException
 import java9.util.Optional
-
-import java.util.*
+import java.util.Collections
+import java.util.Locale
+import java.util.Objects
 
 /**
  * Represents the configuration for a WireGuard peer (a [Peer] block). Peers must have a public key,
@@ -66,11 +67,11 @@ class Peer private constructor(builder: Builder) {
     override fun equals(other: Any?): Boolean {
         if (other !is Peer)
             return false
-        return (allowedIps == other.allowedIps
-            && endpoint == other.endpoint
-            && persistentKeepalive == other.persistentKeepalive
-            && preSharedKey == other.preSharedKey
-            && publicKey == other.publicKey)
+        return (allowedIps == other.allowedIps &&
+            endpoint == other.endpoint &&
+            persistentKeepalive == other.persistentKeepalive &&
+            preSharedKey == other.preSharedKey &&
+            publicKey == other.publicKey)
     }
 
     override fun hashCode(): Int {
@@ -126,7 +127,7 @@ class Peer private constructor(builder: Builder) {
         sb.append("public_key=").append(publicKey.toHex()).append('\n')
         for (allowedIp in allowedIps)
             sb.append("allowed_ip=").append(allowedIp).append('\n')
-        endpoint.flatMap(InetEndpoint::getResolved).ifPresent { ep -> sb.append("endpoint=").append(ep).append('\n')}
+        endpoint.flatMap(InetEndpoint::getResolved).ifPresent { ep -> sb.append("endpoint=").append(ep).append('\n') }
         persistentKeepalive.ifPresent { pk -> sb.append("persistent_keepalive_interval=").append(pk).append('\n') }
         preSharedKey.ifPresent { psk -> sb.append("preshared_key=").append(psk.toHex()).append('\n') }
         return sb.toString()

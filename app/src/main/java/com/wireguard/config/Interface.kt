@@ -20,7 +20,6 @@ import java.util.LinkedHashSet
 import java.util.Locale
 import java.util.Objects
 
-
 /**
  * Represents the configuration for a WireGuard interface (an [Interface] block). Interfaces must
  * have a private key (used to initialize a `KeyPair`), and may optionally have several other
@@ -85,12 +84,12 @@ class Interface private constructor(builder: Builder) {
         if (other !is Interface)
             return false
         val obj = other as Interface?
-        return (addresses == obj!!.addresses
-            && dnsServers == obj.dnsServers
-            && excludedApplications == obj.excludedApplications
-            && keyPair == obj.keyPair
-            && listenPort == obj.listenPort
-            && mtu == obj.mtu)
+        return (addresses == obj!!.addresses &&
+            dnsServers == obj.dnsServers &&
+            excludedApplications == obj.excludedApplications &&
+            keyPair == obj.keyPair &&
+            listenPort == obj.listenPort &&
+            mtu == obj.mtu)
     }
 
     override fun hashCode(): Int {

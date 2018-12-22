@@ -44,7 +44,7 @@ class InetEndpoint private constructor(val host: String, private val isResolved:
         if (isResolved)
             return Optional.of(this)
         synchronized(lock) {
-            //TODO(zx2c4): Implement a real timeout mechanism using DNS TTL
+            // TODO(zx2c4): Implement a real timeout mechanism using DNS TTL
             if (Duration.between(lastResolution, Instant.now()).toMinutes() > 1) {
                 try {
                     // Prefer v4 endpoints over v6 to work around DNS64 and IPv6 NAT issues.
