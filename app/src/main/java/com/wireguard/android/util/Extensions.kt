@@ -17,6 +17,7 @@ import android.text.TextUtils
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.View
+import android.widget.TextView
 import androidx.preference.Preference
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -90,13 +91,16 @@ fun Context.resolveAttribute(attr: Int): Int {
 }
 
 fun copyTextView(view: View) {
-    if (view !is TextInputEditText)
+    var isTextInput = false
+    if (view is TextInputEditText)
+        isTextInput = true
+    else if (view !is TextView)
         return
-    val text = view.editableText
+    val text = if (isTextInput) (view as TextInputEditText).editableText else (view as TextView).text
     if (text == null || text.isEmpty())
         return
-    val service = view.getContext().getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return
-    val description = view.hint
+    val service = view.context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return
+    val description = if (isTextInput) (view as TextInputEditText).hint else view.contentDescription
     service.primaryClip = ClipData.newPlainText(description, text)
     Snackbar.make(view, description.toString() + " copied to clipboard", Snackbar.LENGTH_LONG).show()
 }
