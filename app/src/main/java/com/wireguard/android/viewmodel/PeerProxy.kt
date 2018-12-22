@@ -16,8 +16,6 @@ import com.wireguard.android.BR
 import com.wireguard.config.Attribute
 import com.wireguard.config.BadConfigException
 import com.wireguard.config.Peer
-import java9.util.Lists
-import java9.util.Sets
 import java.lang.ref.WeakReference
 import java.util.ArrayList
 import java.util.LinkedHashSet
@@ -353,7 +351,7 @@ class PeerProxy : BaseObservable, Parcelable {
         @JvmField
         val CREATOR: Parcelable.Creator<PeerProxy> = PeerProxyCreator()
         private val IPV4_PUBLIC_NETWORKS = LinkedHashSet(
-            Lists.of(
+            listOf(
                 "0.0.0.0/5", "8.0.0.0/7", "11.0.0.0/8", "12.0.0.0/6", "16.0.0.0/4", "32.0.0.0/3",
                 "64.0.0.0/2", "128.0.0.0/3", "160.0.0.0/5", "168.0.0.0/6", "172.0.0.0/12",
                 "172.32.0.0/11", "172.64.0.0/10", "172.128.0.0/9", "173.0.0.0/8", "174.0.0.0/7",
@@ -362,6 +360,6 @@ class PeerProxy : BaseObservable, Parcelable {
                 "193.0.0.0/8", "194.0.0.0/7", "196.0.0.0/6", "200.0.0.0/5", "208.0.0.0/4"
             )
         )
-        private val IPV4_WILDCARD = Sets.of("0.0.0.0/0")
+        private val IPV4_WILDCARD = setOf("0.0.0.0/0")
     }
 }
