@@ -24,33 +24,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.config.Attribute.Companion.LIST_SEPARATOR
 
-/*
-fun <T> ArrayList<T>.addExclusive(otherArray: ArrayList<T>): ArrayList<T> {
-    otherArray.forEach {
-        if (it !in this)
-            this.add(it)
-    }
-    return this
-}
-
-fun <T> ArrayList<T>.addExclusive(otherArray: Array<T>): ArrayList<T> {
-    otherArray.forEach {
-        if (it !in this)
-            this.add(it)
-    }
-    return this
-}
-
-fun String?.addExclusive(otherArray: ArrayList<String>): String {
-    val stringCopy = Attribute.stringToList(this).toCollection(ArrayList())
-    otherArray.forEach {
-        if (it !in stringCopy)
-            stringCopy.add(it)
-    }
-    return Attribute.iterableToString(stringCopy)
-}
-*/
-
 fun String.toList(): List<String> {
     if (TextUtils.isEmpty(this))
         return emptyList()
