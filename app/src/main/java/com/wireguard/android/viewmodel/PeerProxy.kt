@@ -29,11 +29,8 @@ class PeerProxy : BaseObservable, Parcelable {
     private var allowedIps: String? = null
     private var allowedIpsState = AllowedIpsState.INVALID
     private var endpoint: String? = null
-    @Nullable
     private var interfaceDnsListener: InterfaceDnsListener? = null
-    @Nullable
     private var owner: ConfigProxy? = null
-    @Nullable
     private var peerListListener: PeerListListener? = null
     private var persistentKeepalive: String? = null
     private var preSharedKey: String? = null
@@ -96,10 +93,10 @@ class PeerProxy : BaseObservable, Parcelable {
 
     constructor(other: Peer) {
         allowedIps = Attribute.join(other.allowedIps)
-        endpoint = other.endpoint?.map { it.toString() }?.orElse("")
-        persistentKeepalive = other.persistentKeepalive?.map { it.toString() }?.orElse("")
-        preSharedKey = other.preSharedKey?.map { it.toBase64() }?.orElse("")
-        publicKey = other.publicKey!!.toBase64()
+        endpoint = other.endpoint.map { it.toString() }?.orElse("")
+        persistentKeepalive = other.persistentKeepalive.map { it.toString() }?.orElse("")
+        preSharedKey = other.preSharedKey.map { it.toBase64() }?.orElse("")
+        publicKey = other.publicKey.toBase64()
     }
 
     constructor() {
@@ -181,15 +178,15 @@ class PeerProxy : BaseObservable, Parcelable {
     fun resolve(): Peer {
         val builder = Peer.Builder()
         if (!allowedIps!!.isEmpty())
-            builder.parseAllowedIPs(allowedIps)
+            builder.parseAllowedIPs(allowedIps!!)
         if (!endpoint!!.isEmpty())
-            builder.parseEndpoint(endpoint)
+            builder.parseEndpoint(endpoint!!)
         if (!persistentKeepalive!!.isEmpty())
-            builder.parsePersistentKeepalive(persistentKeepalive)
+            builder.parsePersistentKeepalive(persistentKeepalive!!)
         if (!preSharedKey!!.isEmpty())
-            builder.parsePreSharedKey(preSharedKey)
+            builder.parsePreSharedKey(preSharedKey!!)
         if (!publicKey!!.isEmpty())
-            builder.parsePublicKey(publicKey)
+            builder.parsePublicKey(publicKey!!)
         return builder.build()
     }
 
