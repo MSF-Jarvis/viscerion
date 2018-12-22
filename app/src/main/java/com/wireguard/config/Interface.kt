@@ -5,6 +5,7 @@
 
 package com.wireguard.config
 
+import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.config.BadConfigException.Location
 import com.wireguard.config.BadConfigException.Reason
 import com.wireguard.config.BadConfigException.Section
@@ -133,7 +134,11 @@ class Interface private constructor(builder: Builder) {
             sb.append("DNS = ").append(Attribute.join(dnsServerStrings)).append('\n')
         }
         if (!excludedApplications.isEmpty())
-            sb.append("ExcludedApplications = ").append(Attribute.join(excludedApplications)).append('\n')
+            sb.append("ExcludedApplications = ").append(
+                Attribute.join(
+                    excludedApplications + ApplicationPreferences.exclusionsArray
+                )
+            ).append('\n')
         listenPort.ifPresent { lp -> sb.append("ListenPort = ").append(lp).append('\n') }
         mtu.ifPresent { m -> sb.append("MTU = ").append(m).append('\n') }
         sb.append("PrivateKey = ").append(keyPair.privateKey.toBase64()).append('\n')
@@ -204,6 +209,10 @@ class Interface private constructor(builder: Builder) {
 
         fun excludeApplications(applications: Collection<String>): Builder {
             excludedApplications.addAll(applications)
+            ApplicationPreferences.exclusionsArray.forEach { exclusion ->
+                if (exclusion !in excludedApplications)
+                    excludedApplications.add(exclusion)
+            }
             return this
         }
 
@@ -230,7 +239,11 @@ class Interface private constructor(builder: Builder) {
         }
 
         fun parseExcludedApplications(apps: CharSequence): Builder {
-            return excludeApplications(Attribute.split(apps).toList())
+            return excludeApplications(
+                Attribute.split(apps)
+                    .filter { it !in ApplicationPreferences.exclusionsArray }
+                    .toList()
+            )
         }
 
         @Throws(BadConfigException::class)
