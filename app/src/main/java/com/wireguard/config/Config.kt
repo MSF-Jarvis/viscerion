@@ -100,7 +100,7 @@ class Config private constructor(builder: Builder) {
         // No default; must be provided before building.
         var interfaze: Interface? = null
 
-        fun addPeer(peer: Peer): Builder {
+        private fun addPeer(peer: Peer): Builder {
             peers.add(peer)
             return this
         }
