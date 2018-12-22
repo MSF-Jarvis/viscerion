@@ -193,7 +193,7 @@ class GoBackend(private var context: Context) : Backend {
         override fun onDestroy() {
             Application.tunnelManager.getTunnels().thenAccept { tunnels ->
                 tunnels.forEach { tunnel ->
-                    if (tunnel != null && tunnel.state != Tunnel.State.DOWN)
+                    if (tunnel.state != Tunnel.State.DOWN)
                         tunnel.setState(Tunnel.State.DOWN)
                 }
             }
