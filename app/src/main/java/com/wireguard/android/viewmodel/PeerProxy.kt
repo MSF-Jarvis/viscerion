@@ -90,9 +90,9 @@ class PeerProxy : BaseObservable, Parcelable {
 
     constructor(other: Peer) {
         allowedIps = Attribute.join(other.allowedIps)
-        endpoint = other.endpoint.map { it.toString() }?.orElse("")
-        persistentKeepalive = other.persistentKeepalive.map { it.toString() }?.orElse("")
-        preSharedKey = other.preSharedKey.map { it.toBase64() }?.orElse("")
+        endpoint = other.endpoint.map { it.toString() }.orElse("")
+        persistentKeepalive = other.persistentKeepalive.map { it.toString() }.orElse("")
+        preSharedKey = other.preSharedKey.map { it.toBase64() }.orElse("")
         publicKey = other.publicKey.toBase64()
     }
 
