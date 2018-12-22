@@ -18,7 +18,6 @@ import com.wireguard.config.BadConfigException
 import com.wireguard.config.Peer
 import java9.util.Lists
 import java9.util.Sets
-import java9.util.stream.Stream
 import java.lang.ref.WeakReference
 import java.util.ArrayList
 import java.util.LinkedHashSet
@@ -202,9 +201,9 @@ class PeerProxy : BaseObservable, Parcelable {
     }
 
     private fun setInterfaceDns(dnsServers: CharSequence?) {
-        val newDnsRoutes: Array<String> = Stream.of(Attribute.split(dnsServers ?: ""))
-            .map { server -> server + "/32" }
-            .toArray() as Array<String>
+        val newDnsRoutes: Array<String> = Attribute.split(dnsServers ?: "")
+            .map { server -> "$server/32" }
+            .toTypedArray()
         if (allowedIpsState == AllowedIpsState.CONTAINS_IPV4_PUBLIC_NETWORKS) {
             val input = allowedIpsSet
             val output = LinkedHashSet<String>(input.size + 1)
