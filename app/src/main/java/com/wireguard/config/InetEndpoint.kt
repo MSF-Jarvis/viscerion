@@ -11,7 +11,6 @@ import java.net.InetAddress
 import java.net.URI
 import java.net.URISyntaxException
 import java.net.UnknownHostException
-import java.time.Instant
 import java.util.regex.Pattern
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
