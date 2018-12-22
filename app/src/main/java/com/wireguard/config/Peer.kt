@@ -161,7 +161,7 @@ class Peer private constructor(builder: Builder) {
             if (publicKey == null)
                 throw BadConfigException(
                     Section.PEER, Location.PUBLIC_KEY,
-                    Reason.MISSING_ATTRIBUTE, null!!
+                    Reason.MISSING_ATTRIBUTE, null
                 )
             return Peer(this)
         }

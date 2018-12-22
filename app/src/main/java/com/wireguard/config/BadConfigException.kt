@@ -21,7 +21,7 @@ class BadConfigException private constructor(
         section: Section,
         location: Location,
         reason: Reason,
-        @Nullable text: CharSequence
+        @Nullable text: CharSequence?
     ) : this(section, location, reason, text, null)
 
     constructor(
@@ -33,7 +33,7 @@ class BadConfigException private constructor(
     constructor(
         section: Section,
         location: Location,
-        @Nullable text: CharSequence,
+        @Nullable text: CharSequence?,
         cause: NumberFormatException
     ) : this(section, location, Reason.INVALID_NUMBER, text, cause)
 

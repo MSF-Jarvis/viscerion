@@ -192,7 +192,7 @@ class Interface private constructor(builder: Builder) {
             if (keyPair == null)
                 throw BadConfigException(
                     Section.INTERFACE, Location.PRIVATE_KEY,
-                    Reason.MISSING_ATTRIBUTE, null!!
+                    Reason.MISSING_ATTRIBUTE, null
                 )
             return Interface(this)
         }

@@ -208,7 +208,7 @@ class Config private constructor(builder: Builder) {
             else if (!inInterfaceSection)
                 throw BadConfigException(
                     Section.CONFIG, Location.TOP_LEVEL,
-                    Reason.MISSING_SECTION, null!!
+                    Reason.MISSING_SECTION, null
                 )
             // Combine all [Interface] sections in the file.
             builder.parseInterface(interfaceLines)
