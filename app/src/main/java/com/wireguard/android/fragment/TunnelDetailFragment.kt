@@ -54,7 +54,7 @@ class TunnelDetailFragment : BaseFragment() {
         if (newTunnel == null)
             binding?.config = null
         else
-            newTunnel.configAsync.thenAccept { a -> binding?.setConfig(a) }
+            newTunnel.configAsync.thenAccept { a -> binding?.config = a }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

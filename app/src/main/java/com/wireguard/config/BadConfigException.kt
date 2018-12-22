@@ -13,7 +13,7 @@ class BadConfigException private constructor(
     val location: Location,
     val reason: Reason,
     @param:Nullable @field:Nullable @get:Nullable
-        val text: CharSequence?,
+    val text: CharSequence?,
     @Nullable cause: Throwable?
 ) : Exception(cause) {
 

@@ -21,25 +21,25 @@ import java.net.InetAddress
 
 object ErrorMessages {
     private val BCE_REASON_MAP = mapOf(
-            Reason.INVALID_KEY to R.string.bad_config_reason_invalid_key,
-            Reason.INVALID_NUMBER to R.string.bad_config_reason_invalid_number,
-            Reason.INVALID_VALUE to R.string.bad_config_reason_invalid_value,
-            Reason.MISSING_ATTRIBUTE to R.string.bad_config_reason_missing_attribute,
-            Reason.MISSING_SECTION to R.string.bad_config_reason_missing_section,
-            Reason.MISSING_VALUE to R.string.bad_config_reason_missing_value,
-            Reason.SYNTAX_ERROR to R.string.bad_config_reason_syntax_error,
-            Reason.UNKNOWN_ATTRIBUTE to R.string.bad_config_reason_unknown_attribute,
-            Reason.UNKNOWN_SECTION to R.string.bad_config_reason_unknown_section
+        Reason.INVALID_KEY to R.string.bad_config_reason_invalid_key,
+        Reason.INVALID_NUMBER to R.string.bad_config_reason_invalid_number,
+        Reason.INVALID_VALUE to R.string.bad_config_reason_invalid_value,
+        Reason.MISSING_ATTRIBUTE to R.string.bad_config_reason_missing_attribute,
+        Reason.MISSING_SECTION to R.string.bad_config_reason_missing_section,
+        Reason.MISSING_VALUE to R.string.bad_config_reason_missing_value,
+        Reason.SYNTAX_ERROR to R.string.bad_config_reason_syntax_error,
+        Reason.UNKNOWN_ATTRIBUTE to R.string.bad_config_reason_unknown_attribute,
+        Reason.UNKNOWN_SECTION to R.string.bad_config_reason_unknown_section
     )
     private val KFE_FORMAT_MAP = mapOf(
-            Format.BASE64 to R.string.key_length_explanation_base64,
-            Format.BINARY to R.string.key_length_explanation_binary,
-            Format.HEX to R.string.key_length_explanation_hex
+        Format.BASE64 to R.string.key_length_explanation_base64,
+        Format.BINARY to R.string.key_length_explanation_binary,
+        Format.HEX to R.string.key_length_explanation_hex
     )
 
     private val KFE_TYPE_MAP = mapOf(
-            Type.CONTENTS to R.string.key_contents_error,
-            Type.LENGTH to R.string.key_length_error
+        Type.CONTENTS to R.string.key_contents_error,
+        Type.LENGTH to R.string.key_length_error
     )
 
     private val PE_CLASS_MAP = mapOf<Class<*>, Int>(

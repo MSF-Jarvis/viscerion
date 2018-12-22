@@ -17,6 +17,7 @@ import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
@@ -26,7 +27,6 @@ import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
-import com.jakewharton.threetenabp.AndroidThreeTen
 import java9.util.concurrent.CompletableFuture
 import timber.log.Timber
 import java.io.File

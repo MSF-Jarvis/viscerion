@@ -27,7 +27,10 @@ class VersionPreference(context: Context, attrs: AttributeSet) : Preference(cont
                     versionSummary = if (exception == null)
                         getContext().getString(R.string.version_summary, backend.getTypePrettyName(), version)
                     else
-                        getContext().getString(R.string.version_summary_unknown, backend.getTypePrettyName().toLowerCase())
+                        getContext().getString(
+                            R.string.version_summary_unknown,
+                            backend.getTypePrettyName().toLowerCase()
+                        )
                     notifyChanged()
                 }
         }

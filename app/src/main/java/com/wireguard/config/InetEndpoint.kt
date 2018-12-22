@@ -6,14 +6,14 @@
 package com.wireguard.config
 
 import java9.util.Optional
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import java.net.Inet4Address
 import java.net.InetAddress
 import java.net.URI
 import java.net.URISyntaxException
 import java.net.UnknownHostException
 import java.util.regex.Pattern
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
 
 /**
  * An external endpoint (host and port) used to connect to a WireGuard [Peer].
