@@ -5,7 +5,6 @@
 
 package com.wireguard.android.fragment
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -65,7 +64,7 @@ class AppListDialogFragment : DialogFragment() {
         return dialog
     }
 
-    @SuppressLint("InlinedApi") // Handled in the code
+    @Suppress("InlinedApi") // Handled in the code
     private fun loadData() {
         val activity = activity ?: return
         val seenPackages: ArrayList<String> = ArrayList()
