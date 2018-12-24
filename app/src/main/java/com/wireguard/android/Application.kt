@@ -17,7 +17,6 @@ import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import com.jakewharton.threetenabp.AndroidThreeTen
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
@@ -100,7 +99,6 @@ class Application : android.app.Application() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannel()
-        AndroidThreeTen.init(this)
     }
 
     companion object {
