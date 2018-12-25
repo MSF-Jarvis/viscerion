@@ -54,7 +54,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:onClick="@{ExtensionsKt::copyTextView}"
-                android:text="@{item.publicKey.toBase64()}" />
+                android:text="@{item.publicKey.toBase64}" />
 
             <TextView
                 android:id="@+id/allowed_ips_label"
