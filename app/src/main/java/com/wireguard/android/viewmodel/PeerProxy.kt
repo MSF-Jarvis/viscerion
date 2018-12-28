@@ -80,6 +80,10 @@ class PeerProxy : BaseObservable, Parcelable {
             notifyPropertyChanged(BR.excludingPrivateIps)
         }
 
+    fun toggleExcludePrivateIPs() {
+        isExcludingPrivateIps = !isExcludingPrivateIps
+    }
+
     private constructor(`in`: Parcel) {
         allowedIps = `in`.readString()
         endpoint = `in`.readString()

@@ -145,6 +145,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="@{() -> item.toggleExcludePrivateIPs()}"
                     android:text="@{item.excludingPrivateIps ? R.string.exclude_private_ips_on : R.string.exclude_private_ips_off}"
                     android:visibility="@{item.ableToExcludePrivateIps ? View.VISIBLE : View.GONE}"/>
 
