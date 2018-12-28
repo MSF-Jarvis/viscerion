@@ -48,8 +48,7 @@ class Config private constructor(builder: Builder) {
     override fun equals(other: Any?): Boolean {
         if (other !is Config)
             return false
-        val obj = other as Config?
-        return `interface` == obj!!.`interface` && peers == obj.peers
+        return `interface` == other.`interface` && peers == other.peers
     }
 
     override fun hashCode(): Int {

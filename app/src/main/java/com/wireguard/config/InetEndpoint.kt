@@ -29,8 +29,7 @@ class InetEndpoint private constructor(val host: String, private val isResolved:
     override fun equals(other: Any?): Boolean {
         if (other !is InetEndpoint)
             return false
-        val obj = other as InetEndpoint?
-        return host == obj!!.host && port == obj.port
+        return host == other.host && port == other.port
     }
 
     /**

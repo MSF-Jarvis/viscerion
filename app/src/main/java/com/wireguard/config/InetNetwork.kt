@@ -19,8 +19,7 @@ class InetNetwork private constructor(val address: InetAddress, val mask: Int) {
     override fun equals(other: Any?): Boolean {
         if (other !is InetNetwork)
             return false
-        val obj = other as InetNetwork?
-        return address == obj!!.address && mask == obj.mask
+        return address == other.address && mask == other.mask
     }
 
     override fun hashCode(): Int {
