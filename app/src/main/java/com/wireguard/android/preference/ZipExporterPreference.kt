@@ -70,7 +70,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
                         ZipOutputStream(FileOutputStream(file)).use { zip ->
                             for (i in futureConfigs.indices) {
                                 zip.putNextEntry(ZipEntry(tunnels[i].name + ".conf"))
-                                zip.write(futureConfigs[i].getNow(null).toString().toByteArray(StandardCharsets.UTF_8))
+                                zip.write(futureConfigs[i].getNow(null).toWgQuickString().toByteArray(StandardCharsets.UTF_8))
                             }
                             zip.closeEntry()
                         }
@@ -109,7 +109,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
     }
 
     override fun getTitle(): CharSequence {
-        return context.getString(R.string.zip_exporter_title)
+        return context.getString(R.string.zip_export_title)
     }
 
     override fun onClick() {
