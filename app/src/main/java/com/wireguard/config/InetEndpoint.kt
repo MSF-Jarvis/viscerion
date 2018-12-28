@@ -5,7 +5,6 @@
 
 package com.wireguard.config
 
-import java9.util.Optional
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.net.Inet4Address
@@ -37,11 +36,11 @@ class InetEndpoint private constructor(val host: String, private val isResolved:
      * to a numeric address. If the host is already numeric, the existing instance may be returned.
      * Because this function may perform network I/O, it must not be called from the main thread.
      *
-     * @return the resolved endpoint, or [Optional.empty]
+     * @return the resolved endpoint, or null
      */
-    fun getResolved(): Optional<InetEndpoint> {
+    fun getResolved(): InetEndpoint? {
         if (isResolved)
-            return Optional.of(this)
+            return this
         synchronized(lock) {
             // TODO(zx2c4): Implement a real timeout mechanism using DNS TTL
             if (Duration.between(lastResolution, Instant.now()).toMinutes() > 1) {
@@ -61,7 +60,7 @@ class InetEndpoint private constructor(val host: String, private val isResolved:
                     resolved = null
                 }
             }
-            return Optional.ofNullable(resolved)
+            return resolved
         }
     }
 

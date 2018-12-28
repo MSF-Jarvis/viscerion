@@ -10,7 +10,6 @@ import com.wireguard.config.BadConfigException.Reason
 import com.wireguard.config.BadConfigException.Section
 import com.wireguard.crypto.Key
 import com.wireguard.crypto.KeyFormatException
-import java9.util.Optional
 import java.util.Collections
 import java.util.Locale
 import java.util.Objects
@@ -33,21 +32,21 @@ class Peer private constructor(builder: Builder) {
     /**
      * Returns the peer's endpoint.
      *
-     * @return the endpoint, or `Optional.empty()` if none is configured
+     * @return the endpoint, or `null` if none is configured
      */
-    val endpoint: Optional<InetEndpoint>
+    val endpoint: InetEndpoint?
     /**
      * Returns the peer's persistent keepalive.
      *
-     * @return the persistent keepalive, or `Optional.empty()` if none is configured
+     * @return the persistent keepalive, or `null` if none is configured
      */
-    val persistentKeepalive: Optional<Int>
+    val persistentKeepalive: Int?
     /**
      * Returns the peer's pre-shared key.
      *
-     * @return the pre-shared key, or `Optional.empty()` if none is configured
+     * @return the pre-shared key, or `null` if none is configured
      */
-    val preSharedKey: Optional<Key>
+    val preSharedKey: Key?
     /**
      * Returns the peer's public key.
      *
@@ -93,7 +92,7 @@ class Peer private constructor(builder: Builder) {
     override fun toString(): String {
         val sb = StringBuilder("(Peer ")
         sb.append(publicKey.toBase64())
-        endpoint.ifPresent { ep -> sb.append(" @").append(ep) }
+        endpoint?.let { ep -> sb.append(" @").append(ep) }
         sb.append(')')
         return sb.toString()
     }
@@ -108,9 +107,9 @@ class Peer private constructor(builder: Builder) {
         val sb = StringBuilder()
         if (!allowedIps.isEmpty())
             sb.append("AllowedIPs = ").append(Attribute.join(allowedIps)).append('\n')
-        endpoint.ifPresent { ep -> sb.append("Endpoint = ").append(ep).append('\n') }
-        persistentKeepalive.ifPresent { pk -> sb.append("PersistentKeepalive = ").append(pk).append('\n') }
-        preSharedKey.ifPresent { psk -> sb.append("PreSharedKey = ").append(psk.toBase64()).append('\n') }
+        endpoint?.let { ep -> sb.append("Endpoint = ").append(ep).append('\n') }
+        persistentKeepalive?.let { pk -> sb.append("PersistentKeepalive = ").append(pk).append('\n') }
+        preSharedKey?.let { psk -> sb.append("PreSharedKey = ").append(psk.toBase64()).append('\n') }
         sb.append("PublicKey = ").append(publicKey.toBase64()).append('\n')
         return sb.toString()
     }
@@ -127,9 +126,9 @@ class Peer private constructor(builder: Builder) {
         sb.append("public_key=").append(publicKey.toHex()).append('\n')
         for (allowedIp in allowedIps)
             sb.append("allowed_ip=").append(allowedIp).append('\n')
-        endpoint.flatMap(InetEndpoint::getResolved).ifPresent { ep -> sb.append("endpoint=").append(ep).append('\n') }
-        persistentKeepalive.ifPresent { pk -> sb.append("persistent_keepalive_interval=").append(pk).append('\n') }
-        preSharedKey.ifPresent { psk -> sb.append("preshared_key=").append(psk.toHex()).append('\n') }
+        endpoint?.getResolved().let { ep -> sb.append("endpoint=").append(ep).append('\n') }
+        persistentKeepalive?.let { pk -> sb.append("persistent_keepalive_interval=").append(pk).append('\n') }
+        preSharedKey?.let { psk -> sb.append("preshared_key=").append(psk.toHex()).append('\n') }
         return sb.toString()
     }
 
@@ -138,11 +137,11 @@ class Peer private constructor(builder: Builder) {
         // Defaults to an empty set.
         val allowedIps = LinkedHashSet<InetNetwork>()
         // Defaults to not present.
-        var endpoint: Optional<InetEndpoint> = Optional.empty<InetEndpoint>()
+        var endpoint: InetEndpoint? = null
         // Defaults to not present.
-        var persistentKeepalive: Optional<Int> = Optional.empty<Int>()
+        var persistentKeepalive: Int? = 0
         // Defaults to not present.
-        var preSharedKey: Optional<Key> = Optional.empty<Key>()
+        var preSharedKey: Key? = null
         // No default; must be provided before building.
         var publicKey: Key? = null
 
@@ -217,7 +216,7 @@ class Peer private constructor(builder: Builder) {
         }
 
         fun setEndpoint(endpoint: InetEndpoint): Builder {
-            this.endpoint = Optional.of(endpoint)
+            this.endpoint = endpoint
             return this
         }
 
@@ -228,15 +227,12 @@ class Peer private constructor(builder: Builder) {
                     Section.PEER, Location.PERSISTENT_KEEPALIVE,
                     Reason.INVALID_VALUE, persistentKeepalive.toString()
                 )
-            this.persistentKeepalive = if (persistentKeepalive == 0)
-                Optional.empty()
-            else
-                Optional.of(persistentKeepalive)
+            this.persistentKeepalive = persistentKeepalive
             return this
         }
 
         fun setPreSharedKey(preSharedKey: Key): Builder {
-            this.preSharedKey = Optional.of(preSharedKey)
+            this.preSharedKey = preSharedKey
             return this
         }
 
@@ -264,12 +260,10 @@ class Peer private constructor(builder: Builder) {
         fun parse(lines: Iterable<CharSequence>): Peer {
             val builder = Builder()
             for (line in lines) {
-                val attribute = Attribute.parse(line).orElseThrow {
-                    BadConfigException(
-                        Section.PEER, Location.TOP_LEVEL,
-                        Reason.SYNTAX_ERROR, line
-                    )
-                }
+                val attribute = Attribute.parse(line) ?: throw BadConfigException(
+                    Section.PEER, Location.TOP_LEVEL,
+                    Reason.SYNTAX_ERROR, line
+                )
                 when (attribute.key.toLowerCase(Locale.ENGLISH)) {
                     "allowedips" -> builder.parseAllowedIPs(attribute.value)
                     "endpoint" -> builder.parseEndpoint(attribute.value)

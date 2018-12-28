@@ -27,7 +27,6 @@ import com.wireguard.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener
 import com.wireguard.config.Attribute
 import com.wireguard.config.InetNetwork
 import com.wireguard.util.Keyed
-import java9.util.Optional
 
 /**
  * Static methods for use by generated code in the Android data binding library.
@@ -141,7 +140,7 @@ fun setOnBeforeCheckedChanged(
 }
 
 @BindingAdapter("android:text")
-fun setText(view: TextView, text: Optional<*>) {
+fun setText(view: TextView, text: Any?) {
     view.text = try {
         text.toString()
     } catch (ignored: Exception) {

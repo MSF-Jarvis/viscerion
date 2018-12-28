@@ -6,7 +6,6 @@
 package com.wireguard.config
 
 import android.text.TextUtils
-import java9.util.Optional
 import java.util.regex.Pattern
 
 class Attribute private constructor(val key: String, val value: String) {
@@ -18,14 +17,13 @@ class Attribute private constructor(val key: String, val value: String) {
             return TextUtils.join(", ", values)
         }
 
-        fun parse(line: CharSequence): Optional<Attribute> {
+        fun parse(line: CharSequence): Attribute? {
             val matcher = LINE_PATTERN.matcher(line)
-            return if (!matcher.matches()) Optional.empty() else Optional.of(
+            return if (!matcher.matches()) null else
                 Attribute(
                     matcher.group(1),
                     matcher.group(2)
                 )
-            )
         }
 
         fun split(value: CharSequence): Array<String> {

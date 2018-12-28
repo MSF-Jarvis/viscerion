@@ -52,8 +52,8 @@ class InterfaceProxy : BaseObservable, Parcelable {
             .collect(Collectors.toUnmodifiableList<Any>())
         dnsServers = Attribute.join(dnsServerStrings)
         excludedApplications.addAll(other.excludedApplications)
-        listenPort = other.listenPort.map { toString() }.orElse("")
-        mtu = other.mtu.map { toString() }.orElse("")
+        listenPort = other.listenPort?.toString() ?: ""
+        mtu = other.mtu?.toString() ?: ""
         val keyPair = other.keyPair
         privateKey = keyPair.privateKey.toBase64()
         publicKey = keyPair.publicKey.toBase64()

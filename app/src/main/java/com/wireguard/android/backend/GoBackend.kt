@@ -145,7 +145,10 @@ class GoBackend(private var context: Context) : Backend {
                 }
             }
 
-            builder.setMtu(config.`interface`.mtu.orElse(1280))
+            var mtu = config.`interface`.mtu
+            if (mtu == null || mtu == 0)
+                mtu = 1280
+            builder.setMtu(mtu)
 
             builder.setBlocking(true)
             builder.establish().use { tun ->

@@ -12,7 +12,6 @@ import com.wireguard.config.BadConfigException.Section
 import com.wireguard.crypto.Key
 import com.wireguard.crypto.KeyFormatException
 import com.wireguard.crypto.KeyPair
-import java9.util.Optional
 import java9.util.stream.Collectors
 import java9.util.stream.StreamSupport
 import java.net.InetAddress
@@ -63,13 +62,13 @@ class Interface private constructor(builder: Builder) {
      *
      * @return a UDP port number, or `Optional.empty()` if none is configured
      */
-    val listenPort: Optional<Int>
+    val listenPort: Int?
     /**
      * Returns the MTU used for the WireGuard interface.
      *
      * @return the MTU, or `Optional.empty()` if none is configured
      */
-    val mtu: Optional<Int>
+    val mtu: Int?
 
     init {
         // Defensively copy to ensure immutability even if the Builder is reused.
@@ -112,7 +111,7 @@ class Interface private constructor(builder: Builder) {
     override fun toString(): String {
         val sb = StringBuilder("(Interface ")
         sb.append(keyPair.publicKey.toBase64())
-        listenPort.ifPresent { lp -> sb.append(" @").append(lp) }
+        listenPort?.let { lp -> sb.append(" @").append(lp) }
         sb.append(')')
         return sb.toString()
     }
@@ -139,8 +138,8 @@ class Interface private constructor(builder: Builder) {
                     excludedApplications + ApplicationPreferences.exclusionsArray
                 )
             ).append('\n')
-        listenPort.ifPresent { lp -> sb.append("ListenPort = ").append(lp).append('\n') }
-        mtu.ifPresent { m -> sb.append("MTU = ").append(m).append('\n') }
+        listenPort?.let { lp -> sb.append("ListenPort = ").append(lp).append('\n') }
+        mtu?.let { m -> sb.append("MTU = ").append(m).append('\n') }
         sb.append("PrivateKey = ").append(keyPair.privateKey.toBase64()).append('\n')
         return sb.toString()
     }
@@ -154,7 +153,7 @@ class Interface private constructor(builder: Builder) {
     fun toWgUserspaceString(): String {
         val sb = StringBuilder()
         sb.append("private_key=").append(keyPair.privateKey.toHex()).append('\n')
-        listenPort.ifPresent { lp -> sb.append("listen_port=").append(lp).append('\n') }
+        listenPort?.let { lp -> sb.append("listen_port=").append(lp).append('\n') }
         return sb.toString()
     }
 
@@ -168,9 +167,9 @@ class Interface private constructor(builder: Builder) {
         // No default; must be provided before building.
         var keyPair: KeyPair? = null
         // Defaults to not present.
-        var listenPort: Optional<Int> = Optional.empty<Int>()
+        var listenPort: Int? = null
         // Defaults to not present.
-        var mtu: Optional<Int> = Optional.empty<Int>()
+        var mtu: Int? = null
 
         fun addAddress(address: InetNetwork): Builder {
             addresses.add(address)
@@ -285,7 +284,7 @@ class Interface private constructor(builder: Builder) {
                     Section.INTERFACE, Location.LISTEN_PORT,
                     Reason.INVALID_VALUE, listenPort.toString()
                 )
-            this.listenPort = if (listenPort == 0) Optional.empty() else Optional.of(listenPort)
+            this.listenPort = if (listenPort == 0) 0 else listenPort
             return this
         }
 
@@ -296,7 +295,7 @@ class Interface private constructor(builder: Builder) {
                     Section.INTERFACE, Location.LISTEN_PORT,
                     Reason.INVALID_VALUE, mtu.toString()
                 )
-            this.mtu = if (mtu == 0) Optional.empty() else Optional.of(mtu)
+            this.mtu = if (mtu == 0) 0 else mtu
             return this
         }
     }
@@ -316,12 +315,11 @@ class Interface private constructor(builder: Builder) {
         fun parse(lines: Iterable<CharSequence>): Interface {
             val builder = Builder()
             for (line in lines) {
-                val attribute = Attribute.parse(line).orElseThrow {
+                val attribute = Attribute.parse(line) ?: throw
                     BadConfigException(
                         Section.INTERFACE, Location.TOP_LEVEL,
                         Reason.SYNTAX_ERROR, line
                     )
-                }
                 when (attribute.key.toLowerCase(Locale.ENGLISH)) {
                     "address" -> builder.parseAddresses(attribute.value)
                     "dns" -> builder.parseDnsServers(attribute.value)
