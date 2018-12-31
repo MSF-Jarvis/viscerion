@@ -23,13 +23,13 @@ import com.wireguard.android.databinding.TunnelEditorFragmentBinding
 import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ErrorMessages
+import com.wireguard.android.util.requireNonNull
 import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.android.widget.KeyInputFilter
 import com.wireguard.android.widget.NameInputFilter
 import com.wireguard.config.Config
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
-import java.util.Objects
 
 /**
  * Fragment for editing a WireGuard configuration.
@@ -256,10 +256,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     }
 
     override fun onExcludedAppsSelected(excludedApps: List<String>) {
-        Objects.requireNonNull<TunnelEditorFragmentBinding>(
-            binding,
-            "Tried to set excluded apps while no view was loaded"
-        )
+        binding.requireNonNull<TunnelEditorFragmentBinding>("Tried to set excluded apps while no view was loaded")
         val excludedApplications = binding?.config?.`interface`?.getExcludedApplications()
         excludedApplications?.clear()
         excludedApplications?.addAll(excludedApps)

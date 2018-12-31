@@ -20,11 +20,12 @@ import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.fragment.AppListDialogFragment
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ApplicationPreferences
+import com.wireguard.android.util.addExclusive
 import com.wireguard.android.util.asString
 import com.wireguard.android.util.restartApplication
 import com.wireguard.android.util.thenAccept
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import com.wireguard.android.util.toList
+import com.wireguard.android.util.toArrayList
 import java.util.ArrayList
 import java.util.Arrays
 
@@ -117,7 +118,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 }
             }
             preferenceManager.findPreference(ApplicationPreferences.globalExclusionsKey).setOnPreferenceClickListener {
-                val excludedApps = ArrayList<String>(ApplicationPreferences.exclusions.toList())
+                val excludedApps = ArrayList<String>(ApplicationPreferences.exclusions.toArrayList())
                 val fragment = AppListDialogFragment.newInstance(excludedApps, true, this)
                 fragment.show(fragmentManager, null)
                 true
@@ -131,18 +132,22 @@ class SettingsActivity : ThemeChangeAwareActivity() {
 
         override fun onExcludedAppsSelected(excludedApps: List<String>) {
             ApplicationPreferences.exclusions = excludedApps.asString()
-            Application.tunnelManager.completableTunnels
-                .thenAccept { tunnels ->
-                    tunnels.forEach { tunnel ->
-                        val oldConfig = tunnel.getConfig()
-                        oldConfig?.let {
-                            it.`interface`.excludedApplications += ApplicationPreferences.exclusions.toList()
-                            tunnel.setConfig(it)
-                            if (tunnel.state == Tunnel.State.UP)
-                                tunnel.setState(Tunnel.State.DOWN).whenComplete { _, _ -> tunnel.setState(Tunnel.State.UP) }
+            if (ApplicationPreferences.exclusions.isNotEmpty())
+                Application.tunnelManager.completableTunnels
+                    .thenAccept { tunnels ->
+                        tunnels.forEach { tunnel ->
+                            val oldConfig = tunnel.getConfig()
+                            oldConfig?.let {
+                                ApplicationPreferences.exclusions.toArrayList().forEach { exclusion ->
+                                    it.`interface`.excludedApplications.remove(exclusion)
+                                }
+                                it.`interface`.excludedApplications.addExclusive(ApplicationPreferences.exclusions.toArrayList())
+                                tunnel.setConfig(it)
+                                if (tunnel.state == Tunnel.State.UP)
+                                    tunnel.setState(Tunnel.State.DOWN).whenComplete { _, _ -> tunnel.setState(Tunnel.State.UP) }
+                            }
                         }
                     }
-                }
         }
     }
 }

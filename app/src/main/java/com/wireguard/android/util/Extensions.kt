@@ -26,14 +26,28 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.wireguard.config.Attribute.Companion.LIST_SEPARATOR
 
-fun String.toList(): List<String> {
+fun <T> ArrayList<T>.addExclusive(otherArray: ArrayList<T>): ArrayList<T> {
+    otherArray.forEach {
+        if (it !in this)
+            this.add(it)
+    }
+    return this
+}
+
+fun String.toArrayList(): ArrayList<String> {
     if (TextUtils.isEmpty(this))
-        return emptyList()
-    return LIST_SEPARATOR.split(this.trim()).toList()
+        return ArrayList()
+    return LIST_SEPARATOR.split(this.trim()).toCollection(ArrayList())
 }
 
 fun <T> List<T>.asString(): String {
     return TextUtils.join(", ", this)
+}
+
+fun <T> Any?.requireNonNull(message: String): T {
+    if (this == null)
+        throw NullPointerException(message)
+    return this as T
 }
 
 fun Context.restartApplication() {
