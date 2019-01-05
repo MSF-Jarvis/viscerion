@@ -54,7 +54,6 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
         } else {
             activity = null
         }
-        Timber.tag(TAG)
     }
 
     override fun onDetach() {
@@ -119,7 +118,6 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
     }
 
     companion object {
-        private val TAG = "WireGuard/" + BaseFragment::class.java.simpleName
         private const val REQUEST_CODE_VPN_PERMISSION = 23491
     }
 }

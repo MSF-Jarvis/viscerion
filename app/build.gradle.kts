@@ -31,8 +31,8 @@ android {
         applicationId = "me.msfjarvis.wgandroid"
         minSdkVersion(21)
         targetSdkVersion(28)
-        versionCode = 1002
-        versionName = "1.0.2"
+        versionCode = 2000
+        versionName = "2.0.0"
         buildConfigField("int", "MIN_SDK_VERSION", "21")
         setProperty("archivesBaseName", "wg-android_${gitHash()}")
     }
@@ -73,7 +73,7 @@ android {
             versionNameSuffix = "-debug"
             externalNativeBuild {
                 cmake {
-                    arguments.add("-DANDROID_PACKAGE_NAME=${android.defaultConfig.applicationId}")
+                    arguments.add("-DANDROID_PACKAGE_NAME=${android.defaultConfig.applicationId}$applicationIdSuffix")
                 }
             }
             isMinifyEnabled = false
@@ -89,6 +89,7 @@ dependencies {
     implementation("androidx.annotation:annotation:1.0.1")
     implementation("androidx.appcompat:appcompat:1.0.2")
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     implementation("androidx.core:core-ktx:1.0.1")
     implementation("androidx.databinding:databinding-adapters:3.2.1")
     implementation("androidx.databinding:databinding-runtime:3.2.1")

@@ -7,7 +7,6 @@ package com.wireguard.android.viewmodel
 
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.annotation.Nullable
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
@@ -113,7 +112,7 @@ class PeerProxy : BaseObservable, Parcelable {
         val peers = owner.peers
         if (interfaceDnsListener == null)
             interfaceDnsListener = InterfaceDnsListener(this)
-        interfaze!!.addOnPropertyChangedCallback(interfaceDnsListener!!)
+        interfaze.addOnPropertyChangedCallback(interfaceDnsListener!!)
         setInterfaceDns(interfaze.getDnsServers())
         if (peerListListener == null)
             peerListListener = PeerListListener(this)
@@ -178,16 +177,11 @@ class PeerProxy : BaseObservable, Parcelable {
     @Throws(BadConfigException::class)
     fun resolve(): Peer {
         val builder = Peer.Builder()
-        if (!allowedIps!!.isEmpty())
-            builder.parseAllowedIPs(allowedIps!!)
-        if (!endpoint!!.isEmpty())
-            builder.parseEndpoint(endpoint!!)
-        if (!persistentKeepalive!!.isEmpty())
-            builder.parsePersistentKeepalive(persistentKeepalive!!)
-        if (!preSharedKey!!.isEmpty())
-            builder.parsePreSharedKey(preSharedKey!!)
-        if (!publicKey!!.isEmpty())
-            builder.parsePublicKey(publicKey!!)
+        allowedIps?.let { if (it.isNotEmpty()) builder.parseAllowedIPs(it) }
+        endpoint?.let { if (it.isNotEmpty()) builder.parseEndpoint(it) }
+        persistentKeepalive?.let { if (it.isNotEmpty()) builder.parsePersistentKeepalive(it) }
+        preSharedKey?.let { if (it.isNotEmpty()) builder.parsePreSharedKey(it) }
+        publicKey?.let { if (it.isNotEmpty()) builder.parsePublicKey(it) }
         return builder.build()
     }
 
@@ -204,6 +198,7 @@ class PeerProxy : BaseObservable, Parcelable {
 
     private fun setInterfaceDns(dnsServers: CharSequence?) {
         val newDnsRoutes: Array<String> = Attribute.split(dnsServers ?: "")
+            .filter { server -> !server.contains(":") }
             .map { server -> "$server/32" }
             .toTypedArray()
         if (allowedIpsState == AllowedIpsState.CONTAINS_IPV4_PUBLIC_NETWORKS) {
@@ -248,15 +243,15 @@ class PeerProxy : BaseObservable, Parcelable {
     fun unbind() {
         if (owner == null)
             return
-        val interfaze = owner!!.`interface`
-        val peers = owner!!.peers
-        if (interfaceDnsListener != null)
-            interfaze!!.removeOnPropertyChangedCallback(interfaceDnsListener!!)
-        if (peerListListener != null)
-            peers.removeOnListChangedCallback(peerListListener)
-        peers.remove(this)
-        setInterfaceDns("")
-        setTotalPeers(0)
+        owner?.let {
+            val interfaze = it.`interface`
+            val peers = it.peers
+            interfaceDnsListener?.let { interfaceDnsListener -> interfaze.removeOnPropertyChangedCallback(interfaceDnsListener) }
+            peerListListener?.let { peerListListener -> peers.removeOnListChangedCallback(peerListListener) }
+            peers.remove(this)
+            setInterfaceDns("")
+            setTotalPeers(0)
+        }
         owner = null
     }
 
@@ -280,7 +275,7 @@ class PeerProxy : BaseObservable, Parcelable {
         private val weakPeerProxy: WeakReference<PeerProxy> = WeakReference(peerProxy)
 
         override fun onPropertyChanged(sender: Observable, propertyId: Int) {
-            @Nullable val peerProxy = weakPeerProxy.get()
+            val peerProxy: PeerProxy? = weakPeerProxy.get()
             if (peerProxy == null) {
                 sender.removeOnPropertyChangedCallback(this)
                 return
@@ -299,7 +294,7 @@ class PeerProxy : BaseObservable, Parcelable {
         private val weakPeerProxy: WeakReference<PeerProxy> = WeakReference(peerProxy)
 
         override fun onChanged(sender: ObservableList<PeerProxy>) {
-            @Nullable val peerProxy = weakPeerProxy.get()
+            val peerProxy: PeerProxy? = weakPeerProxy.get()
             if (peerProxy == null) {
                 sender.removeOnListChangedCallback(this)
                 return

@@ -26,10 +26,6 @@ class ToolsInstaller(context: Context) {
     private var areToolsAvailable: Boolean? = null
     private var installAsMagiskModule: Boolean? = null
 
-    init {
-        Timber.tag(TAG)
-    }
-
     @Throws(NoRootException::class)
     fun areInstalled(): Int {
         if (INSTALL_DIR == null)
@@ -143,7 +139,7 @@ class ToolsInstaller(context: Context) {
             val destination = File("$magiskDirectory/$INSTALL_DIR", names[1])
             script.append(
                 String.format(
-                    "cp '%s' '%s'; chmod 755 '%s'; restorecon '%s' || true; ",
+                    "cp '%s' '%s'; chmod 755 '%s'; chcon 'u:object_r:system_file:s0' '%s' || true; ",
                     File(nativeLibraryDir, names[0]), destination, destination, destination
                 )
             )
@@ -204,7 +200,7 @@ class ToolsInstaller(context: Context) {
         private val EXECUTABLES = arrayOf(arrayOf("libwg.so", "wg"), arrayOf("libwg-quick.so", "wg-quick"))
         private val INSTALL_DIRS = arrayOf(File("/system/xbin"), File("/system/bin"))
         private val INSTALL_DIR = installDir
-        private val TAG = "WireGuard/" + ToolsInstaller::class.java.simpleName
+        private var magiskDir: String? = null
 
         private val installDir: File?
             get() {
@@ -218,13 +214,16 @@ class ToolsInstaller(context: Context) {
             }
 
         private fun getMagiskDirectory(): String {
+            if (magiskDir != null)
+                return magiskDir as String
             val output = ArrayList<String>()
             Application.rootShell.run(output, "su --version | cut -d ':' -f 1")
             val magiskVer = output[0]
-            return when {
+            magiskDir = when {
                 magiskVer.startsWith("18.") -> "/sbin/.magisk"
                 else -> "/sbin/.core"
             }
+            return magiskDir as String
         }
     }
 }

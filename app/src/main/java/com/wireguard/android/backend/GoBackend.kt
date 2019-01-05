@@ -33,11 +33,10 @@ class GoBackend(private var context: Context) : Backend {
 
     init {
         SharedLibraryLoader.loadSharedLibrary(context, "wg-go")
-        Timber.tag(TAG)
     }
 
-    override fun applyConfig(tunnel: Tunnel?, config: Config?): Config? {
-        if (tunnel?.state == Tunnel.State.UP) {
+    override fun applyConfig(tunnel: Tunnel, config: Config): Config {
+        if (tunnel.state == Tunnel.State.UP) {
             // Restart the tunnel to apply the new config.
             setStateInternal(tunnel, tunnel.getConfig(), Tunnel.State.DOWN)
             try {
@@ -51,7 +50,7 @@ class GoBackend(private var context: Context) : Backend {
         return config
     }
 
-    override fun enumerate(): Set<String>? {
+    override fun enumerate(): Set<String> {
         currentTunnel?.let {
             val runningTunnels = ArraySet<String>()
             runningTunnels.add(it.name)
@@ -60,15 +59,15 @@ class GoBackend(private var context: Context) : Backend {
         return emptySet()
     }
 
-    override fun getState(tunnel: Tunnel?): Tunnel.State? {
+    override fun getState(tunnel: Tunnel): Tunnel.State {
         return if (currentTunnel == tunnel) Tunnel.State.UP else Tunnel.State.DOWN
     }
 
-    override fun getStatistics(tunnel: Tunnel?): Tunnel.Statistics? {
+    override fun getStatistics(tunnel: Tunnel): Tunnel.Statistics? {
         return Tunnel.Statistics()
     }
 
-    override fun setState(tunnel: Tunnel?, state: Tunnel.State?): Tunnel.State? {
+    override fun setState(tunnel: Tunnel, state: Tunnel.State): Tunnel.State {
         val originalState = getState(tunnel)
         var finalState = state
         if (state == Tunnel.State.TOGGLE)
@@ -77,12 +76,12 @@ class GoBackend(private var context: Context) : Backend {
             return originalState
         if (state == Tunnel.State.UP && currentTunnel != null)
             throw IllegalStateException(context.getString(R.string.multiple_tunnels_error))
-        Timber.d("Changing tunnel %s to state %s ", tunnel?.name, finalState)
-        setStateInternal(tunnel, tunnel?.getConfig(), finalState)
+        Timber.d("Changing tunnel %s to state %s ", tunnel.name, finalState)
+        setStateInternal(tunnel, tunnel.getConfig(), finalState)
         return getState(tunnel)
     }
 
-    override fun getVersion(): String? {
+    override fun getVersion(): String {
         return wgVersion()
     }
 
@@ -222,7 +221,6 @@ class GoBackend(private var context: Context) : Backend {
     }
 
     companion object {
-        private val TAG = "WireGuard/" + GoBackend::class.java.simpleName
         private var vpnService = CompletableFuture<VpnService>()
     }
 }

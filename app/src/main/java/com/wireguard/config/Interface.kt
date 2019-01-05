@@ -6,6 +6,7 @@
 package com.wireguard.config
 
 import com.wireguard.android.util.ApplicationPreferences
+import com.wireguard.android.util.requireNonNull
 import com.wireguard.config.BadConfigException.Location
 import com.wireguard.config.BadConfigException.Reason
 import com.wireguard.config.BadConfigException.Section
@@ -18,7 +19,6 @@ import java.net.InetAddress
 import java.util.Collections
 import java.util.LinkedHashSet
 import java.util.Locale
-import java.util.Objects
 
 /**
  * Represents the configuration for a WireGuard interface (an [Interface] block). Interfaces must
@@ -49,8 +49,10 @@ class Interface private constructor(builder: Builder) {
      *
      * @return a set of package names
      */
-    // The collection is already immutable.
-    var excludedApplications: Set<String>
+    // This should ideally be immutable but I require it to not be
+    // for my global exclusions implementation. Suggestions welcome
+    // on alternate ways to do this.
+    var excludedApplications: ArrayList<String>
     /**
      * Returns the public/private key pair used by the interface.
      *
@@ -74,8 +76,8 @@ class Interface private constructor(builder: Builder) {
         // Defensively copy to ensure immutability even if the Builder is reused.
         addresses = Collections.unmodifiableSet(LinkedHashSet(builder.addresses))
         dnsServers = Collections.unmodifiableSet(LinkedHashSet(builder.dnsServers))
-        excludedApplications = Collections.unmodifiableSet(LinkedHashSet(builder.excludedApplications))
-        keyPair = Objects.requireNonNull<KeyPair>(builder.keyPair, "Interfaces must have a private key")
+        excludedApplications = ArrayList(builder.excludedApplications)
+        keyPair = builder.keyPair.requireNonNull("Interfaces must have a private key")
         listenPort = builder.listenPort
         mtu = builder.mtu
     }
@@ -83,13 +85,12 @@ class Interface private constructor(builder: Builder) {
     override fun equals(other: Any?): Boolean {
         if (other !is Interface)
             return false
-        val obj = other as Interface?
-        return (addresses == obj!!.addresses &&
-            dnsServers == obj.dnsServers &&
-            excludedApplications == obj.excludedApplications &&
-            keyPair == obj.keyPair &&
-            listenPort == obj.listenPort &&
-            mtu == obj.mtu)
+        return (addresses == other.addresses &&
+            dnsServers == other.dnsServers &&
+            excludedApplications == other.excludedApplications &&
+            keyPair == other.keyPair &&
+            listenPort == other.listenPort &&
+            mtu == other.mtu)
     }
 
     override fun hashCode(): Int {
@@ -316,10 +317,10 @@ class Interface private constructor(builder: Builder) {
             val builder = Builder()
             for (line in lines) {
                 val attribute = Attribute.parse(line) ?: throw
-                    BadConfigException(
-                        Section.INTERFACE, Location.TOP_LEVEL,
-                        Reason.SYNTAX_ERROR, line
-                    )
+                BadConfigException(
+                    Section.INTERFACE, Location.TOP_LEVEL,
+                    Reason.SYNTAX_ERROR, line
+                )
                 when (attribute.key.toLowerCase(Locale.ENGLISH)) {
                     "address" -> builder.parseAddresses(attribute.value)
                     "dns" -> builder.parseDnsServers(attribute.value)

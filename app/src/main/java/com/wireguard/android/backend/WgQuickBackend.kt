@@ -19,6 +19,7 @@ import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.State
 import com.wireguard.android.model.Tunnel.Statistics
 import com.wireguard.android.model.TunnelManager
+import com.wireguard.android.util.requireNonNull
 import com.wireguard.config.Config
 import timber.log.Timber
 import java.io.File
@@ -26,7 +27,6 @@ import java.io.FileOutputStream
 import java.nio.charset.StandardCharsets
 import java.util.ArrayList
 import java.util.Locale
-import java.util.Objects
 
 /**
  * WireGuard backend that uses `wg-quick` to implement tunnel configuration.
@@ -52,8 +52,8 @@ class WgQuickBackend(private var context: Context) : Backend {
     }
 
     @Throws(Exception::class)
-    override fun applyConfig(tunnel: Tunnel?, config: Config?): Config? {
-        if (tunnel?.state == State.UP) {
+    override fun applyConfig(tunnel: Tunnel, config: Config): Config {
+        if (tunnel.state == State.UP) {
             // Restart the tunnel to apply the new config.
             setStateInternal(tunnel, tunnel.getConfig(), State.DOWN)
             try {
@@ -75,7 +75,7 @@ class WgQuickBackend(private var context: Context) : Backend {
             if (Application.rootShell.run(output, "wg show interfaces") != 0 || output.isEmpty())
                 return emptySet()
         } catch (e: Exception) {
-            Timber.tag(TAG).w(e, "Unable to enumerate running tunnels")
+            Timber.w(e, "Unable to enumerate running tunnels")
             return emptySet()
         }
 
@@ -83,31 +83,31 @@ class WgQuickBackend(private var context: Context) : Backend {
         return output[0].split(" ".toRegex()).toSet()
     }
 
-    override fun getState(tunnel: Tunnel?): State? {
-        return if (enumerate().contains(tunnel?.name)) State.UP else State.DOWN
+    override fun getState(tunnel: Tunnel): State {
+        return if (enumerate().contains(tunnel.name)) State.UP else State.DOWN
     }
 
-    override fun getStatistics(tunnel: Tunnel?): Statistics? {
+    override fun getStatistics(tunnel: Tunnel): Statistics {
         return Statistics()
     }
 
     @Throws(Exception::class)
-    override fun setState(tunnel: Tunnel?, state: State?): State? {
+    override fun setState(tunnel: Tunnel, state: State): State {
         var stateToSet = state
         val originalState = getState(tunnel)
         if (stateToSet == State.TOGGLE)
             stateToSet = if (originalState == State.UP) State.DOWN else State.UP
         if (stateToSet == originalState)
             return originalState
-        Timber.tag(TAG).d("Changing tunnel %s to state %s", tunnel?.name, stateToSet)
+        Timber.d("Changing tunnel %s to state %s", tunnel.name, stateToSet)
         Application.toolsInstaller.ensureToolsAvailable()
-        setStateInternal(tunnel, tunnel?.getConfig(), stateToSet)
+        setStateInternal(tunnel, tunnel.getConfig(), stateToSet)
         return getState(tunnel)
     }
 
     @Throws(Exception::class)
     private fun setStateInternal(tunnel: Tunnel?, config: Config?, state: State?) {
-        Objects.requireNonNull<Config>(config, "Trying to set state with a null config")
+        config.requireNonNull<Config>("Trying to set state with a null config")
 
         val tempFile = File(localTemporaryDir, tunnel?.name + CONFIGURATION_FILE_SUFFIX)
         FileOutputStream(
@@ -150,9 +150,5 @@ class WgQuickBackend(private var context: Context) : Backend {
         } else if (state == State.DOWN) {
             notificationManager.cancel(tunnel.name.hashCode())
         }
-    }
-
-    companion object {
-        private val TAG = "WireGuard/" + WgQuickBackend::class.java.simpleName
     }
 }
