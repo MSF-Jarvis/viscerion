@@ -33,6 +33,7 @@ import java.util.Arrays
  * Interface for changing application-global persistent settings.
  */
 
+@ExperimentalCoroutinesApi
 class SettingsActivity : ThemeChangeAwareActivity() {
     private val permissionRequestCallbacks = SparseArray<(permissions: Array<String>, granted: IntArray) -> Unit>()
     private var permissionRequestCounter: Int = 0
@@ -91,7 +92,6 @@ class SettingsActivity : ThemeChangeAwareActivity() {
         }
     }
 
-    @ExperimentalCoroutinesApi
     class SettingsFragment : PreferenceFragmentCompat(), AppListDialogFragment.AppExclusionListener {
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
             addPreferencesFromResource(R.xml.preferences)

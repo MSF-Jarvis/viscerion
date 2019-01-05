@@ -9,11 +9,13 @@ import android.os.Bundle
 import androidx.fragment.app.transaction
 import com.wireguard.android.fragment.TunnelEditorFragment
 import com.wireguard.android.model.Tunnel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * Standalone activity for creating tunnels.
  */
 
+@ExperimentalCoroutinesApi
 class TunnelCreatorActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
