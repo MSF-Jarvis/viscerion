@@ -22,9 +22,9 @@ import androidx.preference.Preference
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.wireguard.android.activity.SettingsActivity
+import com.wireguard.config.Attribute.Companion.LIST_SEPARATOR
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import com.wireguard.config.Attribute.Companion.LIST_SEPARATOR
 
 fun <T> ArrayList<T>.addExclusive(otherArray: ArrayList<T>): ArrayList<T> {
     otherArray.forEach {

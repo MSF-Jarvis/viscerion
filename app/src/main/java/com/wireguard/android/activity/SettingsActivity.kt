@@ -24,8 +24,8 @@ import com.wireguard.android.util.addExclusive
 import com.wireguard.android.util.asString
 import com.wireguard.android.util.restartApplication
 import com.wireguard.android.util.thenAccept
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.wireguard.android.util.toArrayList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.ArrayList
 import java.util.Arrays
 

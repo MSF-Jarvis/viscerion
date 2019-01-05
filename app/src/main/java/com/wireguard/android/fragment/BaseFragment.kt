@@ -23,9 +23,9 @@ import com.wireguard.android.databinding.TunnelDetailFragmentBinding
 import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.State
+import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.thenAccept
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import com.wireguard.android.util.ErrorMessages
 import timber.log.Timber
 
 /**
