@@ -183,8 +183,8 @@ class RootShell(context: Context) {
     }
 
     class NoRootException : Exception {
-        internal constructor(message: String, cause: Throwable) : super(message, cause) {}
+        internal constructor(message: String, cause: Throwable) : super(message, cause)
 
-        internal constructor(message: String) : super(message) {}
+        internal constructor(message: String) : super(message)
     }
 }
