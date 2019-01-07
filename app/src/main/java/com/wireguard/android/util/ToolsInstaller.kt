@@ -9,7 +9,7 @@ import android.content.Context
 import android.system.OsConstants
 import com.wireguard.android.Application
 import com.wireguard.android.BuildConfig
-import com.wireguard.android.util.RootShellKT.NoRootException
+import com.wireguard.android.util.RootShell.NoRootException
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException

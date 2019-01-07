@@ -24,7 +24,7 @@ import com.wireguard.android.configStore.FileConfigStore
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
-import com.wireguard.android.util.RootShellKT
+import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
 import java9.util.concurrent.CompletableFuture
 import timber.log.Timber
@@ -33,7 +33,7 @@ import java.lang.ref.WeakReference
 
 class Application : android.app.Application() {
     private lateinit var asyncWorker: AsyncWorker
-    private lateinit var rootShell: RootShellKT
+    private lateinit var rootShell: RootShell
     private val sharedPreferences: SharedPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(this)
     }
@@ -80,7 +80,7 @@ class Application : android.app.Application() {
             Timber.plant(Timber.DebugTree())
 
         asyncWorker = AsyncWorker(AsyncTask.SERIAL_EXECUTOR, Handler(Looper.getMainLooper()))
-        rootShell = RootShellKT(applicationContext)
+        rootShell = RootShell(applicationContext)
         toolsInstaller = ToolsInstaller(applicationContext)
 
         AppCompatDelegate.setDefaultNightMode(

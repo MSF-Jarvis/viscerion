@@ -18,7 +18,7 @@ import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 
-class RootShellKT(context: Context) {
+class RootShell(context: Context) {
 
     private val SU = "su"
     private val deviceNotRootedMessage: String = context.getString(R.string.error_root)
