@@ -4,13 +4,10 @@
 
     <data>
         <import type="android.view.View" />
-
         <import type="com.wireguard.android.model.ApplicationData" />
-
         <variable
             name="fragment"
             type="com.wireguard.android.fragment.AppListDialogFragment" />
-
         <variable
             name="appData"
             type="com.wireguard.android.util.ObservableKeyedList&lt;String, ApplicationData&gt;" />
@@ -19,7 +16,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="200dp" >
+        android:minHeight="200dp"
+        android:paddingTop="8dp">
 
         <ProgressBar
             android:id="@+id/progress_bar"
