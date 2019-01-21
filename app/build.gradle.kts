@@ -104,8 +104,8 @@ dependencies {
     implementation("net.sourceforge.streamsupport:android-retrofuture:1.7.0")
     implementation("net.sourceforge.streamsupport:android-retrostreams:1.7.0")
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0")
 }
 
 repositories {
