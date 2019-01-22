@@ -37,8 +37,8 @@ android {
         setProperty("archivesBaseName", "wg-android_${gitHash()}")
     }
     compileOptions {
-        setSourceCompatibility(JavaVersion.VERSION_1_8)
-        setTargetCompatibility(JavaVersion.VERSION_1_8)
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     // If the keystore file exists
     if (keystorePropertiesFile.exists()) {
