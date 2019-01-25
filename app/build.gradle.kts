@@ -83,6 +83,7 @@ android {
     }
     lintOptions {
         isAbortOnError = true
+        disable("UnusedResources")
     }
 }
 
