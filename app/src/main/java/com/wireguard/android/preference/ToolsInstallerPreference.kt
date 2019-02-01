@@ -13,7 +13,6 @@ import com.wireguard.android.R
 import com.wireguard.android.util.ToolsInstaller
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
@@ -23,7 +22,6 @@ import kotlin.coroutines.CoroutineContext
  * result as the preference summary.
  */
 
-@ExperimentalCoroutinesApi
 class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), CoroutineScope {
     private var state = State.INITIAL
     override val coroutineContext: CoroutineContext

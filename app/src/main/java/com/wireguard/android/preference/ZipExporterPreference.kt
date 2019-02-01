@@ -22,7 +22,6 @@ import com.wireguard.config.Config
 import java9.util.concurrent.CompletableFuture
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -39,7 +38,6 @@ import kotlin.coroutines.CoroutineContext
  * Preference implementing a button that asynchronously exports config zips.
  */
 
-@ExperimentalCoroutinesApi
 class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), CoroutineScope {
 
     private var exportedFilePath: String? = null

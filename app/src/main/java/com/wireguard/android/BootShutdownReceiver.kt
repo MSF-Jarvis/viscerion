@@ -11,10 +11,8 @@ import android.content.Intent
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.thenAccept
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
-@ExperimentalCoroutinesApi
 class BootShutdownReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {

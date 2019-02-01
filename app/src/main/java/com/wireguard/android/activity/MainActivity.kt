@@ -20,7 +20,6 @@ import com.wireguard.android.fragment.TunnelEditorFragment
 import com.wireguard.android.fragment.TunnelListFragment
 import com.wireguard.android.model.Tunnel
 import kotlinx.android.synthetic.main.main_activity.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * CRUD interface for WireGuard tunnels. This activity serves as the main entry point to the
@@ -28,7 +27,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
  * editing the configuration and interface state of WireGuard tunnels.
  */
 
-@ExperimentalCoroutinesApi
 class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener {
     private var actionBar: ActionBar? = null
     private var listFragment: TunnelListFragment? = null

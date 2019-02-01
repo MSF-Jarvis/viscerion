@@ -23,7 +23,6 @@ import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.asString
 import com.wireguard.android.util.restartApplication
 import com.wireguard.android.util.thenAccept
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.ArrayList
 import java.util.Arrays
 
@@ -31,7 +30,6 @@ import java.util.Arrays
  * Interface for changing application-global persistent settings.
  */
 
-@ExperimentalCoroutinesApi
 class SettingsActivity : ThemeChangeAwareActivity() {
     private val permissionRequestCallbacks = SparseArray<(permissions: Array<String>, granted: IntArray) -> Unit>()
     private var permissionRequestCounter: Int = 0

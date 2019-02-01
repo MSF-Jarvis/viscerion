@@ -32,7 +32,6 @@ import com.wireguard.android.widget.MultiselectableRelativeLayout
 import com.wireguard.android.widget.fab.FloatingActionButtonRecyclerViewScrollListener
 import com.wireguard.config.Config
 import java9.util.concurrent.CompletableFuture
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
@@ -43,7 +42,6 @@ import java.util.HashSet
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-@ExperimentalCoroutinesApi
 class TunnelListFragment : BaseFragment() {
 
     private val actionModeListener = ActionModeListener()

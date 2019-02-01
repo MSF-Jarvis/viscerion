@@ -25,7 +25,6 @@ import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.State
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.thenAccept
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
 /**
@@ -33,7 +32,6 @@ import timber.log.Timber
  * attached to a `BaseActivity`.
  */
 
-@ExperimentalCoroutinesApi
 abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
 
     private var activity: BaseActivity? = null

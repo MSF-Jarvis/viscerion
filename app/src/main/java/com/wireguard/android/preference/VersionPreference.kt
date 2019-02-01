@@ -15,9 +15,7 @@ import com.wireguard.android.Application
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
 import com.wireguard.android.util.thenAccept
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 class VersionPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
     private var versionSummary: String? = null
 

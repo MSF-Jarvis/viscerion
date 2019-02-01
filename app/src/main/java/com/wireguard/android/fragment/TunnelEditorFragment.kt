@@ -29,14 +29,12 @@ import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.android.widget.KeyInputFilter
 import com.wireguard.android.widget.NameInputFilter
 import com.wireguard.config.Config
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
 /**
  * Fragment for editing a WireGuard configuration.
  */
 
-@ExperimentalCoroutinesApi
 class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     private var binding: TunnelEditorFragmentBinding? = null
     private var tunnel: Tunnel? = null

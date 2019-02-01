@@ -24,7 +24,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.config.Attribute.Companion.LIST_SEPARATOR
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 fun String.toArrayList(): ArrayList<String> {
     if (TextUtils.isEmpty(this))
@@ -92,7 +91,6 @@ fun copyTextView(view: View) {
     Snackbar.make(view, "$description copied to clipboard", Snackbar.LENGTH_LONG).show()
 }
 
-@ExperimentalCoroutinesApi
 inline fun <T> CompletableDeferred<T>.thenAccept(
     action: (T) -> Unit
 ) {
