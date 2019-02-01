@@ -26,14 +26,6 @@ import com.wireguard.config.Attribute.Companion.LIST_SEPARATOR
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-fun <T> ArrayList<T>.addExclusive(otherArray: ArrayList<T>): ArrayList<T> {
-    otherArray.forEach {
-        if (it !in this)
-            this.add(it)
-    }
-    return this
-}
-
 fun String.toArrayList(): ArrayList<String> {
     if (TextUtils.isEmpty(this))
         return ArrayList()
@@ -44,10 +36,16 @@ fun <T> List<T>.asString(): String {
     return TextUtils.join(", ", this)
 }
 
-fun <T> Any?.requireNonNull(message: String): T {
+fun <T> Array<out T>?.isNotNullOrEmpty(): Boolean {
+    return this != null && !isEmpty()
+}
+
+inline fun <reified T : Any> Any?.requireNonNull(message: String): T {
     if (this == null)
         throw NullPointerException(message)
-    return this as T
+    if (this !is T)
+        throw IllegalArgumentException(message)
+    return this
 }
 
 fun Context.restartApplication() {
@@ -91,7 +89,7 @@ fun copyTextView(view: View) {
     val service = view.context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return
     val description = if (isTextInput) (view as TextInputEditText).hint else view.contentDescription
     service.primaryClip = ClipData.newPlainText(description, text)
-    Snackbar.make(view, description.toString() + " copied to clipboard", Snackbar.LENGTH_LONG).show()
+    Snackbar.make(view, "$description copied to clipboard", Snackbar.LENGTH_LONG).show()
 }
 
 @ExperimentalCoroutinesApi

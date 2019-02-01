@@ -44,12 +44,12 @@ class VersionPreference(context: Context, attrs: AttributeSet) : Preference(cont
     }
 
     override fun getTitle(): CharSequence {
-        return context.getString(R.string.version_title, BuildConfig.VERSION_NAME)
+        return context.getString(R.string.version_title, if (BuildConfig.DEBUG) BuildConfig.GIT_HASH else BuildConfig.VERSION_NAME)
     }
 
     override fun onClick() {
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse("https://www.wireguard.com/")
+        intent.data = Uri.parse("https://github.com/MSF-Jarvis/viscerion")
         try {
             context.startActivity(intent)
         } catch (ignored: ActivityNotFoundException) {

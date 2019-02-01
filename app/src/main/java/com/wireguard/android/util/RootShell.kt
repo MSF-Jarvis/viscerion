@@ -18,7 +18,7 @@ import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 
-class RootShell(context: Context) {
+class RootShell(val context: Context) {
 
     private val deviceNotRootedMessage: String = context.getString(R.string.error_root)
     private val localBinaryDir: File
@@ -33,10 +33,7 @@ class RootShell(context: Context) {
         val cacheDir = context.cacheDir
         localBinaryDir = File(cacheDir, "bin")
         localTemporaryDir = File(cacheDir, "tmp")
-        preamble = String.format(
-            "export CALLING_PACKAGE=%s PATH=\"%s:\$PATH\" TMPDIR='%s'; id -u\n",
-            BuildConfig.APPLICATION_ID, localBinaryDir, localTemporaryDir
-        )
+        preamble = "export CALLING_PACKAGE=${BuildConfig.APPLICATION_ID} PATH=\"$localBinaryDir:\$PATH\" TMPDIR='$localTemporaryDir'; id -u\n"
     }
 
     private fun isExecutableInPath(name: String): Boolean {
@@ -64,9 +61,8 @@ class RootShell(context: Context) {
     fun run(output: ArrayList<String>? = null, command: String): Int {
         start()
         val marker = UUID.randomUUID().toString()
-        val script = "echo " + marker + "; echo " + marker + " >&2; (" + command +
-            "); ret=$?; echo " + marker + " \$ret; echo " + marker + " \$ret >&2\n"
-        Timber.v("executing: %s", command)
+        val script = "echo $marker; echo $marker >&2; ($command); ret=$?; echo $marker \$ret; echo $marker \$ret >&2\n"
+        if (DEBUG) Timber.v("executing: %s", command)
         stdin.write(script)
         stdin.flush()
         var line: String?
@@ -85,7 +81,7 @@ class RootShell(context: Context) {
                 }
             } else if (markersSeen > 0) {
                 output?.add(line)
-                Timber.v("stdout: %s", line)
+                if (DEBUG) Timber.v("stdout: %s", line)
             }
         }
         while (true) {
@@ -99,14 +95,14 @@ class RootShell(context: Context) {
                     break
                 }
             } else if (markersSeen > 2) {
-                Timber.v("stdout: %s", line)
+                if (DEBUG) Timber.v("stdout: %s", line)
             }
         }
         if (markersSeen != 4)
-            throw IOException("Expected 4 markers, received $markersSeen")
+            throw IOException(context.getString(R.string.shell_marker_count_error, markersSeen))
         if (errnoStdout != errnoStderr)
             throw IOException("Unable to read exit status")
-        Timber.v("exit: %s", errnoStdout)
+        if (DEBUG) Timber.v("exit: %s", errnoStdout)
         return errnoStdout
     }
 
@@ -162,7 +158,7 @@ class RootShell(context: Context) {
                     if (line.contains("Permission denied"))
                         throw NoRootException(deviceNotRootedMessage)
                 }
-                throw IOException("Shell failed to start: " + process!!.exitValue())
+                throw IOException(context.getString(R.string.shell_start_error, process!!.exitValue()))
             }
         } catch (e: IOException) {
             stop()
@@ -189,5 +185,6 @@ class RootShell(context: Context) {
 
     companion object {
         private const val SU = "su"
+        private val DEBUG = BuildConfig.DEBUG
     }
 }

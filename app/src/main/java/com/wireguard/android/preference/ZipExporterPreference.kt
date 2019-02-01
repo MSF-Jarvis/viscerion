@@ -47,7 +47,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
         get() = Dispatchers.IO
 
     private fun exportZip() {
-        Application.tunnelManager.completableTunnels.thenAccept { exportZip(it) }
+        Application.tunnelManager.getTunnels().thenAccept { exportZip(it) }
     }
 
     private fun exportZip(tunnels: List<Tunnel>) {
@@ -69,7 +69,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
                     try {
                         ZipOutputStream(FileOutputStream(file)).use { zip ->
                             for (i in futureConfigs.indices) {
-                                zip.putNextEntry(ZipEntry(tunnels[i].name + ".conf"))
+                                zip.putNextEntry(ZipEntry("${tunnels[i].name}.conf"))
                                 zip.write(futureConfigs[i].getNow(null).toWgQuickString().toByteArray(StandardCharsets.UTF_8))
                             }
                             zip.closeEntry()

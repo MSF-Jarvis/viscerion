@@ -1,8 +1,8 @@
+import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.FileInputStream
 import java.io.IOException
 import java.util.Properties
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.application")
@@ -28,17 +28,17 @@ android {
     compileSdkVersion(28)
     dataBinding.isEnabled = true
     defaultConfig {
-        applicationId = "me.msfjarvis.wgandroid"
+        applicationId = "me.msfjarvis.viscerion"
         minSdkVersion(21)
         targetSdkVersion(28)
-        versionCode = 2000
-        versionName = "2.0.0"
-        buildConfigField("int", "MIN_SDK_VERSION", "21")
-        setProperty("archivesBaseName", "wg-android_${gitHash()}")
+        versionCode = 3000
+        versionName = "3.0.0"
+        buildConfigField("String", "GIT_HASH", "\"${gitHash()}\"")
+        setProperty("archivesBaseName", "viscerion_${gitHash()}")
     }
     compileOptions {
-        setSourceCompatibility(JavaVersion.VERSION_1_8)
-        setTargetCompatibility(JavaVersion.VERSION_1_8)
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     // If the keystore file exists
     if (keystorePropertiesFile.exists()) {
@@ -80,9 +80,12 @@ android {
         }
     }
     externalNativeBuild.cmake {
-        path = rootProject.file("$name/tools/CMakeLists.txt")
+        setPath(rootProject.file("$name/tools/CMakeLists.txt"))
     }
-    lintOptions.isAbortOnError = false
+    lintOptions {
+        isAbortOnError = true
+        disable("UnusedResources")
+    }
 }
 
 dependencies {
@@ -92,15 +95,14 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     implementation("androidx.core:core-ktx:1.0.1")
-    implementation("androidx.databinding:databinding-adapters:3.2.1")
-    implementation("androidx.databinding:databinding-runtime:3.2.1")
+    implementation("androidx.databinding:databinding-adapters:3.3.0")
+    implementation("androidx.databinding:databinding-runtime:3.3.0")
     implementation("androidx.fragment:fragment-ktx:1.0.0")
     implementation("androidx.preference:preference:1.0.0")
     implementation("com.google.android.material:material:1.0.0")
-    implementation("com.google.zxing:core:3.3.2")
+    implementation("com.google.zxing:core:3.3.3")
     implementation("com.jakewharton.threetenabp:threetenabp:1.1.1")
     implementation("com.jakewharton.timber:timber:4.7.1")
-//    implementation("com.journeyapps:zxing-android-embedded:3.6.0")
     implementation("net.sourceforge.streamsupport:android-retrofuture:1.7.0")
     implementation("net.sourceforge.streamsupport:android-retrostreams:1.7.0")
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))

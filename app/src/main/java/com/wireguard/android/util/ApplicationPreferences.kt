@@ -13,6 +13,7 @@ class ApplicationPreferences {
         const val appThemeKey = "app_theme"
         const val globalExclusionsKey = "global_exclusions"
         const val forceUserspaceBackendkey = "force_userspace_backend"
+        const val whitelistAppsKey = "whitelist_exclusions"
         private const val appThemeDarkValue = "dark"
         const val appThemeBlackValue = "amoled"
         val darkAppThemeValues = arrayOf(appThemeDarkValue, appThemeBlackValue)
@@ -26,7 +27,7 @@ class ApplicationPreferences {
                 }
                 exclusionsArray = value.toArrayList().toCollection(ArrayList())
             }
-        var exclusionsArray: ArrayList<String> = exclusions.toArrayList().toCollection(ArrayList())
+        var exclusionsArray: ArrayList<String> = exclusions.toArrayList()
 
         var theme: String
             get() {
@@ -45,6 +46,10 @@ class ApplicationPreferences {
                 Application.sharedPreferences.edit {
                     putBoolean(forceUserspaceBackendkey, value)
                 }
+            }
+        val whitelistApps: Boolean
+            get() {
+                return Application.sharedPreferences.getBoolean(whitelistAppsKey, false)
             }
     }
 }

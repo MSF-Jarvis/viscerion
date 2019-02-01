@@ -30,7 +30,7 @@ import java.util.ArrayList
 
 class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     private val context = Application.get()
-    val completableTunnels = CompletableFuture<ObservableSortedKeyedList<String, Tunnel>>()
+    private val completableTunnels = CompletableFuture<ObservableSortedKeyedList<String, Tunnel>>()
     private val tunnels = ObservableSortedKeyedArrayList<String, Tunnel>(COMPARATOR)
     private val delayedLoadRestoreTunnels = ArrayList<CompletableFuture<Void>>()
     private var haveLoaded: Boolean = false
@@ -170,9 +170,17 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     }
 
     fun saveState() {
-        val test = tunnels.asSequence().filter { it -> it.state == Tunnel.State.UP }.map { it.name }.toSet()
         Application.sharedPreferences.edit {
-            putStringSet(KEY_RUNNING_TUNNELS, test)
+            putStringSet(KEY_RUNNING_TUNNELS, tunnels.asSequence().filter { it.state == Tunnel.State.UP }.map { it.name }.toSet())
+        }
+    }
+
+    fun restartActiveTunnels() {
+        completableTunnels.thenAccept { tunnels ->
+            tunnels.forEach { tunnel ->
+                if (tunnel.state == Tunnel.State.UP)
+                    tunnel.setState(Tunnel.State.DOWN).whenComplete { _, _ -> tunnel.setState(Tunnel.State.UP) }
+            }
         }
     }
 
@@ -249,9 +257,11 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         private val COMPARATOR = Comparators.thenComparing(
             String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder()
         )
+        private var lastUsedTunnel: Tunnel? = null
         private const val KEY_LAST_USED_TUNNEL = "last_used_tunnel"
         private const val KEY_RESTORE_ON_BOOT = "restore_on_boot"
         private const val KEY_RUNNING_TUNNELS = "enabled_configs"
+
         internal fun getTunnelState(tunnel: Tunnel): CompletionStage<Tunnel.State> {
             return Application.asyncWorker.supplyAsync { Application.backend.getState(tunnel) }
                 .thenApply(tunnel::onStateChanged)
@@ -262,7 +272,5 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
                 .supplyAsync { Application.backend.getStatistics(tunnel) }
                 .thenApply(tunnel::onStatisticsChanged)
         }
-
-        private var lastUsedTunnel: Tunnel? = null
     }
 }
