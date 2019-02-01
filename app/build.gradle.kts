@@ -120,7 +120,13 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-Xjsr305=strict",
+            "-progressive",
+            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"
+            )
+    }
 }
 
 kapt {
