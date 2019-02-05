@@ -1,7 +1,7 @@
 /*
  * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
-*/
+ */
 @file:Suppress("Unused")
 
 package com.wireguard.android.databinding
