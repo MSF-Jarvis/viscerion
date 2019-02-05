@@ -18,8 +18,9 @@ branches:
     - master
 
 script:
-  - ./gradlew spotlessCheck
-  - ./gradlew assemble bundle check
+  - |
+      ./gradlew spotlessCheck && \
+      ./gradlew assemble bundle check
 
 notifications:
   email: false
