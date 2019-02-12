@@ -4,10 +4,13 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.util.Properties
 
+apply {
+    from("../spotless.gradle")
+}
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-android-extensions")
     id("kotlin-kapt")
 }
 
@@ -52,7 +55,7 @@ android {
             create(buildTypeRelease) {
                 keyAlias = keystoreProperties["keyAlias"].toString()
                 keyPassword = keystoreProperties["keyPassword"].toString()
-                storeFile = file(keystoreProperties["storeFile"].toString())
+                storeFile = rootProject.file(keystoreProperties["storeFile"].toString())
                 storePassword = keystoreProperties["storePassword"].toString()
             }
         }
@@ -80,7 +83,7 @@ android {
         }
     }
     externalNativeBuild.cmake {
-        setPath(rootProject.file("$name/tools/CMakeLists.txt"))
+        setPath(file("tools/CMakeLists.txt"))
     }
     lintOptions {
         isAbortOnError = true
@@ -95,8 +98,8 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     implementation("androidx.core:core-ktx:1.0.1")
-    implementation("androidx.databinding:databinding-adapters:3.3.0")
-    implementation("androidx.databinding:databinding-runtime:3.3.0")
+    implementation("androidx.databinding:databinding-adapters:3.3.1")
+    implementation("androidx.databinding:databinding-runtime:3.3.1")
     implementation("androidx.fragment:fragment-ktx:1.0.0")
     implementation("androidx.preference:preference:1.0.0")
     implementation("com.google.android.material:material:1.0.0")

@@ -1,8 +1,7 @@
 /*
- * Copyright © 2018 Harsh Shandilya. All Rights Reserved.
+ * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
-
 package com.wireguard.android.util
 
 import androidx.core.content.edit
@@ -10,13 +9,10 @@ import com.wireguard.android.Application
 
 class ApplicationPreferences {
     companion object {
-        const val appThemeKey = "app_theme"
+        const val appThemeKey = "dark_theme"
         const val globalExclusionsKey = "global_exclusions"
         const val forceUserspaceBackendkey = "force_userspace_backend"
         const val whitelistAppsKey = "whitelist_exclusions"
-        private const val appThemeDarkValue = "dark"
-        const val appThemeBlackValue = "amoled"
-        val darkAppThemeValues = arrayOf(appThemeDarkValue, appThemeBlackValue)
         var exclusions: String
             get() {
                 return Application.sharedPreferences.getString(globalExclusionsKey, "") as String
@@ -28,28 +24,15 @@ class ApplicationPreferences {
                 exclusionsArray = value.toArrayList().toCollection(ArrayList())
             }
         var exclusionsArray: ArrayList<String> = exclusions.toArrayList()
+            private set
 
-        var theme: String
-            get() {
-                return Application.sharedPreferences.getString(appThemeKey, appThemeDarkValue) as String
-            }
-            set(value) {
-                Application.sharedPreferences.edit {
-                    putString(appThemeKey, value)
-                }
-            }
-        var forceUserspaceBackend: Boolean
-            get() {
-                return Application.sharedPreferences.getBoolean(forceUserspaceBackendkey, false)
-            }
-            set(value) {
-                Application.sharedPreferences.edit {
-                    putBoolean(forceUserspaceBackendkey, value)
-                }
-            }
+        val useDarkTheme: Boolean
+            get() = Application.sharedPreferences.getBoolean(appThemeKey, false)
+
+        val forceUserspaceBackend: Boolean
+            get() = Application.sharedPreferences.getBoolean(forceUserspaceBackendkey, false)
+
         val whitelistApps: Boolean
-            get() {
-                return Application.sharedPreferences.getBoolean(whitelistAppsKey, false)
-            }
+            get() = Application.sharedPreferences.getBoolean(whitelistAppsKey, false)
     }
 }

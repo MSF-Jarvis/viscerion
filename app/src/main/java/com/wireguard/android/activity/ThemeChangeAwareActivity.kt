@@ -1,8 +1,7 @@
 /*
- * Copyright © 2017-2018 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
-
 package com.wireguard.android.activity
 
 import android.content.SharedPreferences
@@ -11,7 +10,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.wireguard.android.Application
-import com.wireguard.android.R
+import com.wireguard.android.util.restartApplication
 import com.wireguard.android.util.ApplicationPreferences
 import timber.log.Timber
 import java.lang.reflect.Field
@@ -20,10 +19,6 @@ abstract class ThemeChangeAwareActivity : AppCompatActivity(), SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        when (ApplicationPreferences.theme) {
-            ApplicationPreferences.appThemeBlackValue -> setTheme(R.style.AppThemeBlack)
-            else -> setTheme(R.style.AppTheme)
-        }
         Application.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
@@ -34,19 +29,15 @@ abstract class ThemeChangeAwareActivity : AppCompatActivity(), SharedPreferences
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (ApplicationPreferences.appThemeKey == key) {
-            val isDarkTheme = ApplicationPreferences.theme in ApplicationPreferences.darkAppThemeValues
+            val isDarkTheme = ApplicationPreferences.useDarkTheme
             AppCompatDelegate.setDefaultNightMode(
                 if (isDarkTheme)
                     AppCompatDelegate.MODE_NIGHT_YES
                 else
                     AppCompatDelegate.MODE_NIGHT_NO
             )
-            when (ApplicationPreferences.theme) {
-                ApplicationPreferences.appThemeBlackValue -> setTheme(R.style.AppThemeBlack)
-                else -> setTheme(R.style.AppTheme)
-            }
             invalidateDrawableCache(resources, isDarkTheme)
-            recreate()
+            applicationContext?.restartApplication()
         }
     }
 

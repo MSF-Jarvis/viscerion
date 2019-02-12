@@ -1,8 +1,7 @@
 /*
- * Copyright © 2019 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
-
 package com.wireguard.android.util
 
 import android.content.Context
@@ -110,7 +109,7 @@ class RootShell(val context: Context) {
     @Throws(IOException::class, NoRootException::class)
     fun start() {
         if (!isExecutableInPath(SU))
-            return
+            throw NoRootException(deviceNotRootedMessage)
         if (isRunning())
             return
         if (!localBinaryDir.isDirectory && !localBinaryDir.mkdirs())

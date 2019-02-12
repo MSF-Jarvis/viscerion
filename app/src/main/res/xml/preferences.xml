@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <com.wireguard.android.preference.VersionPreference android:icon="@mipmap/ic_launcher" />
     <CheckBoxPreference
         android:defaultValue="false"
@@ -14,13 +14,10 @@
     <com.wireguard.android.preference.ToolsInstallerPreference android:key="tools_installer" />
     <com.wireguard.android.preference.ZipExporterPreference />
     <com.wireguard.android.preference.LogExporterPreference />
-    <ListPreference
-        android:key="app_theme"
+    <SwitchPreference
+        android:key="dark_theme"
         android:title="@string/theme_title"
-        android:summary="%s"
-        android:defaultValue="dark"
-        android:entries="@array/pref_theme_entries"
-        android:entryValues="@array/pref_theme_entry_values" />
+        android:summary="@string/theme_summary"/>
     <Preference
         android:key="global_exclusions"
         android:title="@string/global_exclusions_title"
@@ -31,4 +28,4 @@
         android:title="@string/force_userspace_backend_title"
         android:summary="@string/force_userspace_backend_summary" />
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

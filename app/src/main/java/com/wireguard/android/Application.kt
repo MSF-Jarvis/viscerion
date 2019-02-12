@@ -1,8 +1,7 @@
 /*
- * Copyright © 2017-2018 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
-
 package com.wireguard.android
 
 import android.app.NotificationChannel
@@ -72,7 +71,7 @@ class Application : android.app.Application() {
         toolsInstaller = ToolsInstaller(applicationContext)
 
         AppCompatDelegate.setDefaultNightMode(
-            if (ApplicationPreferences.theme in ApplicationPreferences.darkAppThemeValues)
+            if (ApplicationPreferences.useDarkTheme)
                 AppCompatDelegate.MODE_NIGHT_YES
             else
                 AppCompatDelegate.MODE_NIGHT_NO
