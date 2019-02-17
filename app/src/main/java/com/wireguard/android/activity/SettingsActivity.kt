@@ -1,5 +1,6 @@
 /*
- * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
+ * Copyright © 2017-2018 WireGuard LLC.
+ * Copyright © 2019 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.wireguard.android.activity
@@ -92,23 +93,22 @@ class SettingsActivity : ThemeChangeAwareActivity() {
             addPreferencesFromResource(R.xml.preferences)
             val screen = preferenceScreen
             val wgQuickOnlyPrefs = arrayOf(
-                preferenceManager.findPreference("tools_installer"),
-                preferenceManager.findPreference("restore_on_boot")
+                preferenceScreen.findPreference("tools_installer"),
+                preferenceScreen.findPreference("restore_on_boot")
             )
             val debugOnlyPrefs = arrayOf(
-                preferenceManager.findPreference(ApplicationPreferences.forceUserspaceBackendkey)
+                preferenceScreen.findPreference(ApplicationPreferences.forceUserspaceBackendkey)
             )
             val wgOnlyPrefs = arrayOf(
-                preferenceManager.findPreference(ApplicationPreferences.whitelistAppsKey)
+                preferenceScreen.findPreference(ApplicationPreferences.whitelistAppsKey)
             )
-            if (!BuildConfig.DEBUG || !Application.supportsKernelModule)
-                debugOnlyPrefs.forEach {
-                    screen.removePreference(it)
-                }
-            for (pref in wgQuickOnlyPrefs)
+            for (pref in wgQuickOnlyPrefs + wgOnlyPrefs + debugOnlyPrefs)
                 pref.isVisible = false
-            for (pref in wgOnlyPrefs)
-                pref.isVisible = false
+
+            if (BuildConfig.DEBUG && Application.supportsKernelModule)
+                for (pref in debugOnlyPrefs)
+                    pref.isVisible = true
+
             Application.backendAsync.thenAccept { backend ->
                 for (pref in wgQuickOnlyPrefs) {
                     if (backend is WgQuickBackend)
@@ -133,11 +133,10 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 Application.tunnelManager.restartActiveTunnels()
                 true
             }
-            preferenceManager.findPreference(ApplicationPreferences.forceUserspaceBackendkey)
-                ?.setOnPreferenceClickListener {
-                    context?.restartApplication()
-                    true
-                }
+            preferenceManager.findPreference(ApplicationPreferences.forceUserspaceBackendkey)?.setOnPreferenceClickListener {
+                context?.restartApplication()
+                true
+            }
         }
 
         override fun onExcludedAppsSelected(excludedApps: List<String>) {

@@ -1,5 +1,6 @@
 /*
- * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
+ * Copyright © 2017-2018 WireGuard LLC.
+ * Copyright © 2019 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.wireguard.android.preference
@@ -14,9 +15,10 @@ import androidx.preference.Preference
 import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.Application
 import com.wireguard.android.R
+import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ExceptionLoggers
-import com.wireguard.android.util.parentActivity
+import com.wireguard.android.util.getParentActivity
 import com.wireguard.config.Config
 import java9.util.concurrent.CompletableFuture
 import kotlinx.coroutines.CoroutineScope
@@ -37,6 +39,7 @@ import kotlin.coroutines.CoroutineContext
  * Preference implementing a button that asynchronously exports config zips.
  */
 
+@Suppress("Unused")
 class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), CoroutineScope {
 
     private var exportedFilePath: String? = null
@@ -88,7 +91,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
             val error = ExceptionLoggers.unwrapMessage(throwable)
             val message = context.getString(R.string.zip_export_error, error)
             Timber.e(message)
-            parentActivity?.findViewById<View>(android.R.id.content)?.let {
+            getParentActivity<SettingsActivity>()?.findViewById<View>(android.R.id.content)?.let {
                 Snackbar.make(it, message, Snackbar.LENGTH_LONG).show()
             }
             isEnabled = true
@@ -110,7 +113,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(
     }
 
     override fun onClick() {
-        parentActivity?.ensurePermissions(
+        getParentActivity<SettingsActivity>()?.ensurePermissions(
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         ) { _, granted ->
             if (granted.isNotEmpty() && granted[0] == PackageManager.PERMISSION_GRANTED) {

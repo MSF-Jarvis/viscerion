@@ -1,5 +1,6 @@
 /*
- * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
+ * Copyright © 2017-2018 WireGuard LLC.
+ * Copyright © 2019 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.wireguard.android.util
@@ -9,6 +10,7 @@ import android.system.OsConstants
 import com.wireguard.android.Application
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.util.RootShell.NoRootException
+import com.wireguard.android.util.SharedLibraryLoader.extractNativeLibrary
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
@@ -18,12 +20,26 @@ import java.io.IOException
  * Helper to install WireGuard tools to the system partition.
  */
 
-class ToolsInstaller(context: Context) {
+class ToolsInstaller(val context: Context) {
 
     private val localBinaryDir: File = File(context.cacheDir, "bin")
-    private val nativeLibraryDir: File = File(context.applicationInfo.nativeLibraryDir)
+    private val nativeLibraryDir: File
     private var areToolsAvailable: Boolean? = null
     private var installAsMagiskModule: Boolean? = null
+
+    init {
+        nativeLibraryDir = if (!context.applicationInfo.splitSourceDirs.isNullOrEmpty()) {
+            // App bundles, unpack executables from the split config APK.
+            EXECUTABLES.forEach {
+                extractNativeLibrary(context,
+                    it[0],
+                    useActualName = true, skipDeletion = true)
+            }
+            context.cacheDir
+        } else {
+            File(context.applicationInfo.nativeLibraryDir)
+        }
+    }
 
     @Throws(NoRootException::class)
     fun areInstalled(): Int {
@@ -32,7 +48,7 @@ class ToolsInstaller(context: Context) {
         val script = StringBuilder()
         for (names in EXECUTABLES) {
             script.append(
-                "cmp -s '${File(nativeLibraryDir, names[0])}' '${File(INSTALL_DIR, names[1])}' && "
+                "[ -f '${File(INSTALL_DIR, names[1])}' ] && cmp -s '${File(nativeLibraryDir, names[0])}' '${File(INSTALL_DIR, names[1])}' && "
             )
         }
         script.append("exit ").append(OsConstants.EALREADY).append(';')
@@ -80,7 +96,7 @@ class ToolsInstaller(context: Context) {
             installAsMagiskModule = try {
                 Application.rootShell.run(
                     null,
-                    "[ -d $magiskDirectory/mirror -a -d $magiskDirectory/img -a ! -f /cache/.disable_magisk ]"
+                    "[ -d $magiskDirectory/img -a ! -f /cache/.disable_magisk ]"
                 ) == OsConstants.EXIT_SUCCESS
             } catch (ignored: Exception) {
                 false
@@ -174,19 +190,18 @@ class ToolsInstaller(context: Context) {
 
         private val EXECUTABLES = arrayOf(arrayOf("libwg.so", "wg"), arrayOf("libwg-quick.so", "wg-quick"))
         private val INSTALL_DIRS = arrayOf(File("/system/xbin"), File("/system/bin"))
-        private val INSTALL_DIR = installDir
+        private val INSTALL_DIR = getInstallDir()
         private var magiskDir: String? = null
 
-        private val installDir: File?
-            get() {
-                val path = System.getenv("PATH") ?: return INSTALL_DIRS[0]
-                val paths = path.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toList()
-                for (dir in INSTALL_DIRS) {
-                    if (paths.contains(dir.path) && dir.isDirectory)
-                        return dir
-                }
-                return null
+        private fun getInstallDir(): File? {
+            val path = System.getenv("PATH") ?: return INSTALL_DIRS[0]
+            val paths = path.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toList()
+            for (dir in INSTALL_DIRS) {
+                if (paths.contains(dir.path) && dir.isDirectory)
+                    return dir
             }
+            return null
+        }
 
         private fun isMagiskSu(): Boolean {
             val output = ArrayList<String>()
@@ -199,7 +214,7 @@ class ToolsInstaller(context: Context) {
                 val output = ArrayList<String>()
                 Application.rootShell.run(output, "su --version | cut -d ':' -f 1")
                 val magiskVer = output[0]
-                magiskDir = if (magiskVer.startsWith("18.")) "/sbin.magisk" else "/sbin.core"
+                magiskDir = if (magiskVer.startsWith("18.")) "/sbin/.magisk" else "/sbin/.core"
             }
             return magiskDir as String
         }

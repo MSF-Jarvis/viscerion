@@ -1,5 +1,6 @@
 /*
- * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
+ * Copyright © 2017-2018 WireGuard LLC.
+ * Copyright © 2019 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.wireguard.android.preference
@@ -15,6 +16,7 @@ import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
 import com.wireguard.android.util.thenAccept
 
+@Suppress("Unused")
 class VersionPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
     private var versionSummary: String? = null
 

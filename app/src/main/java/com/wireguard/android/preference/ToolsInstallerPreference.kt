@@ -1,5 +1,6 @@
 /*
- * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
+ * Copyright © 2017-2018 WireGuard LLC.
+ * Copyright © 2019 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.wireguard.android.preference
@@ -21,6 +22,7 @@ import kotlin.coroutines.CoroutineContext
  * result as the preference summary.
  */
 
+@Suppress("Unused")
 class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), CoroutineScope {
     private var state = State.INITIAL
     override val coroutineContext: CoroutineContext

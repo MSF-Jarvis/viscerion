@@ -8,7 +8,7 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:3.3.1")
         classpath(kotlin("gradle-plugin", "1.3.21"))
-        classpath("com.diffplug.spotless:spotless-plugin-gradle:3.17.0")
+        classpath("com.diffplug.spotless:spotless-plugin-gradle:3.18.0")
     }
 }
 
@@ -24,20 +24,22 @@ allprojects {
 }
 
 tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
-    checkForGradleUpdate = false
-        resolutionStrategy {
-            componentSelection {
-                all {
-                    val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview")
-                        .map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-]*") }
-                        .any { it.matches(candidate.version)
-                }
+    resolutionStrategy {
+        componentSelection {
+            all {
+                val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview")
+                    .map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-]*") }
+                    .any { it.matches(candidate.version) }
                 if (rejected) {
                     reject("Release candidate")
                 }
             }
         }
     }
+    checkForGradleUpdate = true
+    outputFormatter = "json"
+    outputDir = "build/dependencyUpdates"
+    reportfileName = "report"
 }
 
 tasks {

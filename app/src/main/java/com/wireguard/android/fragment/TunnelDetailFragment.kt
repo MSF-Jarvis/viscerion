@@ -1,10 +1,13 @@
 /*
- * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
+ * Copyright © 2017-2018 WireGuard LLC.
+ * Copyright © 2019 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.wireguard.android.fragment
 
+import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,7 +16,7 @@ import android.view.ViewGroup
 import com.wireguard.android.R
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding
 import com.wireguard.android.model.Tunnel
-import com.wireguard.android.util.resolveAttribute
+import com.wireguard.android.util.ApplicationPreferences
 
 /**
  * Fragment that shows details about a specific tunnel.
@@ -48,7 +51,7 @@ class TunnelDetailFragment : BaseFragment() {
     }
 
     override fun onSelectedTunnelChanged(oldTunnel: Tunnel?, newTunnel: Tunnel?) {
-        binding ?: return
+        if (binding == null) return
         binding?.tunnel = newTunnel
         if (newTunnel == null)
             binding?.config = null
@@ -57,8 +60,7 @@ class TunnelDetailFragment : BaseFragment() {
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        binding ?: return
-
+        if (binding == null) return
         binding?.fragment = this
         onSelectedTunnelChanged(null, selectedTunnel)
         super.onViewStateRestored(savedInstanceState)
@@ -67,7 +69,20 @@ class TunnelDetailFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         context?.let {
-            activity?.window?.navigationBarColor = it.resolveAttribute(android.R.attr.navigationBarColor)
+            activity?.window?.apply {
+                val typedValue = TypedValue()
+                it.theme.resolveAttribute(android.R.attr.navigationBarColor, typedValue, true)
+                navigationBarColor = typedValue.data
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 && !ApplicationPreferences.useDarkTheme) {
+                    // Restore window flags
+                    decorView.systemUiVisibility =
+                        View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        it.theme.resolveAttribute(android.R.attr.navigationBarDividerColor, typedValue, true)
+                        navigationBarDividerColor = typedValue.data
+                    }
+                }
+            }
         }
     }
 }

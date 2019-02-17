@@ -1,5 +1,6 @@
 /*
- * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
+ * Copyright © 2017-2018 WireGuard LLC.
+ * Copyright © 2019 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.wireguard.android
@@ -98,6 +99,7 @@ class Application : android.app.Application() {
         val toolsInstaller by lazy { get().toolsInstaller }
         val tunnelManager by lazy { get().tunnelManager }
         var supportsKernelModule = false
+            private set
 
         fun get(): Application {
             return weakSelf.get() as Application
@@ -116,7 +118,9 @@ class Application : android.app.Application() {
                                     throw Exception("Forcing userspace backend on user request.")
                                 app.rootShell.start()
                                 backend = WgQuickBackend(app.applicationContext)
-                            } catch (ignored: Exception) {
+                            } catch (exc: Exception) {
+                                if (exc is RootShell.NoRootException)
+                                    supportsKernelModule = false
                             }
                         }
                         if (backend == null)

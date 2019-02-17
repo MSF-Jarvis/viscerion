@@ -1,5 +1,6 @@
 /*
- * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
+ * Copyright © 2017-2018 WireGuard LLC.
+ * Copyright © 2019 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.wireguard.android.preference
@@ -13,8 +14,9 @@ import android.view.View
 import androidx.preference.Preference
 import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.R
+import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.android.util.ExceptionLoggers
-import com.wireguard.android.util.parentActivity
+import com.wireguard.android.util.getParentActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -31,6 +33,7 @@ import kotlin.coroutines.CoroutineContext
  * Preference implementing a button that asynchronously exports logs.
  */
 
+@Suppress("Unused")
 class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), CoroutineScope {
 
     private var exportedFilePath: String? = null
@@ -76,7 +79,7 @@ class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(
             val error = ExceptionLoggers.unwrapMessage(throwable)
             val message = context.getString(R.string.log_export_error, error)
             Timber.e(throwable)
-            parentActivity?.findViewById<View>(android.R.id.content)?.let {
+            getParentActivity<SettingsActivity>()?.findViewById<View>(android.R.id.content)?.let {
                 Snackbar.make(it, message, Snackbar.LENGTH_LONG).show()
             }
             isEnabled = true
@@ -98,7 +101,7 @@ class LogExporterPreference(context: Context, attrs: AttributeSet) : Preference(
     }
 
     override fun onClick() {
-        parentActivity?.ensurePermissions(
+        getParentActivity<SettingsActivity>()?.ensurePermissions(
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         ) { _, granted ->
             if (granted.isNotEmpty() && granted[0] == PackageManager.PERMISSION_GRANTED) {

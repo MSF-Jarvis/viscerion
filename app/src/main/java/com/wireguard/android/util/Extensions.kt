@@ -1,5 +1,6 @@
 /*
- * Copyright © 2019 Harsh Shandilya. All Rights Reserved.
+ * Copyright © 2017-2018 WireGuard LLC.
+ * Copyright © 2019 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.wireguard.android.util
@@ -13,29 +14,25 @@ import android.content.Intent
 import android.os.Handler
 import android.os.SystemClock
 import android.text.TextUtils
-import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.config.Attribute.Companion.LIST_SEPARATOR
 import kotlinx.coroutines.CompletableDeferred
 
 fun String.toArrayList(): ArrayList<String> {
-    if (TextUtils.isEmpty(this))
-        return ArrayList()
-    return LIST_SEPARATOR.split(this.trim()).toCollection(ArrayList())
+    return if (TextUtils.isEmpty(this))
+        ArrayList()
+    else
+        LIST_SEPARATOR.split(this.trim()).toCollection(ArrayList())
 }
 
 fun <T> List<T>.asString(): String {
     return TextUtils.join(", ", this)
-}
-
-fun <T> Array<out T>?.isNotNullOrEmpty(): Boolean {
-    return this != null && !isEmpty()
 }
 
 inline fun <reified T : Any> Any?.requireNonNull(message: String): T {
@@ -60,19 +57,12 @@ fun Context.restartApplication() {
     Handler().postDelayed({ android.os.Process.killProcess(android.os.Process.myPid()) }, 500L)
 }
 
-val Preference.parentActivity: SettingsActivity?
-    get() {
-        return try {
-            ((context as ContextThemeWrapper).baseContext as SettingsActivity)
-        } catch (ignored: ClassCastException) {
-            null
-        }
+inline fun <reified T : AppCompatActivity> Preference.getParentActivity(): T? {
+    return try {
+        ((context as ContextThemeWrapper).baseContext as T)
+    } catch (ignored: ClassCastException) {
+        null
     }
-
-fun Context.resolveAttribute(attr: Int): Int {
-    val typedValue = TypedValue()
-    this.theme.resolveAttribute(attr, typedValue, true)
-    return typedValue.data
 }
 
 fun copyTextView(view: View) {
