@@ -255,11 +255,11 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
                     return
                 }
                 "${BuildConfig.APPLICATION_ID}.SET_TUNNEL_UP" -> {
-                    tunnelName = intent.getStringExtra("tunnel_name")
+                    tunnelName = intent.getStringExtra(TUNNEL_NAME_INTENT_EXTRA)
                     state = Tunnel.State.UP
                 }
                 "${BuildConfig.APPLICATION_ID}.SET_TUNNEL_DOWN" -> {
-                    tunnelName = intent.getStringExtra("tunnel_name")
+                    tunnelName = intent.getStringExtra(TUNNEL_NAME_INTENT_EXTRA)
                     state = Tunnel.State.DOWN
                 }
                 else -> Timber.tag("IntentReceiver").d("Invalid intent action: ${intent.action}")
@@ -287,6 +287,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         private const val KEY_LAST_USED_TUNNEL = "last_used_tunnel"
         private const val KEY_RESTORE_ON_BOOT = "restore_on_boot"
         private const val KEY_RUNNING_TUNNELS = "enabled_configs"
+        private const val TUNNEL_NAME_INTENT_EXTRA = "tunnel_name"
 
         internal fun getTunnelState(tunnel: Tunnel): CompletionStage<Tunnel.State> {
             return Application.asyncWorker.supplyAsync { Application.backend.getState(tunnel) }
