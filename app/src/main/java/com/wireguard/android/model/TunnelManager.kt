@@ -13,6 +13,7 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.wireguard.android.Application
 import com.wireguard.android.BR
+import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.configStore.ConfigStore
@@ -25,6 +26,7 @@ import com.wireguard.config.Config
 import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
+import timber.log.Timber
 import java.util.ArrayList
 
 class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
@@ -243,10 +245,35 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     class IntentReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val manager = Application.tunnelManager
+            var tunnelName: String? = null
+            var state: Tunnel.State? = null
             if (intent == null || intent.action == null)
                 return
-            if ("com.wireguard.android.action.REFRESH_TUNNEL_STATES" == intent.action) {
-                manager.refreshTunnelStates()
+            when (intent.action) {
+                "com.wireguard.android.action.REFRESH_TUNNEL_STATES" -> {
+                    manager.refreshTunnelStates()
+                    return
+                }
+                "${BuildConfig.APPLICATION_ID}.SET_TUNNEL_UP" -> {
+                    tunnelName = intent.getStringExtra("tunnel_name")
+                    state = Tunnel.State.UP
+                }
+                "${BuildConfig.APPLICATION_ID}.SET_TUNNEL_DOWN" -> {
+                    tunnelName = intent.getStringExtra("tunnel_name")
+                    state = Tunnel.State.DOWN
+                }
+                else -> Timber.tag("IntentReceiver").d("Invalid intent action: ${intent.action}")
+            }
+            if (tunnelName != null && state != null) {
+                Timber.tag("IntentReceiver").d("Setting $tunnelName's state to $state")
+                manager.getTunnels().thenAccept { tunnels ->
+                    val tunnel = tunnels[tunnelName]
+                    tunnel?.let {
+                        manager.setTunnelState(it, state)
+                    }
+                }
+            } else {
+                Timber.tag("IntentReceiver").d("Intent parameter tunnel_name not set!")
             }
         }
     }
