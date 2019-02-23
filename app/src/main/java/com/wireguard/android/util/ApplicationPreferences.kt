@@ -13,8 +13,8 @@ object ApplicationPreferences {
     const val globalExclusionsKey = "global_exclusions"
     const val forceUserspaceBackendkey = "force_userspace_backend"
     const val whitelistAppsKey = "whitelist_exclusions"
+    const val taskerIntegrationSecretKey = "intent_integration_secret"
     private const val allowTaskerIntegrationKey = "allow_tasker_integration"
-    private const val taskerIntegrationSecretKey = "intent_integration_secret"
 
     var exclusions: String
         get() = Application.sharedPreferences.getString(globalExclusionsKey, "") ?: ""

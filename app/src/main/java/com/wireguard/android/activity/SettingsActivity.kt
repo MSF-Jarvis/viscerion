@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.transaction
 import androidx.preference.CheckBoxPreference
+import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
@@ -107,6 +108,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
             val exclusionsPref = preferenceManager.findPreference<Preference>(ApplicationPreferences.globalExclusionsKey)
             val whitelistAppsPref = preferenceManager.findPreference<CheckBoxPreference>(ApplicationPreferences.whitelistAppsKey)
             val forceUserspaceBackendPref = preferenceManager.findPreference<SwitchPreferenceCompat>(ApplicationPreferences.forceUserspaceBackendkey)
+            val integrationSecretPref = preferenceManager.findPreference<EditTextPreference>(ApplicationPreferences.taskerIntegrationSecretKey)
             for (pref in wgQuickOnlyPrefs + wgOnlyPrefs + debugOnlyPrefs)
                 pref.isVisible = false
 
@@ -141,6 +143,14 @@ class SettingsActivity : ThemeChangeAwareActivity() {
             forceUserspaceBackendPref?.setOnPreferenceClickListener {
                 context?.restartApplication()
                 true
+            }
+            integrationSecretPref.setSummaryProvider { preference ->
+                if (ApplicationPreferences.allowTaskerIntegration &&
+                    preference.isEnabled &&
+                    ApplicationPreferences.taskerIntegrationSecret.isEmpty())
+                    getString(R.string.tasker_integration_summary_empty_secret)
+                else
+                    getString(R.string.tasker_integration_secret_summary)
             }
         }
 
