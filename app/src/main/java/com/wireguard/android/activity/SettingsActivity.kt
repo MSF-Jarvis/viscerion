@@ -12,7 +12,10 @@ import android.view.MenuItem
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.transaction
+import androidx.preference.CheckBoxPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import com.wireguard.android.Application
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
@@ -92,15 +95,18 @@ class SettingsActivity : ThemeChangeAwareActivity() {
             addPreferencesFromResource(R.xml.preferences)
             val screen = preferenceScreen
             val wgQuickOnlyPrefs = arrayOf(
-                preferenceScreen.findPreference("tools_installer"),
-                preferenceScreen.findPreference("restore_on_boot")
+                preferenceScreen.findPreference<Preference>("tools_installer"),
+                preferenceScreen.findPreference<CheckBoxPreference>("restore_on_boot")
             )
             val debugOnlyPrefs = arrayOf(
-                preferenceScreen.findPreference(ApplicationPreferences.forceUserspaceBackendkey)
+                preferenceScreen.findPreference<SwitchPreferenceCompat>(ApplicationPreferences.forceUserspaceBackendkey)
             )
             val wgOnlyPrefs = arrayOf(
-                preferenceScreen.findPreference(ApplicationPreferences.whitelistAppsKey)
+                preferenceScreen.findPreference<CheckBoxPreference>(ApplicationPreferences.whitelistAppsKey)
             )
+            val exclusionsPref = preferenceManager.findPreference<Preference>(ApplicationPreferences.globalExclusionsKey)
+            val whitelistAppsPref = preferenceManager.findPreference<CheckBoxPreference>(ApplicationPreferences.whitelistAppsKey)
+            val forceUserspaceBackendPref = preferenceManager.findPreference<SwitchPreferenceCompat>(ApplicationPreferences.forceUserspaceBackendkey)
             for (pref in wgQuickOnlyPrefs + wgOnlyPrefs + debugOnlyPrefs)
                 pref.isVisible = false
 
@@ -122,17 +128,17 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                         screen.removePreference(pref)
                 }
             }
-            preferenceManager.findPreference(ApplicationPreferences.globalExclusionsKey).setOnPreferenceClickListener {
+            exclusionsPref.setOnPreferenceClickListener {
                 val excludedApps = ArrayList<String>(ApplicationPreferences.exclusionsArray)
                 val fragment = AppListDialogFragment.newInstance(excludedApps, true, this)
-                fragment.show(fragmentManager, null)
+                fragment.show(requireFragmentManager(), null)
                 true
             }
-            preferenceManager.findPreference(ApplicationPreferences.whitelistAppsKey)?.setOnPreferenceClickListener {
+            whitelistAppsPref?.setOnPreferenceClickListener {
                 Application.tunnelManager.restartActiveTunnels()
                 true
             }
-            preferenceManager.findPreference(ApplicationPreferences.forceUserspaceBackendkey)?.setOnPreferenceClickListener {
+            forceUserspaceBackendPref?.setOnPreferenceClickListener {
                 context?.restartApplication()
                 true
             }
