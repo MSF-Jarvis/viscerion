@@ -37,6 +37,14 @@ fun Project.configureSpotless() {
             endWithNewline()
         }
 
+        java {
+            target("**/*.java")
+            trimTrailingWhitespace()
+            removeUnusedImports()
+            googleJavaFormat().aosp()
+            endWithNewline()
+        }
+
         kotlinGradle {
             target("*.gradle.kts", "gradle/*.gradle.kts", "buildSrc/*.gradle.kts")
             ktlint("0.29.0")
