@@ -129,6 +129,8 @@ afterEvaluate {
     val assembleTask = tasks.findByName("assembleDebug") ?: tasks.findByName("assembleRelease")
     val dependencies = mutableListOf()
     dependencies += rootProject.tasks.getByName("spotlessCheck")
-    if (dependencies.isNotEmpty())
+    if (dependencies.isNotEmpty()) {
+        assembleTask?.dependsOn?.forEach { dependencies += it }
         assembleTask?.setDependsOn(dependencies)
+    }
 }
