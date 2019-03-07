@@ -125,3 +125,11 @@ tasks.withType<KotlinCompile> {
 kapt {
     useBuildCache = true
 }
+
+afterEvaluate {
+    val assembleTask = tasks.findByName("assembleDebug") ?: tasks.findByName("assembleRelease")
+    val dependencies = mutableListOf()
+    dependencies += rootProject.tasks.getByName("spotlessCheck")
+    if (dependencies.isNotEmpty())
+        assembleTask?.setDependsOn(dependencies)
+}
