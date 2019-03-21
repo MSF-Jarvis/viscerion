@@ -13,6 +13,7 @@ class DependencyStore {
         private const val coreKtxVersion = "1.1.0-alpha05"
         private const val databindingVersion = "3.5.0-alpha07"
         private const val fragmentKtxVersion = "1.1.0-alpha05"
+        private const val pagingVersion = "2.1.0"
         private const val preferenceVersion = "1.1.0-alpha04"
 
         const val annotations = "androidx.annotation:annotation:$annotationVersion"
@@ -23,6 +24,7 @@ class DependencyStore {
         const val databindingAdapters = "androidx.databinding:databinding-adapters:$databindingVersion"
         const val databindingRuntime = "androidx.databinding:databinding-runtime:$databindingVersion"
         const val fragmentKtx = "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+        const val pagingKtx = "androidx.paging:paging-runtime-ktx:$pagingVersion"
         const val preference = "androidx.preference:preference:$preferenceVersion"
     }
 
