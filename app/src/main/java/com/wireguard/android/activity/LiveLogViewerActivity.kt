@@ -46,19 +46,21 @@ class LiveLogViewerActivity : AppCompatActivity() {
             addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        rootSession = Shell.Builder().useSH().open()
-        rootSession.addCommand(
+        rootSession = Shell.Builder().useSH().open().apply {
+            addCommand(
                 arrayOf("logcat", "-b", "all", "-v", "threadtime", "*:V"),
                 0, object : Shell.OnCommandLineListener {
-            override fun onLine(line: String?) {
-                line?.let {
-                    logcatDataset.add(LogEntry(it))
-                    runOnUiThread { viewAdapter.notifyDataSetChanged() }
-                }
-            }
+                    override fun onLine(line: String?) {
+                        line?.let {
+                            logcatDataset.add(LogEntry(it))
+                            runOnUiThread { viewAdapter.notifyDataSetChanged() }
+                        }
+                    }
 
-            override fun onCommandResult(commandCode: Int, exitCode: Int) {}
-        })
+                    override fun onCommandResult(commandCode: Int, exitCode: Int) {}
+                }
+            )
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
