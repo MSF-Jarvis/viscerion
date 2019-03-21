@@ -5,17 +5,25 @@
  */
 package com.wireguard.android.activity
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wireguard.android.R
 import com.wireguard.android.databinding.LogViewerActivityBinding
+import com.wireguard.android.util.LogExporter
 
 class LiveLogViewerActivity : AppCompatActivity() {
 
@@ -51,6 +59,35 @@ class LiveLogViewerActivity : AppCompatActivity() {
             }
         })
         logcatThread.start()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.log_viewer, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.export_log -> {
+                if (ContextCompat.checkSelfPermission(
+                                this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(
+                            this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1000)
+                } else {
+                    LogExporter(this).exportLog()
+                }
+                return true
+            }
+        }
+        return false
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            1000 -> LogExporter(this).exportLog()
+            else -> super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     override fun onDestroy() {
