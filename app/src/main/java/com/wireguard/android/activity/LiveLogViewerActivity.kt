@@ -23,13 +23,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wireguard.android.R
 import com.wireguard.android.databinding.LogViewerActivityBinding
 import com.wireguard.android.util.LogExporter
+import eu.chainfire.libsuperuser.Shell
 
 class LiveLogViewerActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var logcatThread: Thread
+    private lateinit var rootSession: Shell.Interactive
     private val logcatDataset: ArrayList<LogEntry> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,20 +45,19 @@ class LiveLogViewerActivity : AppCompatActivity() {
             adapter = viewAdapter
             addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         }
-        logcatThread = Thread(Runnable {
-            val process = Runtime.getRuntime().exec(arrayOf("logcat", "-b", "all", "-v", "threadtime", "*:V"))
-            process.inputStream.bufferedReader().apply {
-                var line: String?
-                while (true) {
-                    line = readLine()
-                    if (line == null)
-                        break
-                    logcatDataset.add(LogEntry(line))
+        rootSession = Shell.Builder().useSH().open()
+        rootSession.addCommand(
+                arrayOf("logcat", "-b", "all", "-v", "threadtime", "*:V"),
+                0, object : Shell.OnCommandLineListener {
+            override fun onLine(line: String?) {
+                line?.let {
+                    logcatDataset.add(LogEntry(it))
                     runOnUiThread { viewAdapter.notifyDataSetChanged() }
                 }
             }
+
+            override fun onCommandResult(commandCode: Int, exitCode: Int) {}
         })
-        logcatThread.start()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -97,8 +97,8 @@ class LiveLogViewerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (::logcatThread.isInitialized && logcatThread.isAlive) {
-            logcatThread.interrupt()
+        if (rootSession.isRunning) {
+            rootSession.kill()
         }
     }
 
