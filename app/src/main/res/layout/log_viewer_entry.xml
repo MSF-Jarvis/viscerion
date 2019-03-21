@@ -6,4 +6,5 @@
     android:padding="6dp"
     android:text="@string/log_viewer"
     android:textColor="?android:attr/textColorPrimary"
+    android:foreground="?attr/selectableItemBackground"
     style="@style/TextAppearance.MaterialComponents.Caption"/>
