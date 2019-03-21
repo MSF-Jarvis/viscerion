@@ -6,7 +6,6 @@
 package com.wireguard.android.activity
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -73,7 +72,9 @@ class LiveLogViewerActivity : AppCompatActivity() {
                                 this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(
-                            this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1000)
+                            this,
+                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1000
+                    )
                 } else {
                     LogExporter.exportLog(this)
                 }
@@ -83,10 +84,14 @@ class LiveLogViewerActivity : AppCompatActivity() {
         return false
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             1000 -> LogExporter.exportLog(this)
-            else -> super.onActivityResult(requestCode, resultCode, data)
+            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
 
