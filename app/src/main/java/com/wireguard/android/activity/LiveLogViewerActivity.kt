@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.paging.PagedListAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -62,8 +60,8 @@ class LiveLogViewerActivity : AppCompatActivity() {
         }
     }
 
-    class LogEntryAdapter(private val myDataset: ArrayList<LogEntry>) :
-            PagedListAdapter<LogEntry, LogEntryAdapter.ViewHolder>(diffCallback) {
+    class LogEntryAdapter(private val dataset: ArrayList<LogEntry>) :
+            RecyclerView.Adapter<LogEntryAdapter.ViewHolder>() {
 
         class ViewHolder(val textView: TextView, var isSingleLine: Boolean = true) :
                 RecyclerView.ViewHolder(textView)
@@ -80,7 +78,7 @@ class LiveLogViewerActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.textView.apply {
                 setSingleLine()
-                text = myDataset[position].entry
+                text = dataset[position].entry
                 setOnClickListener {
                     setSingleLine(!holder.isSingleLine)
                     holder.isSingleLine = !holder.isSingleLine
@@ -88,20 +86,8 @@ class LiveLogViewerActivity : AppCompatActivity() {
             }
         }
 
-        override fun getItemCount() = myDataset.size
+        override fun getItemCount() = dataset.size
     }
 
     data class LogEntry(val entry: String)
-
-    companion object {
-        private val diffCallback = object : DiffUtil.ItemCallback<LogEntry>() {
-            override fun areContentsTheSame(oldItem: LogEntry, newItem: LogEntry): Boolean {
-                return oldItem.entry == newItem.entry
-            }
-
-            override fun areItemsTheSame(oldItem: LogEntry, newItem: LogEntry): Boolean {
-                return false
-            }
-        }
-    }
 }

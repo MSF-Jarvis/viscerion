@@ -96,7 +96,6 @@ dependencies {
     implementation(deps.AndroidX.databindingAdapters)
     implementation(deps.AndroidX.databindingRuntime)
     implementation(deps.AndroidX.fragmentKtx)
-    implementation(deps.AndroidX.pagingKtx)
     implementation(deps.AndroidX.preference)
     implementation(deps.Material.material)
     implementation(deps.ThirdParty.retrofuture)
