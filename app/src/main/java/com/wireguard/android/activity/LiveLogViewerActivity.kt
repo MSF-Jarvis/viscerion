@@ -75,7 +75,7 @@ class LiveLogViewerActivity : AppCompatActivity() {
                     ActivityCompat.requestPermissions(
                             this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1000)
                 } else {
-                    LogExporter(this).exportLog()
+                    LogExporter.exportLog(this)
                 }
                 return true
             }
@@ -85,7 +85,7 @@ class LiveLogViewerActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            1000 -> LogExporter(this).exportLog()
+            1000 -> LogExporter.exportLog(this)
             else -> super.onActivityResult(requestCode, resultCode, data)
         }
     }

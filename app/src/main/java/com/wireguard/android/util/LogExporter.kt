@@ -18,9 +18,9 @@ import java.io.FileOutputStream
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class LogExporter(val activity: AppCompatActivity) {
+object LogExporter {
 
-    fun exportLog() {
+    fun exportLog(activity: AppCompatActivity) {
         Application.asyncWorker.supplyAsync {
             val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             val file = File(path, "viscerion-log.txt")
@@ -47,20 +47,18 @@ class LogExporter(val activity: AppCompatActivity) {
                 throw e
             }
             file.absolutePath
-        }.whenComplete(this::exportLogComplete)
-    }
-
-    private fun exportLogComplete(filePath: String, throwable: Throwable?) {
-        var message = ""
-        if (throwable != null) {
-            val error = ExceptionLoggers.unwrapMessage(throwable)
-            message = activity.getString(R.string.log_export_error, error)
-            Timber.e(throwable)
-        } else {
-            message = activity.getString(R.string.log_export_success, filePath)
-        }
-        activity.findViewById<View>(android.R.id.content)?.let {
-            Snackbar.make(it, message, Snackbar.LENGTH_LONG).show()
+        }.whenComplete { filePath: String, throwable: Throwable? ->
+            val message: String
+            if (throwable != null) {
+                val error = ExceptionLoggers.unwrapMessage(throwable)
+                message = activity.getString(R.string.log_export_error, error)
+                Timber.e(throwable)
+            } else {
+                message = activity.getString(R.string.log_export_success, filePath)
+            }
+            activity.findViewById<View>(android.R.id.content)?.let {
+                Snackbar.make(it, message, Snackbar.LENGTH_LONG).show()
+            }
         }
     }
 }
