@@ -45,6 +45,7 @@ class LiveLogViewerActivity : AppCompatActivity() {
             adapter = viewAdapter
             addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         rootSession = Shell.Builder().useSH().open()
         rootSession.addCommand(
                 arrayOf("logcat", "-b", "all", "-v", "threadtime", "*:V"),
@@ -67,6 +68,7 @@ class LiveLogViewerActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            android.R.id.home -> finish()
             R.id.export_log -> {
                 if (ContextCompat.checkSelfPermission(
                                 this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
