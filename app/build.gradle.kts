@@ -23,12 +23,12 @@ fun gitHash(): String {
 }
 
 android {
-    compileSdkVersion(28)
+    compileSdkVersion("android-Q")
     dataBinding.isEnabled = true
     defaultConfig {
         applicationId = "me.msfjarvis.viscerion"
         minSdkVersion(21)
-        targetSdkVersion(28)
+        targetSdkVersion("Q")
         versionCode = VersionConfiguration.versionCode
         versionName = VersionConfiguration.versionName
         buildConfigField("String", "GIT_HASH", "\"${gitHash()}\"")
