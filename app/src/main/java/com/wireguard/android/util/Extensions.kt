@@ -29,6 +29,7 @@ import com.wireguard.config.Attribute.Companion.LIST_SEPARATOR
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
+/* TODO: Remove when Q drops */
 val ATLEAST_Q: Boolean
     get() {
         return Build.VERSION.CODENAME.length == 1 &&
