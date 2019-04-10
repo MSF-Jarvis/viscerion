@@ -28,7 +28,7 @@ android {
     defaultConfig {
         applicationId = "me.msfjarvis.viscerion"
         minSdkVersion(21)
-        targetSdkVersion("Q")
+        targetSdkVersion(28)
         versionCode = VersionConfiguration.versionCode
         versionName = VersionConfiguration.versionName
         buildConfigField("String", "GIT_HASH", "\"${gitHash()}\"")
