@@ -83,7 +83,6 @@ class Application : android.app.Application() {
         updateAppTheme()
 
         tunnelManager = TunnelManager(FileConfigStore(applicationContext))
-        tunnelManager.onCreate()
 
         asyncWorker.supplyAsync { backend }.thenAccept { backend ->
             futureBackend.complete(backend)

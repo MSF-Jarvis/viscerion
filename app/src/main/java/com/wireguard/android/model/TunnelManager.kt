@@ -34,6 +34,14 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     private val delayedLoadRestoreTunnels = ArrayList<CompletableFuture<Void>>()
     private var haveLoaded: Boolean = false
 
+    init {
+        Application.asyncWorker.supplyAsync { configStore.enumerate() }
+                .thenAcceptBoth(
+                        Application.asyncWorker.supplyAsync { Application.backend.enumerate() }
+                ) { present, running -> this.onTunnelsLoaded(present, running) }
+                .whenComplete(ExceptionLoggers.E)
+    }
+
     private fun addToList(name: String, config: Config?, state: Tunnel.State): Tunnel {
         val tunnel = Tunnel(this, name, config, state)
         tunnels.add(tunnel)
@@ -99,14 +107,6 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
 
     fun getTunnels(): CompletableFuture<ObservableSortedKeyedList<String, Tunnel>> {
         return completableTunnels
-    }
-
-    fun onCreate() {
-        Application.asyncWorker.supplyAsync { configStore.enumerate() }
-                .thenAcceptBoth(
-                        Application.asyncWorker.supplyAsync { Application.backend.enumerate() }
-                ) { present, running -> this.onTunnelsLoaded(present, running) }
-                .whenComplete(ExceptionLoggers.E)
     }
 
     private fun onTunnelsLoaded(present: Iterable<String>, running: Collection<String>) {
