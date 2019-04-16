@@ -17,6 +17,7 @@ import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.configStore.FileConfigStore
+import com.wireguard.android.di.applicationModules
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
@@ -24,6 +25,10 @@ import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
 import com.wireguard.android.util.updateAppTheme
 import java9.util.concurrent.CompletableFuture
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import timber.log.Timber
 import java.io.File
 import java.lang.ref.WeakReference
@@ -61,6 +66,12 @@ class Application : android.app.Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        startKoin {
+            androidLogger(level = Level.DEBUG)
+            androidContext(this@Application)
+            modules(applicationModules)
+        }
 
         if (BuildConfig.DEBUG)
             Timber.plant(Timber.DebugTree())
