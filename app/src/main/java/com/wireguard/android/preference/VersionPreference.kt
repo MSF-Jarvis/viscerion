@@ -14,15 +14,19 @@ import androidx.preference.Preference
 import com.wireguard.android.Application
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
+import com.wireguard.android.util.AsyncWorker
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class VersionPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
+class VersionPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), KoinComponent {
     private var versionSummary: String? = null
+    private val asyncWorker by inject<AsyncWorker>()
 
     init {
         Application.backendAsync.thenAccept { backend ->
             versionSummary =
                     getContext().getString(R.string.version_summary_checking, backend.getTypePrettyName().toLowerCase())
-            Application.asyncWorker.supplyAsync { backend.getVersion() }
+            asyncWorker.supplyAsync { backend.getVersion() }
                     .whenComplete { version, exception ->
                         versionSummary = if (exception == null)
                             getContext().getString(R.string.version_summary, backend.getTypePrettyName(), version)
