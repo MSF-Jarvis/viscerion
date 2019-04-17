@@ -26,9 +26,11 @@ import com.wireguard.android.R
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.fragment.AppListDialogFragment
+import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.asString
 import com.wireguard.android.util.isPermissionGranted
 import com.wireguard.android.util.updateAppTheme
+import org.koin.android.ext.android.inject
 import java.io.File
 import java.util.Arrays
 
@@ -95,6 +97,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     class SettingsFragment : PreferenceFragmentCompat(), AppListDialogFragment.AppExclusionListener {
+        private val tunnelManager by inject<TunnelManager>()
+
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
             addPreferencesFromResource(R.xml.preferences)
             val screen = preferenceScreen
@@ -205,7 +209,7 @@ class SettingsActivity : AppCompatActivity() {
 
         override fun onExcludedAppsSelected(excludedApps: List<String>) {
             if (excludedApps.asString() == Application.appPrefs.exclusions) return
-            Application.tunnelManager.getTunnels().thenAccept { tunnels ->
+            tunnelManager.getTunnels().thenAccept { tunnels ->
                 if (excludedApps.isNotEmpty()) {
                     tunnels.forEach { tunnel ->
                         val oldConfig = tunnel.getConfig()

@@ -8,10 +8,7 @@ package com.wireguard.android
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.AsyncTask
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.RequiresApi
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
@@ -22,24 +19,21 @@ import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.RootShell
-import com.wireguard.android.util.ToolsInstaller
 import com.wireguard.android.util.updateAppTheme
 import java9.util.concurrent.CompletableFuture
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
+import org.koin.core.inject
 import org.koin.core.logger.Level
 import timber.log.Timber
 import java.io.File
 import java.lang.ref.WeakReference
 
 class Application : android.app.Application() {
-    private lateinit var asyncWorker: AsyncWorker
     private lateinit var rootShell: RootShell
-    private val appPrefs: ApplicationPreferences by lazy {
-        ApplicationPreferences(this)
-    }
-    private lateinit var toolsInstaller: ToolsInstaller
     private lateinit var tunnelManager: TunnelManager
     private var backend: Backend? = null
     private val futureBackend = CompletableFuture<Backend>()
@@ -76,14 +70,11 @@ class Application : android.app.Application() {
         if (BuildConfig.DEBUG)
             Timber.plant(Timber.DebugTree())
 
-        asyncWorker = AsyncWorker(AsyncTask.SERIAL_EXECUTOR, Handler(Looper.getMainLooper()))
-        rootShell = RootShell(applicationContext)
-        toolsInstaller = ToolsInstaller(applicationContext)
-
         updateAppTheme()
 
         tunnelManager = TunnelManager(FileConfigStore(applicationContext))
 
+        val asyncWorker by inject<AsyncWorker>()
         asyncWorker.supplyAsync { backend }.thenAccept { backend ->
             futureBackend.complete(backend)
         }
@@ -92,15 +83,12 @@ class Application : android.app.Application() {
             createNotificationChannel()
     }
 
-    companion object {
+    companion object : KoinComponent {
 
         private lateinit var weakSelf: WeakReference<Application>
-        val asyncWorker by lazy { get().asyncWorker }
         val backendAsync by lazy { get().futureBackend }
-        val rootShell by lazy { get().rootShell }
-        val appPrefs by lazy { get().appPrefs }
-        val toolsInstaller by lazy { get().toolsInstaller }
-        val tunnelManager by lazy { get().tunnelManager }
+        val rootShell by inject<RootShell>()
+        val appPrefs by inject<ApplicationPreferences>()
 
         fun get(): Application {
             return weakSelf.get() as Application
