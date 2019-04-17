@@ -13,12 +13,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.getSystemService
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.databinding.ConfigNamingDialogFragmentBinding
+import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.widget.NameInputFilter
 import com.wireguard.config.BadConfigException
 import com.wireguard.config.Config
+import org.koin.android.ext.android.inject
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.nio.charset.StandardCharsets
@@ -28,6 +29,7 @@ class ConfigNamingDialogFragment : DialogFragment() {
     private var config: Config? = null
     private var binding: ConfigNamingDialogFragmentBinding? = null
     private var imm: InputMethodManager? = null
+    private val tunnelManager by inject<TunnelManager>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +80,7 @@ class ConfigNamingDialogFragment : DialogFragment() {
         binding?.let {
             val name = it.tunnelNameText.text.toString()
 
-            Application.tunnelManager.create(name, config).whenComplete { tunnel, throwable ->
+            tunnelManager.create(name, config).whenComplete { tunnel, throwable ->
                 if (tunnel != null) {
                     dismiss()
                 } else {

@@ -17,14 +17,17 @@ import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.databinding.AppListDialogFragmentBinding
 import com.wireguard.android.model.ApplicationData
+import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.ObservableKeyedArrayList
+import org.koin.android.ext.android.inject
 
 class AppListDialogFragment : DialogFragment() {
 
     private var currentlyExcludedApps: ArrayList<String>? = null
     private var isGlobalExclusionsDialog = false
     private val appData = ObservableKeyedArrayList<String, ApplicationData>()
+    private val asyncWorker by inject<AsyncWorker>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +64,7 @@ class AppListDialogFragment : DialogFragment() {
 
     private fun loadData() {
         val activity = requireActivity()
-        Application.asyncWorker.supplyAsync<List<ApplicationData>> {
+        asyncWorker.supplyAsync<List<ApplicationData>> {
             val appData = ArrayList<ApplicationData>()
             val pm = activity.packageManager
             pm.getPackagesHoldingPermissions(

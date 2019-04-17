@@ -25,12 +25,14 @@ import com.wireguard.android.activity.MainActivity
 import com.wireguard.android.databinding.TunnelEditorFragmentBinding
 import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener
 import com.wireguard.android.model.Tunnel
+import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.requireNonNull
 import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.android.widget.KeyInputFilter
 import com.wireguard.android.widget.NameInputFilter
 import com.wireguard.config.Config
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 /**
@@ -154,7 +156,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                 when {
                     tunnel == null -> {
                         Timber.d("Attempting to create new tunnel %s", binding?.name)
-                        val manager = Application.tunnelManager
+                        val manager by inject<TunnelManager>()
                         manager.create(binding?.name.requireNonNull("Tunnel name cannot be empty!"), newConfig)
                                 .whenComplete { newTunnel, throwable ->
                                     this.onTunnelCreated(
