@@ -17,6 +17,7 @@ import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.model.Tunnel.Statistics
+import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.KotlinCompanions
 import com.wireguard.android.util.ObservableSortedKeyedArrayList
@@ -25,19 +26,23 @@ import com.wireguard.config.Config
 import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 
-class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
-    private val context by lazy { Application.get() }
+class TunnelManager(private val context: Context) : BaseObservable(), KoinComponent {
+
     private val completableTunnels = CompletableFuture<ObservableSortedKeyedList<String, Tunnel>>()
     private val tunnels = ObservableSortedKeyedArrayList<String, Tunnel>(COMPARATOR)
     private val delayedLoadRestoreTunnels = ArrayList<CompletableFuture<Void>>()
+    private val asyncWorker by inject<AsyncWorker>()
+    private val configStore by inject<ConfigStore>()
     private var haveLoaded: Boolean = false
 
     init {
-        Application.asyncWorker.supplyAsync { configStore.enumerate() }
+        asyncWorker.supplyAsync { configStore.enumerate() }
                 .thenAcceptBoth(
-                        Application.asyncWorker.supplyAsync { Application.backend.enumerate() }
+                        asyncWorker.supplyAsync { Application.backend.enumerate() }
                 ) { present, running -> this.onTunnelsLoaded(present, running) }
                 .whenComplete(ExceptionLoggers.E)
     }
@@ -55,7 +60,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
             val message = context.getString(R.string.tunnel_error_already_exists, name)
             return CompletableFuture.failedFuture(IllegalArgumentException(message))
         }
-        return Application.asyncWorker.supplyAsync { config?.let { configStore.create(name, it) } }
+        return asyncWorker.supplyAsync { config?.let { configStore.create(name, it) } }
                 .thenApply { savedConfig -> addToList(name, savedConfig, Tunnel.State.DOWN) }
     }
 
@@ -66,7 +71,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         if (wasLastUsed)
             setLastUsedTunnel(null)
         tunnels.remove(tunnel)
-        return Application.asyncWorker.runAsync {
+        return asyncWorker.runAsync {
             if (originalState == Tunnel.State.UP)
                 Application.backend.setState(tunnel, Tunnel.State.DOWN)
             try {
@@ -101,7 +106,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     }
 
     internal fun getTunnelConfig(tunnel: Tunnel): CompletionStage<Config> {
-        return Application.asyncWorker.supplyAsync { configStore.load(tunnel.name) }
+        return asyncWorker.supplyAsync { configStore.load(tunnel.name) }
                 .thenApply(tunnel::onConfigChanged)
     }
 
@@ -135,7 +140,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     }
 
     fun refreshTunnelStates() {
-        Application.asyncWorker.supplyAsync { Application.backend.enumerate() }
+        asyncWorker.supplyAsync { Application.backend.enumerate() }
                 .thenAccept { running ->
                     tunnels.forEach { tunnel ->
                         val state = if (running?.contains(tunnel.name) == true) Tunnel.State.UP else Tunnel.State.DOWN
@@ -178,7 +183,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     }
 
     internal fun setTunnelConfig(tunnel: Tunnel, config: Config): CompletionStage<Config> {
-        return Application.asyncWorker.supplyAsync {
+        return asyncWorker.supplyAsync {
             val appliedConfig = Application.backend.applyConfig(tunnel, config)
             configStore.save(tunnel.name, appliedConfig)
         }.thenApply(tunnel::onConfigChanged)
@@ -197,7 +202,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         if (wasLastUsed)
             setLastUsedTunnel(null)
         tunnels.remove(tunnel)
-        return Application.asyncWorker.supplyAsync {
+        return asyncWorker.supplyAsync {
             if (originalState == Tunnel.State.UP)
                 Application.backend.setState(tunnel, Tunnel.State.DOWN)
             configStore.rename(tunnel.name, name)
@@ -219,7 +224,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
     fun setTunnelState(tunnel: Tunnel, state: Tunnel.State): CompletionStage<Tunnel.State> {
         // Ensure the configuration is loaded before trying to use it.
         return tunnel.configAsync.thenCompose {
-            Application.asyncWorker.supplyAsync {
+            asyncWorker.supplyAsync {
                 Application.backend.setState(
                         tunnel,
                         state
@@ -236,7 +241,7 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
 
     class IntentReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val manager = Application.tunnelManager
+            val manager by inject<TunnelManager>()
             if (intent == null || intent.action == null)
                 return
             when (intent.action) {
@@ -249,10 +254,11 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         }
     }
 
-    companion object {
+    companion object : KoinComponent {
         const val NOTIFICATION_CHANNEL_ID = "wg-quick_tunnels"
         const val TUNNEL_NAME_INTENT_EXTRA = "tunnel_name"
         const val INTENT_INTEGRATION_SECRET_EXTRA = "integration_secret"
+        private val asyncWorker by inject<AsyncWorker>()
 
         private val COMPARATOR = Comparators.thenComparing(
                 String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder()
@@ -260,13 +266,12 @@ class TunnelManager(private var configStore: ConfigStore) : BaseObservable() {
         private var lastUsedTunnel: Tunnel? = null
 
         internal fun getTunnelState(tunnel: Tunnel): CompletionStage<Tunnel.State> {
-            return Application.asyncWorker.supplyAsync { Application.backend.getState(tunnel) }
+            return asyncWorker.supplyAsync { Application.backend.getState(tunnel) }
                     .thenApply(tunnel::onStateChanged)
         }
 
         fun getTunnelStatistics(tunnel: Tunnel): CompletionStage<Statistics> {
-            return Application.asyncWorker
-                    .supplyAsync { Application.backend.getStatistics(tunnel) }
+            return asyncWorker.supplyAsync { Application.backend.getStatistics(tunnel) }
                     .thenApply(tunnel::onStatisticsChanged)
         }
     }

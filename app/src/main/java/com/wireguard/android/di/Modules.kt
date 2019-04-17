@@ -22,5 +22,6 @@ val applicationModules = module {
     single { RootShell(androidContext()) }
     single { ApplicationPreferences(androidContext()) }
     single { ToolsInstaller(androidContext()) }
-    single { TunnelManager(FileConfigStore(androidContext())) }
+    single { FileConfigStore(androidContext()) }
+    single { TunnelManager(androidContext()) }
 }
