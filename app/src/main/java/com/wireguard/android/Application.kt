@@ -13,7 +13,6 @@ import androidx.annotation.RequiresApi
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
-import com.wireguard.android.configStore.FileConfigStore
 import com.wireguard.android.di.applicationModules
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ApplicationPreferences
@@ -34,7 +33,6 @@ import java.lang.ref.WeakReference
 
 class Application : android.app.Application() {
     private lateinit var rootShell: RootShell
-    private lateinit var tunnelManager: TunnelManager
     private var backend: Backend? = null
     private val futureBackend = CompletableFuture<Backend>()
 
@@ -71,8 +69,6 @@ class Application : android.app.Application() {
             Timber.plant(Timber.DebugTree())
 
         updateAppTheme()
-
-        tunnelManager = TunnelManager(FileConfigStore(applicationContext))
 
         val asyncWorker by inject<AsyncWorker>()
         asyncWorker.supplyAsync { backend }.thenAccept { backend ->
