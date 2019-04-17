@@ -12,14 +12,16 @@ import com.wireguard.android.Application
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.TunnelManager
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 
-class TaskerIntegrationReceiver : BroadcastReceiver() {
+class TaskerIntegrationReceiver : BroadcastReceiver(), KoinComponent {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent == null || intent.action == null)
             return
 
-        val manager = Application.tunnelManager
+        val manager by inject<TunnelManager>()
         val isSelfPackage = intent.`package` == BuildConfig.APPLICATION_ID
         val taskerEnabled = !Application.appPrefs.allowTaskerIntegration || Application.appPrefs.taskerIntegrationSecret.isEmpty()
         val tunnelName: String? = intent.getStringExtra(TunnelManager.TUNNEL_NAME_INTENT_EXTRA)

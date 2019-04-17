@@ -10,10 +10,13 @@ import android.content.Context
 import android.content.Intent
 import com.wireguard.android.Application
 import com.wireguard.android.backend.WgQuickBackend
+import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ExceptionLoggers
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 
-class BootShutdownReceiver : BroadcastReceiver() {
+class BootShutdownReceiver : BroadcastReceiver(), KoinComponent {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == null) return
@@ -21,7 +24,7 @@ class BootShutdownReceiver : BroadcastReceiver() {
             if (backend !is WgQuickBackend)
                 return@thenAccept
             val action = intent.action
-            val tunnelManager = Application.tunnelManager
+            val tunnelManager by inject<TunnelManager>()
             if (Intent.ACTION_BOOT_COMPLETED == action) {
                 Timber.i("Broadcast receiver restoring state (boot)")
                 tunnelManager.restoreState(false).whenComplete(ExceptionLoggers.D)
