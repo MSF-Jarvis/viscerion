@@ -6,11 +6,10 @@
 package com.wireguard.android.di.factory
 
 import android.content.Context
-import com.wireguard.android.backend.Backend
-import java9.util.concurrent.CompletableFuture
+import com.wireguard.android.util.BackendAsync
 
 class CompletableBackendFactory(context: Context) {
-    val backendAsync = CompletableFuture<Backend>()
+    val backendAsync = BackendAsync()
 
     init {
         backendAsync.complete(BackendFactory(context).backend)

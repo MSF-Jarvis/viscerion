@@ -27,7 +27,6 @@ class AppListDialogFragment : DialogFragment() {
     private var currentlyExcludedApps: ArrayList<String>? = null
     private var isGlobalExclusionsDialog = false
     private val appData = ObservableKeyedArrayList<String, ApplicationData>()
-    private val asyncWorker by inject<AsyncWorker>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +63,7 @@ class AppListDialogFragment : DialogFragment() {
 
     private fun loadData() {
         val activity = requireActivity()
-        asyncWorker.supplyAsync<List<ApplicationData>> {
+        inject<AsyncWorker>().value.supplyAsync<List<ApplicationData>> {
             val appData = ArrayList<ApplicationData>()
             val pm = activity.packageManager
             pm.getPackagesHoldingPermissions(

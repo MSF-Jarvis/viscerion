@@ -20,14 +20,11 @@ import timber.log.Timber
 
 class ViscerionUpdateReceiver : BroadcastReceiver(), KoinComponent {
 
-    private val asyncWorker by inject<AsyncWorker>()
-    private val tunnelManager by inject<TunnelManager>()
-
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent == null || intent.action == null || BuildConfig.DEBUG) return
         if (context != null && context.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) return
-        asyncWorker.runAsync {
-            tunnelManager.getTunnels().thenAccept { tunnels ->
+        inject<AsyncWorker>().value.runAsync {
+            inject<TunnelManager>().value.getTunnels().thenAccept { tunnels ->
                 ZipExporter.exportZip(tunnels) { filePath, throwable ->
                     Timber.tag("ViscerionUpdate")
                     if (throwable == null) {

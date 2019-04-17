@@ -20,24 +20,23 @@ import org.koin.core.inject
 
 class VersionPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), KoinComponent {
     private var versionSummary: String? = null
-    private val asyncWorker by inject<AsyncWorker>()
-    private val backendAsync by inject<BackendAsync>()
 
     init {
-        backendAsync.thenAccept { backend ->
+        inject<BackendAsync>().value.thenAccept { backend ->
             versionSummary =
                     getContext().getString(R.string.version_summary_checking, backend.getTypePrettyName().toLowerCase())
-            asyncWorker.supplyAsync { backend.getVersion() }
-                    .whenComplete { version, exception ->
-                        versionSummary = if (exception == null)
-                            getContext().getString(R.string.version_summary, backend.getTypePrettyName(), version)
-                        else
-                            getContext().getString(
+            inject<AsyncWorker>().value.supplyAsync {
+                backend.getVersion()
+            }.whenComplete { version, exception ->
+                versionSummary = if (exception == null)
+                    getContext().getString(R.string.version_summary, backend.getTypePrettyName(), version)
+                else
+                    getContext().getString(
                                     R.string.version_summary_unknown,
                                     backend.getTypePrettyName().toLowerCase()
                             )
-                        notifyChanged()
-                    }
+                notifyChanged()
+            }
         }
     }
 

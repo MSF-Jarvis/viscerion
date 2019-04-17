@@ -48,7 +48,6 @@ import java.util.zip.ZipInputStream
 class TunnelListFragment : BaseFragment() {
 
     private val actionModeListener = ActionModeListener()
-    private val asyncWorker by inject<AsyncWorker>()
     private val tunnelManager by inject<TunnelManager>()
     private val prefs by inject<ApplicationPreferences>()
     private var actionMode: ActionMode? = null
@@ -74,7 +73,7 @@ class TunnelListFragment : BaseFragment() {
 
         val futureTunnels = ArrayList<CompletableFuture<Tunnel>>()
         val throwables = ArrayList<Throwable>()
-        asyncWorker.supplyAsync {
+        inject<AsyncWorker>().value.supplyAsync {
             val columns = arrayOf(OpenableColumns.DISPLAY_NAME)
             var name = ""
             @Suppress("Recycle")

@@ -25,7 +25,6 @@ import org.koin.android.ext.android.inject
 
 class TunnelDetailFragment : BaseFragment() {
     private var binding: TunnelDetailFragmentBinding? = null
-    private val prefs by inject<ApplicationPreferences>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +74,8 @@ class TunnelDetailFragment : BaseFragment() {
                 val typedValue = TypedValue()
                 it.theme.resolveAttribute(android.R.attr.navigationBarColor, typedValue, true)
                 navigationBarColor = typedValue.data
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 && !prefs.useDarkTheme) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 &&
+                        !inject<ApplicationPreferences>().value.useDarkTheme) {
                     // Restore window flags
                     decorView.systemUiVisibility =
                             View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR

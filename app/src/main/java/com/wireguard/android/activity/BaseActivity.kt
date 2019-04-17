@@ -20,7 +20,6 @@ import org.koin.android.ext.android.inject
 abstract class BaseActivity : AppCompatActivity() {
 
     private val selectionChangeRegistry = SelectionChangeRegistry()
-    private val tunnelManager by inject<TunnelManager>()
     var selectedTunnel: Tunnel? = null
         set(tunnel) {
             val oldTunnel = this.selectedTunnel
@@ -44,7 +43,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         savedTunnelName?.let {
-            tunnelManager.getTunnels().thenAccept { tunnels ->
+            inject<TunnelManager>().value.getTunnels().thenAccept { tunnels ->
                 selectedTunnel = tunnels[it]
             }
         }

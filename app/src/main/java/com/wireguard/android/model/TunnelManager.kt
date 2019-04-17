@@ -41,11 +41,13 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
     private var haveLoaded: Boolean = false
 
     init {
-        asyncWorker.supplyAsync { configStore.enumerate() }
-                .thenAcceptBoth(
-                        asyncWorker.supplyAsync { backend.enumerate() }
-                ) { present, running -> this.onTunnelsLoaded(present, running) }
-                .whenComplete(ExceptionLoggers.E)
+        asyncWorker.supplyAsync {
+            configStore.enumerate()
+        }.thenAcceptBoth(asyncWorker.supplyAsync {
+            backend.enumerate()
+        }) { present, running ->
+            this.onTunnelsLoaded(present, running)
+        }.whenComplete(ExceptionLoggers.E)
     }
 
     private fun addToList(name: String, config: Config?, state: Tunnel.State): Tunnel {
@@ -141,14 +143,15 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
     }
 
     fun refreshTunnelStates() {
-        asyncWorker.supplyAsync { backend.enumerate() }
-                .thenAccept { running ->
-                    tunnels.forEach { tunnel ->
-                        val state = if (running?.contains(tunnel.name) == true) Tunnel.State.UP else Tunnel.State.DOWN
-                        tunnel.onStateChanged(state)
-                        backend.postNotification(state, tunnel)
-                    }
-                }.whenComplete(ExceptionLoggers.E)
+        asyncWorker.supplyAsync {
+            backend.enumerate()
+        }.thenAccept { running ->
+            tunnels.forEach { tunnel ->
+                val state = if (running?.contains(tunnel.name) == true) Tunnel.State.UP else Tunnel.State.DOWN
+                tunnel.onStateChanged(state)
+                backend.postNotification(state, tunnel)
+            }
+        }.whenComplete(ExceptionLoggers.E)
     }
 
     fun restoreState(force: Boolean): CompletionStage<Void> {
@@ -242,12 +245,11 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
 
     class IntentReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val manager by inject<TunnelManager>()
             if (intent == null || intent.action == null)
                 return
             when (intent.action) {
                 "com.wireguard.android.action.REFRESH_TUNNEL_STATES" -> {
-                    manager.refreshTunnelStates()
+                    inject<TunnelManager>().value.refreshTunnelStates()
                     return
                 }
                 else -> Timber.tag("TunnelManager").d("Invalid intent action: ${intent.action}")

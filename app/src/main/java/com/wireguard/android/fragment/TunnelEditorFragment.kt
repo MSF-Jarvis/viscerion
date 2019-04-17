@@ -40,7 +40,6 @@ import timber.log.Timber
  */
 
 class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
-    private val prefs by inject<ApplicationPreferences>()
     private var binding: TunnelEditorFragmentBinding? = null
     private var tunnel: Tunnel? = null
 
@@ -131,7 +130,8 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             context?.let {
                 activity?.window?.apply {
                     navigationBarColor = ContextCompat.getColor(it, R.color.accent_darker)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 && !prefs.useDarkTheme) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 &&
+                            !inject<ApplicationPreferences>().value.useDarkTheme) {
                         // Clear window flags to let navigation bar be dark
                         decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                     }
@@ -157,8 +157,8 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                 when {
                     tunnel == null -> {
                         Timber.d("Attempting to create new tunnel %s", binding?.name)
-                        val manager by inject<TunnelManager>()
-                        manager.create(binding?.name.requireNonNull("Tunnel name cannot be empty!"), newConfig)
+                        inject<TunnelManager>().value
+                                .create(binding?.name.requireNonNull("Tunnel name cannot be empty!"), newConfig)
                                 .whenComplete { newTunnel, throwable ->
                                     this.onTunnelCreated(
                                             newTunnel,

@@ -28,10 +28,9 @@ import timber.log.Timber
 
 class ZipExporterPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), KoinComponent {
     private var exportedFilePath: String? = null
-    private val tunnelManager by inject<TunnelManager>()
 
     private fun exportZip() {
-        tunnelManager.getTunnels().thenAccept {
+        inject<TunnelManager>().value.getTunnels().thenAccept {
             ZipExporter.exportZip(it) { filePath, throwable ->
                 exportZipComplete(filePath, throwable)
             }

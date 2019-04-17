@@ -29,7 +29,6 @@ class ConfigNamingDialogFragment : DialogFragment() {
     private var config: Config? = null
     private var binding: ConfigNamingDialogFragmentBinding? = null
     private var imm: InputMethodManager? = null
-    private val tunnelManager by inject<TunnelManager>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +79,7 @@ class ConfigNamingDialogFragment : DialogFragment() {
         binding?.let {
             val name = it.tunnelNameText.text.toString()
 
-            tunnelManager.create(name, config).whenComplete { tunnel, throwable ->
+            inject<TunnelManager>().value.create(name, config).whenComplete { tunnel, throwable ->
                 if (tunnel != null) {
                     dismiss()
                 } else {

@@ -98,7 +98,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     class SettingsFragment : PreferenceFragmentCompat(), AppListDialogFragment.AppExclusionListener {
-        private val tunnelManager by inject<TunnelManager>()
         private val prefs by inject<ApplicationPreferences>()
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
@@ -211,7 +210,7 @@ class SettingsActivity : AppCompatActivity() {
 
         override fun onExcludedAppsSelected(excludedApps: List<String>) {
             if (excludedApps.asString() == prefs.exclusions) return
-            tunnelManager.getTunnels().thenAccept { tunnels ->
+            inject<TunnelManager>().value.getTunnels().thenAccept { tunnels ->
                 if (excludedApps.isNotEmpty()) {
                     tunnels.forEach { tunnel ->
                         val oldConfig = tunnel.getConfig()
