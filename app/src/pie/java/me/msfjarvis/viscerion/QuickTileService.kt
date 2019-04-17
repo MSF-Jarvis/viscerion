@@ -20,6 +20,7 @@ import androidx.databinding.Observable.OnPropertyChangedCallback
 import com.wireguard.android.Application
 import com.wireguard.android.BR
 import com.wireguard.android.R
+import com.wireguard.android.activity.MainActivity
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.State
 import com.wireguard.android.model.TunnelManager
