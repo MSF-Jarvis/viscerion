@@ -13,10 +13,12 @@ import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.activity.MainActivity
 import com.wireguard.android.model.Tunnel
+import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.SharedLibraryLoader
 import com.wireguard.config.Config
 import java9.util.concurrent.CompletableFuture
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -198,6 +200,9 @@ class GoBackend(private var context: Context) : Backend {
     }
 
     class VpnService : android.net.VpnService() {
+
+        private val tunnelManager by inject<TunnelManager>()
+
         fun getBuilder(): android.net.VpnService.Builder {
             return Builder()
         }
@@ -208,7 +213,7 @@ class GoBackend(private var context: Context) : Backend {
         }
 
         override fun onDestroy() {
-            Application.tunnelManager.getTunnels().thenAccept { tunnels ->
+            tunnelManager.getTunnels().thenAccept { tunnels ->
                 tunnels.forEach { tunnel ->
                     if (tunnel.state != Tunnel.State.DOWN)
                         tunnel.setState(Tunnel.State.DOWN)
@@ -223,7 +228,7 @@ class GoBackend(private var context: Context) : Backend {
             vpnService.complete(this)
             if (intent == null || intent.component == null || intent.component?.packageName != packageName) {
                 Timber.d("Service started by Always-on VPN feature")
-                Application.tunnelManager.restoreState(true).whenComplete(ExceptionLoggers.D)
+                tunnelManager.restoreState(true).whenComplete(ExceptionLoggers.D)
             }
             return super.onStartCommand(intent, flags, startId)
         }

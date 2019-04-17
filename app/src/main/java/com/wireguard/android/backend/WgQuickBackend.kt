@@ -19,8 +19,10 @@ import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.State
 import com.wireguard.android.model.Tunnel.Statistics
 import com.wireguard.android.model.TunnelManager
+import com.wireguard.android.util.ToolsInstaller
 import com.wireguard.android.util.requireNonNull
 import com.wireguard.config.Config
+import org.koin.core.inject
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -33,6 +35,7 @@ import java.nio.charset.StandardCharsets
 class WgQuickBackend(private var context: Context) : Backend {
 
     private val localTemporaryDir: File = File(context.cacheDir, "tmp")
+    private val toolsInstaller by inject<ToolsInstaller>()
     private var notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(context)
 
     @Throws(Exception::class)
@@ -69,7 +72,7 @@ class WgQuickBackend(private var context: Context) : Backend {
         val output = ArrayList<String>()
         // Don't throw an exception here or nothing will show up in the UI.
         try {
-            Application.toolsInstaller.ensureToolsAvailable()
+            toolsInstaller.ensureToolsAvailable()
             if (Application.rootShell.run(output, "wg show interfaces") != 0 || output.isEmpty())
                 return emptySet()
         } catch (e: Exception) {
@@ -98,7 +101,7 @@ class WgQuickBackend(private var context: Context) : Backend {
         if (stateToSet == originalState)
             return originalState
         Timber.d("Changing tunnel %s to state %s", tunnel.name, stateToSet)
-        Application.toolsInstaller.ensureToolsAvailable()
+        toolsInstaller.ensureToolsAvailable()
         setStateInternal(tunnel, stateToSet, tunnel.getConfig())
         return getState(tunnel)
     }
