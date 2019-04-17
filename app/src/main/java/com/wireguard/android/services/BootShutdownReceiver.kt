@@ -8,9 +8,9 @@ package com.wireguard.android.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.wireguard.android.Application
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.model.TunnelManager
+import com.wireguard.android.util.BackendAsync
 import com.wireguard.android.util.ExceptionLoggers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -20,7 +20,7 @@ class BootShutdownReceiver : BroadcastReceiver(), KoinComponent {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == null) return
-        Application.backendAsync.thenAccept { backend ->
+        inject<BackendAsync>().value.thenAccept { backend ->
             if (backend !is WgQuickBackend)
                 return@thenAccept
             val action = intent.action

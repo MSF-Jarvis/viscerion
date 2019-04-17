@@ -11,19 +11,20 @@ import android.content.Intent
 import android.net.Uri
 import android.util.AttributeSet
 import androidx.preference.Preference
-import com.wireguard.android.Application
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
 import com.wireguard.android.util.AsyncWorker
+import com.wireguard.android.util.BackendAsync
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class VersionPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), KoinComponent {
     private var versionSummary: String? = null
     private val asyncWorker by inject<AsyncWorker>()
+    private val backendAsync by inject<BackendAsync>()
 
     init {
-        Application.backendAsync.thenAccept { backend ->
+        backendAsync.thenAccept { backend ->
             versionSummary =
                     getContext().getString(R.string.version_summary_checking, backend.getTypePrettyName().toLowerCase())
             asyncWorker.supplyAsync { backend.getVersion() }

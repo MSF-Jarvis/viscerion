@@ -9,6 +9,8 @@ import android.os.AsyncTask
 import android.os.Handler
 import android.os.Looper
 import com.wireguard.android.configStore.FileConfigStore
+import com.wireguard.android.di.factory.BackendFactory
+import com.wireguard.android.di.factory.CompletableBackendFactory
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
@@ -17,11 +19,22 @@ import com.wireguard.android.util.ToolsInstaller
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val applicationModules = module {
+val earlyInitModules = module {
     single { AsyncWorker(AsyncTask.SERIAL_EXECUTOR, Handler(Looper.getMainLooper())) }
     single { RootShell(androidContext()) }
     single { ApplicationPreferences(androidContext()) }
-    single { ToolsInstaller(androidContext()) }
     single { FileConfigStore(androidContext()) }
     single { TunnelManager(androidContext()) }
+}
+
+val backendModule = module {
+    single { BackendFactory(androidContext()).backend }
+}
+
+val backendAsyncModule = module {
+    single { CompletableBackendFactory(androidContext()).backendAsync }
+}
+
+val toolsInstallerModule = module {
+    single { ToolsInstaller(androidContext()) }
 }

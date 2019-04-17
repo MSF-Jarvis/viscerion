@@ -415,7 +415,7 @@ class TunnelListFragment : BaseFragment() {
 
             val adapter = binding?.tunnelList?.adapter
 
-            if (actionMode == null && !checkedItems.isEmpty()) {
+            if (actionMode == null && checkedItems.isNotEmpty()) {
                 (activity as AppCompatActivity).startSupportActionMode(this)
             } else if (checkedItems.isEmpty()) {
                 actionMode?.finish()

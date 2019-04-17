@@ -11,12 +11,13 @@ import android.content.Intent
 import android.net.Uri
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import com.wireguard.android.Application
 import com.wireguard.android.BR
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
+import com.wireguard.android.backend.Backend
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.model.Tunnel.Statistics
+import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.KotlinCompanions
@@ -35,14 +36,14 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
     private val completableTunnels = CompletableFuture<ObservableSortedKeyedList<String, Tunnel>>()
     private val tunnels = ObservableSortedKeyedArrayList<String, Tunnel>(COMPARATOR)
     private val delayedLoadRestoreTunnels = ArrayList<CompletableFuture<Void>>()
-    private val asyncWorker by inject<AsyncWorker>()
     private val configStore by inject<ConfigStore>()
+    private val prefs by inject<ApplicationPreferences>()
     private var haveLoaded: Boolean = false
 
     init {
         asyncWorker.supplyAsync { configStore.enumerate() }
                 .thenAcceptBoth(
-                        asyncWorker.supplyAsync { Application.backend.enumerate() }
+                        asyncWorker.supplyAsync { backend.enumerate() }
                 ) { present, running -> this.onTunnelsLoaded(present, running) }
                 .whenComplete(ExceptionLoggers.E)
     }
@@ -73,12 +74,12 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
         tunnels.remove(tunnel)
         return asyncWorker.runAsync {
             if (originalState == Tunnel.State.UP)
-                Application.backend.setState(tunnel, Tunnel.State.DOWN)
+                backend.setState(tunnel, Tunnel.State.DOWN)
             try {
                 configStore.delete(tunnel.name)
             } catch (e: Exception) {
                 if (originalState == Tunnel.State.UP)
-                    Application.backend.setState(tunnel, Tunnel.State.UP)
+                    backend.setState(tunnel, Tunnel.State.UP)
                 // Re-throw the exception to fail the completion.
                 throw e
             }
@@ -102,7 +103,7 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
             return
         lastUsedTunnel = tunnel
         notifyPropertyChanged(BR.lastUsedTunnel)
-        Application.appPrefs.lastUsedTunnel = tunnel?.name ?: ""
+        prefs.lastUsedTunnel = tunnel?.name ?: ""
     }
 
     internal fun getTunnelConfig(tunnel: Tunnel): CompletionStage<Config> {
@@ -117,7 +118,7 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
     private fun onTunnelsLoaded(present: Iterable<String>, running: Collection<String>) {
         for (name in present)
             addToList(name, null, if (running.contains(name)) Tunnel.State.UP else Tunnel.State.DOWN)
-        val lastUsedName = Application.appPrefs.lastUsedTunnel
+        val lastUsedName = prefs.lastUsedTunnel
         if (lastUsedName.isNotEmpty())
             setLastUsedTunnel(tunnels[lastUsedName])
         var toComplete: Array<CompletableFuture<Void>>?
@@ -140,18 +141,18 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
     }
 
     fun refreshTunnelStates() {
-        asyncWorker.supplyAsync { Application.backend.enumerate() }
+        asyncWorker.supplyAsync { backend.enumerate() }
                 .thenAccept { running ->
                     tunnels.forEach { tunnel ->
                         val state = if (running?.contains(tunnel.name) == true) Tunnel.State.UP else Tunnel.State.DOWN
                         tunnel.onStateChanged(state)
-                        Application.backend.postNotification(state, tunnel)
+                        backend.postNotification(state, tunnel)
                     }
                 }.whenComplete(ExceptionLoggers.E)
     }
 
     fun restoreState(force: Boolean): CompletionStage<Void> {
-        if (!force && !Application.appPrefs.restoreOnBoot)
+        if (!force && !prefs.restoreOnBoot)
             return CompletableFuture.completedFuture(null)
         synchronized(delayedLoadRestoreTunnels) {
             if (!haveLoaded) {
@@ -160,7 +161,7 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
                 return f
             }
         }
-        val previouslyRunning = Application.appPrefs.runningTunnels
+        val previouslyRunning = prefs.runningTunnels
         return KotlinCompanions.streamForStateChange(tunnels, previouslyRunning, this)
     }
 
@@ -169,7 +170,7 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
                 Uri.parse("content://${BuildConfig.APPLICATION_ID}/vpn"),
                 null
         )
-        Application.appPrefs.runningTunnels =
+        prefs.runningTunnels =
                 tunnels.asSequence().filter { it.state == Tunnel.State.UP }.map { it.name }.toSet()
     }
 
@@ -184,7 +185,7 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
 
     internal fun setTunnelConfig(tunnel: Tunnel, config: Config): CompletionStage<Config> {
         return asyncWorker.supplyAsync {
-            val appliedConfig = Application.backend.applyConfig(tunnel, config)
+            val appliedConfig = backend.applyConfig(tunnel, config)
             configStore.save(tunnel.name, appliedConfig)
         }.thenApply(tunnel::onConfigChanged)
     }
@@ -204,11 +205,11 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
         tunnels.remove(tunnel)
         return asyncWorker.supplyAsync {
             if (originalState == Tunnel.State.UP)
-                Application.backend.setState(tunnel, Tunnel.State.DOWN)
+                backend.setState(tunnel, Tunnel.State.DOWN)
             configStore.rename(tunnel.name, name)
             val newName = tunnel.onNameChanged(name)
             if (originalState == Tunnel.State.UP)
-                Application.backend.setState(tunnel, Tunnel.State.UP)
+                backend.setState(tunnel, Tunnel.State.UP)
             newName
         }.whenComplete { _, e ->
             // On failure, we don't know what state the tunnel might be in. Fix that.
@@ -225,7 +226,7 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
         // Ensure the configuration is loaded before trying to use it.
         return tunnel.configAsync.thenCompose {
             asyncWorker.supplyAsync {
-                Application.backend.setState(
+                backend.setState(
                         tunnel,
                         state
                 )
@@ -259,6 +260,7 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
         const val TUNNEL_NAME_INTENT_EXTRA = "tunnel_name"
         const val INTENT_INTEGRATION_SECRET_EXTRA = "integration_secret"
         private val asyncWorker by inject<AsyncWorker>()
+        private val backend by inject<Backend>()
 
         private val COMPARATOR = Comparators.thenComparing(
                 String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder()
@@ -266,12 +268,12 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
         private var lastUsedTunnel: Tunnel? = null
 
         internal fun getTunnelState(tunnel: Tunnel): CompletionStage<Tunnel.State> {
-            return asyncWorker.supplyAsync { Application.backend.getState(tunnel) }
+            return asyncWorker.supplyAsync { backend.getState(tunnel) }
                     .thenApply(tunnel::onStateChanged)
         }
 
         fun getTunnelStatistics(tunnel: Tunnel): CompletionStage<Statistics> {
-            return asyncWorker.supplyAsync { Application.backend.getStatistics(tunnel) }
+            return asyncWorker.supplyAsync { backend.getStatistics(tunnel) }
                     .thenApply(tunnel::onStatisticsChanged)
         }
     }
