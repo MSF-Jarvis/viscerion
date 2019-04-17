@@ -8,6 +8,7 @@ package com.wireguard.android.di
 import android.os.AsyncTask
 import android.os.Handler
 import android.os.Looper
+import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.configStore.FileConfigStore
 import com.wireguard.android.di.factory.BackendFactory
 import com.wireguard.android.di.factory.CompletableBackendFactory
@@ -23,7 +24,7 @@ val earlyInitModules = module {
     single { AsyncWorker(AsyncTask.SERIAL_EXECUTOR, Handler(Looper.getMainLooper())) }
     single { RootShell(androidContext()) }
     single { ApplicationPreferences(androidContext()) }
-    single { FileConfigStore(androidContext()) }
+    single<ConfigStore> { FileConfigStore(androidContext()) }
     single { TunnelManager(androidContext()) }
 }
 
