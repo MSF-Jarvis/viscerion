@@ -10,7 +10,7 @@
         <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
         <item name="colorSurface">@color/primary_color</item>
         <item name="colorOnSurface">@color/color_control_normal</item>
-        <item name="android:textColorPrimary">@color/color_control_normal</item>
+        <item name="actionBarPopupTheme">@style/Widget.MaterialComponents.ActionBar.Solid</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
