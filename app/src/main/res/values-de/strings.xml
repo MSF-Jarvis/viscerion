@@ -128,6 +128,15 @@
     <string name="toggle_error">Fehler beim Umschalten des WireGuard Tunnels: %s</string>
     <string name="tools_installer_already">wg und wg-quick sind bereits installiert</string>
     <string name="tools_installer_failure">Konnte Kommandozeilen-Tools nicht installieren (kein Root?)</string>
+    <string name="tools_installer_initial">Optionale Werkzeuge für Skripting installieren</string>
+    <string name="tools_installer_initial_magisk">Optionale Werkzeuge für das Skripting als Magisk-Modul installieren</string>
+    <string name="tools_installer_initial_system">Optionale Werkzeuge für das Skripting auf der Systempartition installieren</string>
+    <string name="tools_installer_success_magisk">wg und wg-quick als Magisk-Modul installiert (Neustart erforderlich)</string>
+    <string name="tools_installer_success_system">wg und wg-quick auf der Systempartition installiert</string>
+    <string name="tools_installer_title">Kommandozeilen-Tools installieren</string>
+    <string name="tools_installer_working">Installiere wg und wg-quick</string>
+    <string name="tools_unavailable_error">Erforderliche Tools nicht verfügbar</string>
+    <string name="tun_create_error">Konnte tun Gerät nicht erstellen</string>
     <string name="zip_export_success">Gespeichert als „%s”</string>
     <string name="preference_category_config">Tunnelkonfigurationen</string>
     <string name="preference_category_debugging">Fehlersuche</string>
