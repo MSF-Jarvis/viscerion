@@ -122,6 +122,12 @@
     <string name="select_all">Alles auswählen</string>
     <string name="set_exclusions">Ausschlüsse festlegen</string>
     <string name="settings">Einstellungen</string>
+    <string name="shell_exit_status_read_error">Die Shell kann den Beenden-Status nicht lesen</string>
+    <string name="shell_marker_count_error">Die Shell erwartete 4 Marker, erhielt aber %d</string>
+    <string name="shell_start_error">Die Shell konnte nicht gestartet werden: %d</string>
+    <string name="toggle_error">Fehler beim Umschalten des WireGuard Tunnels: %s</string>
+    <string name="tools_installer_already">wg und wg-quick sind bereits installiert</string>
+    <string name="tools_installer_failure">Konnte Kommandozeilen-Tools nicht installieren (kein Root?)</string>
     <string name="zip_export_success">Gespeichert als „%s”</string>
     <string name="preference_category_config">Tunnelkonfigurationen</string>
     <string name="preference_category_debugging">Fehlersuche</string>
