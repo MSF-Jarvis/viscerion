@@ -6,18 +6,23 @@
 package com.wireguard.config
 
 import android.net.InetAddresses
+import android.net.TrafficStats
 import android.os.Build
+import org.xbill.DNS.Address
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.net.Inet4Address
 import java.net.Inet6Address
 import java.net.InetAddress
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
 
 /**
  * Utility methods for creating instances of [InetAddress].
  */
 object InetAddressUtils {
     private val PARSER_METHOD: Method by lazy { InetAddress::class.java.getMethod("parseNumericAddress", String::class.java) }
+    private val IPV4_PATTERN = "^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$".toRegex()
 
     /**
      * Parses an alphanumeric IPv4 or IPv6 address, performing DNS lookups when required.
@@ -30,10 +35,21 @@ object InetAddressUtils {
         if (address.isEmpty())
             throw ParseException(InetAddress::class.java, address, "Empty address")
         try {
-            return if (Build.VERSION.SDK_INT < 29) {
-                PARSER_METHOD.invoke(null, address) as InetAddress
+            return if (address.matches(IPV4_PATTERN)) {
+                if (Build.VERSION.SDK_INT < 29) {
+                    PARSER_METHOD.invoke(null, address) as InetAddress
+                } else {
+                    InetAddresses.parseNumericAddress(address)
+                }
             } else {
-                InetAddresses.parseNumericAddress(address)
+                val executor = Executors.newSingleThreadExecutor()
+                val callable: Callable<InetAddress> = Callable {
+                    TrafficStats.setThreadStatsTag(0)
+                    Address.getByName(address)
+                }
+                val future = executor.submit(callable)
+                executor.shutdown()
+                future.get() as InetAddress
             }
         } catch (e: IllegalAccessException) {
             val cause = e.cause

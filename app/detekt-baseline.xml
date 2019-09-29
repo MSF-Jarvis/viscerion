@@ -6,6 +6,7 @@
     <ID>ComplexMethod:Config.kt$Config.Companion$ @Throws(IOException::class, BadConfigException::class) fun parse(reader: BufferedReader): Config</ID>
     <ID>ComplexMethod:ErrorMessages.kt$ErrorMessages$private fun getBadConfigExceptionExplanation( resources: Resources, bce: BadConfigException ): String</ID>
     <ID>ComplexMethod:GoBackend.kt$GoBackend$@Throws(Exception::class) private fun setStateInternal(tunnel: Tunnel?, config: Config?, state: Tunnel.State?)</ID>
+    <ID>ComplexMethod:InetAddressUtils.kt$InetAddressUtils$ @Throws(ParseException::class) fun parse(address: String): InetAddress</ID>
     <ID>ComplexMethod:InetNetwork.kt$InetNetwork.Companion$@Throws(ParseException::class) fun parse(network: String): InetNetwork</ID>
     <ID>ComplexMethod:InterfaceProxy.kt$InterfaceProxy$@Throws(BadConfigException::class) fun resolve(): Interface</ID>
     <ID>ComplexMethod:PeerProxy.kt$PeerProxy$@Throws(BadConfigException::class) fun resolve(): Peer</ID>
