@@ -43,11 +43,10 @@ object InetAddressUtils {
                 }
             } else {
                 val executor = Executors.newSingleThreadExecutor()
-                val callable: Callable<InetAddress> = Callable {
+                val future = executor.submit(Callable<InetAddress> {
                     TrafficStats.setThreadStatsTag(0)
                     Address.getByName(address)
-                }
-                val future = executor.submit(callable)
+                })
                 executor.shutdown()
                 future.get() as InetAddress
             }
