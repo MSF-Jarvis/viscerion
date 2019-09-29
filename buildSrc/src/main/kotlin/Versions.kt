@@ -65,6 +65,8 @@ object Versions {
 
     const val de_fayard_buildsrcversions_gradle_plugin: String = "0.5.0" // available: "0.6.1"
 
+    const val dnsjava: String = "2.1.9"
+
     const val io_gitlab_arturbosch_detekt: String = "1.0.1"
 
     const val android_retrofuture: String = "1.7.1"

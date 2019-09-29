@@ -134,6 +134,11 @@ object Libs {
             "de.fayard.buildSrcVersions:de.fayard.buildSrcVersions.gradle.plugin:" +
             Versions.de_fayard_buildsrcversions_gradle_plugin
 
+    /**
+     * http://www.dnsjava.org
+     */
+    const val dnsjava: String = "dnsjava:dnsjava:" + Versions.dnsjava
+
     const val detekt_cli: String = "io.gitlab.arturbosch.detekt:detekt-cli:" +
             Versions.io_gitlab_arturbosch_detekt
 

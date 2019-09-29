@@ -95,6 +95,7 @@ dependencies {
     implementation(Libs.core_ktx)
     implementation(Libs.databinding_adapters)
     implementation(Libs.databinding_runtime)
+    implementation(Libs.dnsjava)
     implementation(Libs.fragment_ktx)
     implementation(Libs.preference)
     implementation(Libs.slice_builders)

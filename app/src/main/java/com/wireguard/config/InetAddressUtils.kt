@@ -20,7 +20,7 @@ object InetAddressUtils {
     private val PARSER_METHOD: Method by lazy { InetAddress::class.java.getMethod("parseNumericAddress", String::class.java) }
 
     /**
-     * Parses a numeric IPv4 or IPv6 address without performing any DNS lookups.
+     * Parses an alphanumeric IPv4 or IPv6 address, performing DNS lookups when required.
      *
      * @param address a string representing the IP address
      * @return an instance of [Inet4Address] or [Inet6Address], as appropriate
