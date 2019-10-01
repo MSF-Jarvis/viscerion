@@ -1,6 +1,7 @@
 # Viscerion, Unofficial Android client for [WireGuard](https://www.wireguard.com/)
 
 [![Build Status](https://build.msfjarvis.website/api/badges/msfjarvis/viscerion/status.svg)](https://build.msfjarvis.website/msfjarvis/viscerion) [![GitHub workflow](https://github.com/msfjarvis/viscerion/workflows/Build%20workflow/badge.svg)](https://github.com/msfjarvis/viscerion/actions) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/viscerion/localized.svg)](https://crowdin.com/project/viscerion) [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=msfjarvis/viscerion)](https://dependabot.com)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmsfjarvis%2Fviscerion.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmsfjarvis%2Fviscerion?ref=badge_shield)
 
 <a href='https://play.google.com/store/apps/details?id=me.msfjarvis.viscerion&utm_source=GitHub&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width="200px"/></a>
 
@@ -31,3 +32,7 @@ Viscerion is developed solely by me as a side project that has overgrown the ide
 CI infrastructure provided by
 
 <a href='https://www.packet.net'><img alt='Packet' src='.github/Packet_logo_color.png' width='200px'/></a>
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmsfjarvis%2Fviscerion.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmsfjarvis%2Fviscerion?ref=badge_large)
