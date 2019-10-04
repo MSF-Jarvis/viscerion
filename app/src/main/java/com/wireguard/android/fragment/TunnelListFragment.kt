@@ -5,18 +5,17 @@
  */
 package com.wireguard.android.fragment
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.appcompat.widget.SearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.R
@@ -31,6 +30,7 @@ import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.ImportEventsListener
 import com.wireguard.android.util.KotlinCompanions
+import com.wireguard.android.util.ObservableKeyedList
 import com.wireguard.android.widget.MultiselectableRelativeLayout
 import com.wireguard.android.widget.fab.FloatingActionButtonRecyclerViewScrollListener
 import com.wireguard.config.Config
@@ -44,13 +44,14 @@ import java.util.Locale
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-class TunnelListFragment : BaseFragment() {
+class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
 
     private val actionModeListener = ActionModeListener()
     private val tunnelManager by injectTunnelManager()
     private val prefs by injectPrefs()
     private var actionMode: ActionMode? = null
     private var binding: TunnelListFragmentBinding? = null
+    private var savedTunnelsList: ArrayList<Tunnel>? = null
     private val bottomSheetActionListener = object : ImportEventsListener {
         override fun onQrImport(result: String) {
             importTunnel(result)
@@ -191,6 +192,16 @@ class TunnelListFragment : BaseFragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedTunnelsList = arrayListOf()
+        tunnelManager.getTunnels().thenAccept { observableSortedKeyedList ->
+            observableSortedKeyedList.forEach {
+                savedTunnelsList?.add(it)
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -210,6 +221,8 @@ class TunnelListFragment : BaseFragment() {
     }
 
     override fun onDestroyView() {
+        //Add back saved tunnels before setting it null since tunnel manager and binding are in sync.
+        binding?.tunnels?.addAll(savedTunnelsList as Collection<Tunnel>)
         binding = null
         super.onDestroyView()
     }
@@ -260,6 +273,7 @@ class TunnelListFragment : BaseFragment() {
             Timber.e(throwable)
         }
 
+        savedTunnelsList?.addAll(tunnels)
         when {
             tunnels.size == 1 && throwables.isEmpty() -> message = getString(R.string.import_success, tunnels[0].name)
             tunnels.isEmpty() && throwables.size == 1 -> {
@@ -294,6 +308,35 @@ class TunnelListFragment : BaseFragment() {
         }
     }
 
+    override fun onQueryTextChange(newText: String?): Boolean {
+        binding?.tunnels.let { tunnelList ->
+            if (!newText.isNullOrEmpty()) {
+                tunnelList?.clear()
+                savedTunnelsList?.forEach {
+                    if (it.name.contains(newText, true)) {
+                        tunnelList?.add(it)
+                    }
+                }
+            } else {
+                tunnelList?.addAll(savedTunnelsList as Collection<Tunnel>)
+            }
+        }
+        return false
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        onQueryTextChange(query)
+        return false
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
+        val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+        searchView.setOnQueryTextListener(this)
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -313,7 +356,7 @@ class TunnelListFragment : BaseFragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-
+        setHasOptionsMenu(true)
         if (binding == null)
             return
         binding?.fragment = this
