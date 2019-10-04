@@ -6,7 +6,6 @@
 package com.wireguard.android.fragment
 
 import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
@@ -21,6 +20,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.getSystemService
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.R
@@ -220,6 +220,8 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
             }
             tunnelList.addOnScrollListener(FloatingActionButtonRecyclerViewScrollListener(createFab))
             executePendingBindings()
+            tunnels?.clear()
+            tunnels?.addAll(savedTunnelsList)
         }
         // Collapse searchview on fragment transaction
         parentFragmentManager.addOnBackStackChangedListener {
@@ -230,19 +232,7 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
         return binding?.root
     }
 
-    // Collapse searchview on activity change
-    override fun onPause() {
-        binding?.tunnels?.clear()
-        binding?.tunnels?.addAll(savedTunnelsList)
-        if (searchItem.isActionViewExpanded) {
-            searchItem.collapseActionView()
-        }
-        super.onPause()
-    }
-
     override fun onDestroyView() {
-        // Add back saved tunnels before setting it null since tunnel manager and binding are in sync.
-        binding?.tunnels?.addAll(savedTunnelsList)
         binding = null
         super.onDestroyView()
     }
@@ -353,8 +343,8 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
         super.onCreateOptionsMenu(menu, inflater)
         searchItem = menu.findItem(R.id.menu_search)
         val searchView = searchItem.actionView as SearchView
-        val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+        val searchManager = requireActivity().getSystemService<SearchManager>()
+        searchView.setSearchableInfo(searchManager?.getSearchableInfo(activity?.componentName))
         searchView.setOnQueryTextListener(this)
     }
 
