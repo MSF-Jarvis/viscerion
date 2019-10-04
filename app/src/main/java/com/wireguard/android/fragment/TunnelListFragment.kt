@@ -56,6 +56,7 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
     private val savedTunnelsList: ArrayList<Tunnel> = arrayListOf()
     private var actionMode: ActionMode? = null
     private var binding: TunnelListFragmentBinding? = null
+    private var searchItem: MenuItem? = null
     private val bottomSheetActionListener = object : ImportEventsListener {
         override fun onQrImport(result: String) {
             importTunnel(result)
@@ -220,7 +221,24 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
             tunnelList.addOnScrollListener(FloatingActionButtonRecyclerViewScrollListener(createFab))
             executePendingBindings()
         }
+        // Collapse searchview on fragment transaction
+        parentFragmentManager.addOnBackStackChangedListener {
+            if (requireNotNull(searchItem).isActionViewExpanded) {
+                searchItem?.collapseActionView()
+            }
+        }
         return binding?.root
+    }
+
+    // Collapse searchview on activity change
+    override fun onPause() {
+        Timber.d("Paused")
+        binding?.tunnels?.clear()
+        binding?.tunnels?.addAll(savedTunnelsList)
+        if (requireNotNull(searchItem).isActionViewExpanded) {
+            searchItem?.collapseActionView()
+        }
+        super.onPause()
     }
 
     override fun onDestroyView() {
@@ -334,7 +352,8 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
+        searchItem = menu.findItem(R.id.menu_search)
+        val searchView = searchItem?.actionView as SearchView
         val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
         searchView.setOnQueryTextListener(this)
