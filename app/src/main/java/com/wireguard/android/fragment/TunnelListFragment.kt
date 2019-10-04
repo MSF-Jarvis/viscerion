@@ -12,7 +12,12 @@ import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
