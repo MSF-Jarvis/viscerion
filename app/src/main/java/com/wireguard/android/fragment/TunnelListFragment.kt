@@ -30,7 +30,6 @@ import com.wireguard.android.model.Tunnel
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.ImportEventsListener
 import com.wireguard.android.util.KotlinCompanions
-import com.wireguard.android.util.ObservableKeyedList
 import com.wireguard.android.widget.MultiselectableRelativeLayout
 import com.wireguard.android.widget.fab.FloatingActionButtonRecyclerViewScrollListener
 import com.wireguard.config.Config
@@ -49,9 +48,9 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
     private val actionModeListener = ActionModeListener()
     private val tunnelManager by injectTunnelManager()
     private val prefs by injectPrefs()
+    private val savedTunnelsList: ArrayList<Tunnel> = arrayListOf()
     private var actionMode: ActionMode? = null
     private var binding: TunnelListFragmentBinding? = null
-    private var savedTunnelsList: ArrayList<Tunnel>? = null
     private val bottomSheetActionListener = object : ImportEventsListener {
         override fun onQrImport(result: String) {
             importTunnel(result)
@@ -194,10 +193,9 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        savedTunnelsList = arrayListOf()
         tunnelManager.getTunnels().thenAccept { observableSortedKeyedList ->
             observableSortedKeyedList.forEach {
-                savedTunnelsList?.add(it)
+                savedTunnelsList.add(it)
             }
         }
     }
@@ -221,8 +219,8 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
     }
 
     override fun onDestroyView() {
-        //Add back saved tunnels before setting it null since tunnel manager and binding are in sync.
-        binding?.tunnels?.addAll(savedTunnelsList as Collection<Tunnel>)
+        // Add back saved tunnels before setting it null since tunnel manager and binding are in sync.
+        binding?.tunnels?.addAll(savedTunnelsList)
         binding = null
         super.onDestroyView()
     }
@@ -273,7 +271,7 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
             Timber.e(throwable)
         }
 
-        savedTunnelsList?.addAll(tunnels)
+        savedTunnelsList.addAll(tunnels)
         when {
             tunnels.size == 1 && throwables.isEmpty() -> message = getString(R.string.import_success, tunnels[0].name)
             tunnels.isEmpty() && throwables.size == 1 -> {
@@ -312,13 +310,13 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
         binding?.tunnels.let { tunnelList ->
             if (!newText.isNullOrEmpty()) {
                 tunnelList?.clear()
-                savedTunnelsList?.forEach {
+                savedTunnelsList.forEach {
                     if (it.name.contains(newText, true)) {
                         tunnelList?.add(it)
                     }
                 }
             } else {
-                tunnelList?.addAll(savedTunnelsList as Collection<Tunnel>)
+                tunnelList?.addAll(savedTunnelsList)
             }
         }
         return false
