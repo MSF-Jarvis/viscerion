@@ -56,7 +56,7 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
     private val savedTunnelsList: ArrayList<Tunnel> = arrayListOf()
     private var actionMode: ActionMode? = null
     private var binding: TunnelListFragmentBinding? = null
-    private var searchItem: MenuItem? = null
+    private lateinit var searchItem: MenuItem
     private val bottomSheetActionListener = object : ImportEventsListener {
         override fun onQrImport(result: String) {
             importTunnel(result)
@@ -223,8 +223,8 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
         }
         // Collapse searchview on fragment transaction
         parentFragmentManager.addOnBackStackChangedListener {
-            if (requireNotNull(searchItem).isActionViewExpanded) {
-                searchItem?.collapseActionView()
+            if (searchItem.isActionViewExpanded) {
+                searchItem.collapseActionView()
             }
         }
         return binding?.root
@@ -232,11 +232,10 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
 
     // Collapse searchview on activity change
     override fun onPause() {
-        Timber.d("Paused")
         binding?.tunnels?.clear()
         binding?.tunnels?.addAll(savedTunnelsList)
-        if (requireNotNull(searchItem).isActionViewExpanded) {
-            searchItem?.collapseActionView()
+        if (searchItem.isActionViewExpanded) {
+            searchItem.collapseActionView()
         }
         super.onPause()
     }
@@ -353,7 +352,7 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         searchItem = menu.findItem(R.id.menu_search)
-        val searchView = searchItem?.actionView as SearchView
+        val searchView = searchItem.actionView as SearchView
         val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
         searchView.setOnQueryTextListener(this)
