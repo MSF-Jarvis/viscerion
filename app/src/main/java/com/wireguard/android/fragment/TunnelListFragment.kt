@@ -230,8 +230,11 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener {
                 searchItem.collapseActionView()
             }
         }
-        binding?.root?.let { EdgeToEdge.setUpRoot(it as ViewGroup) }
-        binding?.tunnelList?.let { EdgeToEdge.setUpScrollingContent(it) }
+        binding?.let {
+            EdgeToEdge.setUpRoot(it.root as ViewGroup)
+            EdgeToEdge.setUpFAB(it.createFab)
+            EdgeToEdge.setUpScrollingContent(it.tunnelList, it.createFab)
+        }
         return binding?.root
     }
 

@@ -9,9 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.marginBottom
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
+import androidx.core.view.marginTop
+import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import com.google.android.material.appbar.AppBarLayout
-import com.wireguard.android.R
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 /**
  * A utility for edge-to-edge display. It provides several features needed to make the app
@@ -39,8 +44,15 @@ private interface EdgeToEdgeImpl {
      * @param scrollingContent A scrolling ViewGroup. This is typically a RecyclerView or a
      * ScrollView. It should be as wide as the screen, and should touch the bottom edge of
      * the screen.
+     * @param fab A [ExtendedFloatingActionButton] to show last item on scrolling ViewGroup above fab.
      */
-    fun setUpScrollingContent(scrollingContent: ViewGroup) {}
+    fun setUpScrollingContent(scrollingContent: ViewGroup, fab: ExtendedFloatingActionButton?) {}
+
+    /**
+     * Configures a floating action button for edge-to-edge display.
+     * @param fab An [ExtendedFloatingActionButton].
+     */
+    fun setUpFAB(fab: ExtendedFloatingActionButton) {}
 }
 
 @RequiresApi(21)
@@ -49,30 +61,46 @@ private class RealEdgeToEdge : EdgeToEdgeImpl {
     override fun setUpRoot(root: ViewGroup) {
         root.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-    }
 
-    override fun setUpAppBar(appBar: AppBarLayout, toolbar: Toolbar) {
-        val toolbarPadding = toolbar.resources.getDimensionPixelSize(R.dimen.spacing_medium)
-        appBar.setOnApplyWindowInsetsListener { _, windowInsets ->
-            appBar.updatePadding(top = windowInsets.systemWindowInsetTop)
-            toolbar.updatePadding(
-                    left = toolbarPadding + windowInsets.systemWindowInsetLeft,
-                    right = windowInsets.systemWindowInsetRight
-            )
-            windowInsets
+        val initialPaddingTop = root.paddingTop
+        root.setOnApplyWindowInsetsListener { _, insets ->
+            root.updatePadding(top = initialPaddingTop + insets.systemWindowInsetTop)
+            insets
         }
     }
 
-    override fun setUpScrollingContent(scrollingContent: ViewGroup) {
+    override fun setUpScrollingContent(scrollingContent: ViewGroup, fab: ExtendedFloatingActionButton?) {
         val originalPaddingLeft = scrollingContent.paddingLeft
         val originalPaddingRight = scrollingContent.paddingRight
         val originalPaddingBottom = scrollingContent.paddingBottom
+
+        val fabPaddingBottom = fab?.height ?: 0
+
+        val originalMarginTop = scrollingContent.marginTop
+
         scrollingContent.setOnApplyWindowInsetsListener { _, windowInsets ->
             scrollingContent.updatePadding(
                     left = originalPaddingLeft + windowInsets.systemWindowInsetLeft,
                     right = originalPaddingRight + windowInsets.systemWindowInsetRight,
-                    bottom = originalPaddingBottom + windowInsets.systemWindowInsetBottom
+                    bottom = originalPaddingBottom + fabPaddingBottom + windowInsets.systemWindowInsetBottom
             )
+            scrollingContent.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = originalMarginTop + windowInsets.systemWindowInsetTop
+            }
+            windowInsets
+        }
+    }
+
+    override fun setUpFAB(fab: ExtendedFloatingActionButton) {
+        val originalMarginLeft = fab.marginLeft
+        val originalMarginRight = fab.marginRight
+        val originalMarginBottom = fab.marginBottom
+        fab.setOnApplyWindowInsetsListener { _, windowInsets ->
+            fab.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                leftMargin = originalMarginLeft + windowInsets.systemWindowInsetLeft
+                rightMargin = originalMarginRight + windowInsets.systemWindowInsetRight
+                bottomMargin = originalMarginBottom + windowInsets.systemWindowInsetBottom
+            }
             windowInsets
         }
     }
