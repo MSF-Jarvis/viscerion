@@ -63,8 +63,10 @@ object Libs {
      */
     const val preference: String = "androidx.preference:preference:" + Versions.preference
 
-    const val security_crypto: String = "androidx.security:security-crypto:" +
-            Versions.security_crypto
+    /**
+     * http://developer.android.com/tools/extras/support-library.html
+     */
+    const val recyclerview: String = "androidx.recyclerview:recyclerview:" + Versions.recyclerview
 
     const val slice_builders_ktx: String = "androidx.slice:slice-builders-ktx:" +
             Versions.slice_builders_ktx

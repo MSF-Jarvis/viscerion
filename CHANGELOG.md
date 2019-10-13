@@ -1,6 +1,11 @@
 # Release Notes
 
 ### Unreleased
+
+### [v5.2.1](https://github.com/msfjarvis/viscerion/releases/5.2.1)
+- Fix crash in tunnel detail view
+
+### [v5.2.0](https://github.com/msfjarvis/viscerion/releases/5.2.0)
 - Add timer to wg-quick notifications
 - Defer tunnel state restoration to workaround AFWall+ startup block
 - Add German translations
@@ -9,7 +14,7 @@
 - Add ability to restrict application access using biometric authentication
 - Fix constant memory leaks on Q that Google deemed too low priority.
 - Allow searching through tunnels in list view
-- Encrypt app settings on Android 6.0 and above (you might lose your settings on upgrade)
+- Support kernelspace mode on Android Q.
 
 ### [v5.1.1](https://github.com/msfjarvis/viscerion/releases/5.1.1)
 - Revert back to non-service Tasker integration as many devices incessantly
