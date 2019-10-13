@@ -89,7 +89,6 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
         binding = TunnelEditorFragmentBinding.inflate(inflater, container, false)
         binding?.executePendingBindings()
         binding?.let {
-            Timber.d("Tunnel Editor inset called")
             EdgeToEdge.setUpRoot(it.root as ViewGroup)
             EdgeToEdge.setUpScrollingContent(it.mainContainer, null)
         }
