@@ -61,12 +61,6 @@ private class RealEdgeToEdge : EdgeToEdgeImpl {
     override fun setUpRoot(root: ViewGroup) {
         root.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-
-        val initialPaddingTop = root.paddingTop
-        root.setOnApplyWindowInsetsListener { _, insets ->
-            root.updatePadding(top = initialPaddingTop + insets.systemWindowInsetTop)
-            insets
-        }
     }
 
     override fun setUpScrollingContent(scrollingContent: ViewGroup, fab: ExtendedFloatingActionButton?) {
