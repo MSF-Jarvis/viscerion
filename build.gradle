@@ -9,18 +9,13 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath(Libs.com_android_tools_build_gradle)
-        classpath(Libs.kotlin_gradle_plugin)
+        classpath Libs.com_android_tools_build_gradle
+        classpath Libs.kotlin_gradle_plugin
     }
 }
 
 plugins {
-    buildSrcVersions
-}
-
-buildScan {
-    termsOfServiceAgree = "yes"
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
+    id 'de.fayard.buildSrcVersions' version '0.7.0' //Versions.de_fayard_buildsrcversions_gradle_plugin
 }
 
 buildSrcVersions {
@@ -30,14 +25,12 @@ subprojects {
     repositories {
         google()
         jcenter()
-        maven(url = "https://jitpack.io")
+        maven { url 'https://jitpack.io' }
     }
 }
 
 tasks {
-    named<Wrapper>("wrapper") {
+    wrapper {
         distributionType = Wrapper.DistributionType.ALL
     }
 }
-
-configureSpotless()
