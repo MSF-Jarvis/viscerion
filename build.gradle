@@ -46,6 +46,8 @@ subprojects {
     }
 }
 
+apply from: './spotless.root.gradle'
+
 project(':app') {
     apply from: '../spotless.gradle'
 }

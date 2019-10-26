@@ -1,4 +1,10 @@
-ext.versions = [
+/*
+ * Copyright © 2017-2019 WireGuard LLC.
+ * Copyright © 2018-2019 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+ext {
+    versions = [
         // Project
         minSdk: 21,
         targetSdk: 29,
@@ -34,4 +40,5 @@ ext.versions = [
         retrofuture: '1.7.1',
         threetenabp: '1.2.1',
         timber: '4.7.1'
-]
+    ]
+}
