@@ -50,6 +50,27 @@ project(':app') {
     apply from: '../spotless.gradle'
 }
 
+project(':native') {
+    android {
+        buildTypes {
+            release {
+                externalNativeBuild {
+                    cmake {
+                        arguments "-DANDROID_PACKAGE_NAME=me.msfjarvis.viscerion"
+                    }
+                }
+            }
+            debug {
+                externalNativeBuild {
+                    cmake {
+                        arguments "-DANDROID_PACKAGE_NAME=me.msfjarvis.viscerion.debug"
+                    }
+                }
+            }
+        }
+    }
+}
+
 tasks {
     wrapper {
         distributionType = Wrapper.DistributionType.ALL
