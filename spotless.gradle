@@ -31,7 +31,7 @@ spotless {
     }
 
     kotlin {
-        target '**/src/**/*.kt', 'buildSrc/**/*.kt'
+        target '**/src/**/*.kt'
         ktlint('0.35.0').userData(['indent_size': '4', 'continuation_indent_size': '8'])
         licenseHeaderFile '../spotless.license'
         trimTrailingWhitespace()
