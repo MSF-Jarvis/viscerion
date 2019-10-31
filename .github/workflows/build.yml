@@ -8,6 +8,7 @@ jobs:
     - uses: actions/checkout@master
       with:
         submodules: true
+    - run: ./gradlew dependencies
     - name: Cache ~/.gradle
       uses: actions/cache@preview
       with:
@@ -18,7 +19,7 @@ jobs:
     - uses: actions/setup-go@v1
       with:
         go-version: '1.13.3'
-    - run: ./gradlew dependencies spotlessCheck :app:assembleDebug
+    - run: ./gradlew spotlessCheck :app:assembleDebug
     - uses: actions/upload-artifact@master
       with:
         name: Debug APK
