@@ -99,6 +99,8 @@ dependencies {
     implementation 'com.jakewharton.threetenabp:threetenabp:' + versions.threetenabp
     implementation 'com.jakewharton.timber:timber:' + versions.timber
     implementation 'androidx.work:work-runtime-ktx:' + versions.work
+    implementation 'com.google.dagger:dagger:' + versions.dagger
+    kapt 'com.google.dagger:dagger-compiler:' + versions.dagger
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:' + versions.leakcanary
 }
 

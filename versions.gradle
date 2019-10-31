@@ -35,6 +35,7 @@ ext {
 
         // Third party
         barcode: '1.1.1',
+        dagger: '2.24',
         koin: '2.0.1',
         leakcanary: '2.0-beta-3',
         retrofuture: '1.7.1',
