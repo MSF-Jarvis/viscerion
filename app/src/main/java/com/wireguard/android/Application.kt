@@ -11,6 +11,9 @@ import android.os.Build
 import android.os.StrictMode
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
+import com.wireguard.android.di.AppComponent
+import com.wireguard.android.di.ApplicationModule
+import com.wireguard.android.di.DaggerAppComponent
 import com.wireguard.android.di.backendAsyncModule
 import com.wireguard.android.di.backendModule
 import com.wireguard.android.di.configStoreModule
@@ -45,9 +48,7 @@ class Application : android.app.Application() {
         notificationManager.createNotificationChannel(notificationChannel)
     }
 
-    override fun onCreate() {
-        super.onCreate()
-
+    private fun initializeKoin() {
         startKoin {
             androidContext(this@Application)
             modules(listOf(
@@ -58,7 +59,9 @@ class Application : android.app.Application() {
                     toolsInstallerModule
             ))
         }
+    }
 
+    private fun initializeTimber() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
             StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
@@ -67,6 +70,20 @@ class Application : android.app.Application() {
                     .build()
             )
         }
+    }
+
+    private fun initializeDagger() {
+        component = DaggerAppComponent.builder()
+            .applicationModule(ApplicationModule(this))
+            .build()
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        initializeDagger()
+        initializeKoin()
+        initializeTimber()
 
         updateAppTheme(getPrefs().useDarkTheme)
 
@@ -76,6 +93,7 @@ class Application : android.app.Application() {
 
     companion object {
         private lateinit var weakSelf: WeakReference<Application>
+        lateinit var component: AppComponent private set
 
         fun get(): Application {
             return requireNotNull(weakSelf.get())

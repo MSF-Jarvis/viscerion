@@ -11,6 +11,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import com.wireguard.android.Application
 import com.wireguard.android.BR
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
@@ -243,7 +244,7 @@ class TunnelManager @Inject constructor(private val context: Context, val config
 
     class IntentReceiver : BroadcastReceiver() {
 
-        @Inject lateinit var tunnelManager: TunnelManager
+        private val tunnelManager: TunnelManager = Application.component.tunnelManager
 
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null || intent.action == null)
