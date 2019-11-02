@@ -244,14 +244,12 @@ class TunnelManager @Inject constructor(private val context: Context, val config
 
     class IntentReceiver : BroadcastReceiver() {
 
-        private val tunnelManager: TunnelManager = Application.component.tunnelManager
-
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null || intent.action == null)
                 return
             when (intent.action) {
                 "com.wireguard.android.action.REFRESH_TUNNEL_STATES" -> {
-                    tunnelManager.refreshTunnelStates()
+                    (context?.applicationContext as Application).component.tunnelManager.refreshTunnelStates()
                     return
                 }
                 else -> Timber.tag("TunnelManager").d("Invalid intent action: ${intent.action}")

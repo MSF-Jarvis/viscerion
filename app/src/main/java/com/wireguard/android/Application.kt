@@ -14,6 +14,7 @@ import androidx.core.content.getSystemService
 import com.wireguard.android.di.AppComponent
 import com.wireguard.android.di.ApplicationModule
 import com.wireguard.android.di.DaggerAppComponent
+import com.wireguard.android.di.InjectorProvider
 import com.wireguard.android.di.backendAsyncModule
 import com.wireguard.android.di.backendModule
 import com.wireguard.android.di.configStoreModule
@@ -27,7 +28,13 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
 
-class Application : android.app.Application() {
+class Application : android.app.Application(), InjectorProvider {
+
+    override val component: AppComponent by lazy {
+        DaggerAppComponent.builder()
+        .applicationModule(ApplicationModule(this))
+        .build()
+    }
 
     init {
         weakSelf = WeakReference(this)
@@ -72,16 +79,9 @@ class Application : android.app.Application() {
         }
     }
 
-    private fun initializeDagger() {
-        component = DaggerAppComponent.builder()
-            .applicationModule(ApplicationModule(this))
-            .build()
-    }
-
     override fun onCreate() {
         super.onCreate()
 
-        initializeDagger()
         initializeKoin()
         initializeTimber()
 
@@ -93,7 +93,6 @@ class Application : android.app.Application() {
 
     companion object {
         private lateinit var weakSelf: WeakReference<Application>
-        lateinit var component: AppComponent private set
 
         fun get(): Application {
             return requireNotNull(weakSelf.get())
