@@ -67,6 +67,18 @@ class ApplicationModule(application: Application) {
 
     @get:Reusable
     @get:Provides
+    val configStore: ConfigStore = FileConfigStore(context)
+
+    @get:Reusable
+    @get:Provides
+    val prefs: ApplicationPreferences = ApplicationPreferences(context)
+
+    @get:Reusable
+    @get:Provides
+    val asyncWorker: AsyncWorker = AsyncWorker(executor, handler)
+
+    @get:Reusable
+    @get:Provides
     val rootShell: RootShell = RootShell(context)
 
     @get:Reusable
@@ -75,7 +87,11 @@ class ApplicationModule(application: Application) {
 
     @get:Reusable
     @get:Provides
-    val tunnelManager: TunnelManager = TunnelManager(context, getConfigStore(context), getPreferences(context))
+    val tunnelManager: TunnelManager = TunnelManager(context, configStore, prefs)
+
+    @get:Reusable
+    @get:Provides
+    val backendType: Class<Backend> = getBackend(context, rootShell, toolsInstaller, prefs).javaClass
 
     @Reusable
     @Provides
@@ -91,23 +107,6 @@ class ApplicationModule(application: Application) {
             toolsInstaller
         ) else GoBackend(context, preferences)
     }
-
-    @Reusable
-    @Provides
-    fun getBackendType(backend: Backend): Class<Backend> = backend.javaClass
-
-    @Reusable
-    @Provides
-    fun getConfigStore(@ApplicationContext context: Context): ConfigStore = FileConfigStore(context)
-
-    @Reusable
-    @Provides
-    fun getPreferences(@ApplicationContext context: Context): ApplicationPreferences = ApplicationPreferences(context)
-
-    @Reusable
-    @Provides
-    fun getAsyncWorker(executor: Executor, @ApplicationHandler handler: Handler): AsyncWorker =
-        AsyncWorker(executor, handler)
 
     @Singleton
     @Provides
