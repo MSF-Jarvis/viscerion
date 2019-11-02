@@ -14,12 +14,11 @@ import androidx.databinding.Bindable
 import com.wireguard.android.BR
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
-import com.wireguard.android.di.ext.getConfigStore
-import com.wireguard.android.di.ext.getPrefs
-import com.wireguard.android.di.ext.getTunnelManager
+import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.di.ext.injectAsyncWorker
 import com.wireguard.android.di.ext.injectBackend
 import com.wireguard.android.model.Tunnel.Statistics
+import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.KotlinCompanions
 import com.wireguard.android.util.ObservableSortedKeyedArrayList
@@ -28,16 +27,15 @@ import com.wireguard.config.Config
 import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
+import javax.inject.Inject
 import org.koin.core.KoinComponent
 import timber.log.Timber
 
-class TunnelManager(private val context: Context) : BaseObservable(), KoinComponent {
+class TunnelManager @Inject constructor(private val context: Context, val configStore: ConfigStore, val prefs: ApplicationPreferences) : BaseObservable() {
 
     private val completableTunnels = CompletableFuture<ObservableSortedKeyedList<String, Tunnel>>()
     private val tunnels = ObservableSortedKeyedArrayList<String, Tunnel>(COMPARATOR)
     private val delayedLoadRestoreTunnels = ArrayList<CompletableFuture<Void>>()
-    private val configStore = getConfigStore()
-    private val prefs = getPrefs()
     private var haveLoaded: Boolean = false
 
     init {
@@ -244,12 +242,15 @@ class TunnelManager(private val context: Context) : BaseObservable(), KoinCompon
     }
 
     class IntentReceiver : BroadcastReceiver() {
+
+        @Inject lateinit var tunnelManager: TunnelManager
+
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null || intent.action == null)
                 return
             when (intent.action) {
                 "com.wireguard.android.action.REFRESH_TUNNEL_STATES" -> {
-                    getTunnelManager().refreshTunnelStates()
+                    tunnelManager.refreshTunnelStates()
                     return
                 }
                 else -> Timber.tag("TunnelManager").d("Invalid intent action: ${intent.action}")

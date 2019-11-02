@@ -14,27 +14,26 @@ import androidx.core.app.NotificationManagerCompat
 import com.wireguard.android.R
 import com.wireguard.android.activity.LaunchActivity
 import com.wireguard.android.configStore.FileConfigStore.Companion.CONFIGURATION_FILE_SUFFIX
-import com.wireguard.android.di.ext.getRootShell
-import com.wireguard.android.di.ext.getToolsInstaller
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.State
 import com.wireguard.android.model.Tunnel.Statistics
 import com.wireguard.android.model.TunnelManager
+import com.wireguard.android.util.RootShell
+import com.wireguard.android.util.ToolsInstaller
 import com.wireguard.config.Config
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.charset.StandardCharsets
+import javax.inject.Inject
 import timber.log.Timber
 
 /**
  * WireGuard backend that uses `wg-quick` to implement tunnel configuration.
  */
 
-class WgQuickBackend(private var context: Context) : Backend {
+class WgQuickBackend @Inject constructor(private val context: Context, val rootShell: RootShell, val toolsInstaller: ToolsInstaller) : Backend {
 
     private val localTemporaryDir: File = File(context.cacheDir, "tmp")
-    private val toolsInstaller = getToolsInstaller()
-    private val rootShell = getRootShell()
     private var notificationManager = NotificationManagerCompat.from(context)
 
     @Throws(Exception::class)

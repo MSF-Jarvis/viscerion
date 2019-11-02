@@ -65,6 +65,18 @@ class ApplicationModule(application: Application) {
     @get:Provides
     val handler: Handler = Handler(Looper.getMainLooper())
 
+    @get:Reusable
+    @get:Provides
+    val rootShell: RootShell = RootShell(context)
+
+    @get:Reusable
+    @get:Provides
+    val toolsInstaller: ToolsInstaller = ToolsInstaller(context, rootShell)
+
+    @get:Reusable
+    @get:Provides
+    val tunnelManager: TunnelManager = TunnelManager(context, getConfigStore(context), getPreferences(context))
+
     @Reusable
     @Provides
     fun getBackend(
