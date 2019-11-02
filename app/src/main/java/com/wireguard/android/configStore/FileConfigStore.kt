@@ -15,8 +15,8 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.charset.StandardCharsets
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Configuration store that uses a `wg-quick`-style file for each configured tunnel.

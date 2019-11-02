@@ -16,8 +16,8 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 import java.util.UUID
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class RootShell @Inject constructor(val context: Context) {
 
