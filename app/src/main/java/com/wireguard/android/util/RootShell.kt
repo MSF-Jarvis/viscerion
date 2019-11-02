@@ -17,8 +17,9 @@ import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 import timber.log.Timber
+import javax.inject.Inject
 
-class RootShell(val context: Context) {
+class RootShell @Inject constructor(val context: Context) {
 
     private val deviceNotRootedMessage: String by lazy { context.getString(R.string.error_root) }
     private val localBinaryDir: File = File(context.codeCacheDir, "bin")

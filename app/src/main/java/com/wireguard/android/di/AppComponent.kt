@@ -9,7 +9,6 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Handler
 import android.os.Looper
-import com.wireguard.android.Application
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
@@ -21,6 +20,7 @@ import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.BackendAsync
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
+import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -31,14 +31,17 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Qualifier
-annotation class ApplicationContext
-
-@Qualifier
 annotation class ApplicationHandler
 
 @Singleton
 @Component(modules = [ApplicationModule::class])
 interface AppComponent {
+
+    @Component.Factory
+    interface Factory {
+        fun create(@BindsInstance applicationContext: Context): AppComponent
+    }
+
     val backend: Backend
     val backendAsync: BackendAsync
     val asyncWorker: AsyncWorker
@@ -50,53 +53,50 @@ interface AppComponent {
 }
 
 @Module
-class ApplicationModule(application: Application) {
-    @get:ApplicationContext
-    @get:Singleton
-    @get:Provides
-    val context: Context = application.applicationContext
-
+object ApplicationModule {
     @get:Reusable
     @get:Provides
+    @get:JvmStatic
     val executor: Executor = AsyncTask.SERIAL_EXECUTOR
 
     @get:ApplicationHandler
     @get:Reusable
     @get:Provides
+    @get:JvmStatic
     val handler: Handler = Handler(Looper.getMainLooper())
-
-    @get:Reusable
-    @get:Provides
-    val configStore: ConfigStore = FileConfigStore(context)
-
-    @get:Reusable
-    @get:Provides
-    val prefs: ApplicationPreferences = ApplicationPreferences(context)
-
-    @get:Reusable
-    @get:Provides
-    val asyncWorker: AsyncWorker = AsyncWorker(executor, handler)
-
-    @get:Reusable
-    @get:Provides
-    val rootShell: RootShell = RootShell(context)
-
-    @get:Reusable
-    @get:Provides
-    val toolsInstaller: ToolsInstaller = ToolsInstaller(context, rootShell)
-
-    @get:Reusable
-    @get:Provides
-    val tunnelManager: TunnelManager = TunnelManager(context, configStore, prefs)
-
-    @get:Reusable
-    @get:Provides
-    val backendType: Class<Backend> = getBackend(context, rootShell, toolsInstaller, prefs).javaClass
 
     @Reusable
     @Provides
+    @JvmStatic
+    fun getRootShell(context: Context): RootShell = RootShell(context)
+
+    @Reusable
+    @Provides
+    @JvmStatic
+    fun getToolsInstaller(
+        context: Context,
+        rootShell: RootShell
+    ): ToolsInstaller = ToolsInstaller(context, rootShell)
+
+    @Reusable
+    @Provides
+    @JvmStatic
+    fun getConfigStore(context: Context): ConfigStore = FileConfigStore(context)
+
+    @Reusable
+    @Provides
+    @JvmStatic
+    fun getTunnelManager(
+        context: Context,
+        configStore: ConfigStore,
+        prefs: ApplicationPreferences
+    ): TunnelManager = TunnelManager(context, configStore, prefs)
+
+    @Reusable
+    @Provides
+    @JvmStatic
     fun getBackend(
-        @ApplicationContext context: Context,
+        context: Context,
         rootShell: RootShell,
         toolsInstaller: ToolsInstaller,
         preferences: ApplicationPreferences
@@ -108,8 +108,25 @@ class ApplicationModule(application: Application) {
         ) else GoBackend(context, preferences)
     }
 
+    @Reusable
+    @Provides
+    @JvmStatic
+    fun getBackendType(backend: Backend): Class<Backend> = backend.javaClass
+
+    @Reusable
+    @Provides
+    @JvmStatic
+    fun getPreferences(context: Context): ApplicationPreferences = ApplicationPreferences(context)
+
+    @Reusable
+    @Provides
+    @JvmStatic
+    fun getAsyncWorker(executor: Executor, @ApplicationHandler handler: Handler): AsyncWorker =
+        AsyncWorker(executor, handler)
+
     @Singleton
     @Provides
+    @JvmStatic
     fun getBackendAsync(backend: Backend): BackendAsync {
         val backendAsync = BackendAsync()
         backendAsync.complete(backend)

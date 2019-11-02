@@ -12,7 +12,6 @@ import android.os.StrictMode
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
 import com.wireguard.android.di.AppComponent
-import com.wireguard.android.di.ApplicationModule
 import com.wireguard.android.di.DaggerAppComponent
 import com.wireguard.android.di.InjectorProvider
 import com.wireguard.android.di.backendAsyncModule
@@ -31,9 +30,7 @@ import timber.log.Timber
 class Application : android.app.Application(), InjectorProvider {
 
     override val component: AppComponent by lazy {
-        DaggerAppComponent.builder()
-        .applicationModule(ApplicationModule(this))
-        .build()
+        DaggerAppComponent.factory().create(applicationContext)
     }
 
     init {

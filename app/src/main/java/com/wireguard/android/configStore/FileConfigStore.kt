@@ -16,12 +16,13 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Configuration store that uses a `wg-quick`-style file for each configured tunnel.
  */
 
-class FileConfigStore(private val context: Context) : ConfigStore {
+class FileConfigStore @Inject constructor(val context: Context) : ConfigStore {
 
     @Throws(IOException::class)
     override fun create(name: String, config: Config): Config {
