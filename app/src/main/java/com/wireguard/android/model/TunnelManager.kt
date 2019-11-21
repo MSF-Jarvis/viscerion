@@ -32,7 +32,11 @@ import javax.inject.Inject
 import org.koin.core.KoinComponent
 import timber.log.Timber
 
-class TunnelManager @Inject constructor(private val context: Context, val configStore: ConfigStore, val prefs: ApplicationPreferences) : BaseObservable() {
+class TunnelManager @Inject constructor(
+    private val context: Context,
+    private val configStore: ConfigStore,
+    private val prefs: ApplicationPreferences
+) : BaseObservable(), KoinComponent {
 
     private val completableTunnels = CompletableFuture<ObservableSortedKeyedList<String, Tunnel>>()
     private val tunnels = ObservableSortedKeyedArrayList<String, Tunnel>(COMPARATOR)

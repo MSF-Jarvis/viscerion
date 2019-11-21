@@ -24,7 +24,7 @@ import java9.util.concurrent.CompletableFuture
 import javax.inject.Inject
 import timber.log.Timber
 
-class GoBackend @Inject constructor(val context: Context, val prefs: ApplicationPreferences) : Backend {
+class GoBackend @Inject constructor(private val context: Context, private val prefs: ApplicationPreferences) : Backend {
 
     private var currentTunnel: Tunnel? = null
     private var currentTunnelHandle = -1

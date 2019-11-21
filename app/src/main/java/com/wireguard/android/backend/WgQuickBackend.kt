@@ -31,7 +31,7 @@ import timber.log.Timber
  * WireGuard backend that uses `wg-quick` to implement tunnel configuration.
  */
 
-class WgQuickBackend @Inject constructor(private val context: Context, val rootShell: RootShell, val toolsInstaller: ToolsInstaller) : Backend {
+class WgQuickBackend @Inject constructor(private val context: Context, private val toolsInstaller: ToolsInstaller, private val rootShell: RootShell) : Backend {
 
     private val localTemporaryDir: File = File(context.cacheDir, "tmp")
     private var notificationManager = NotificationManagerCompat.from(context)

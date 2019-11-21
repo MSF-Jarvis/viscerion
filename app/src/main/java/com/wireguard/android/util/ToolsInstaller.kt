@@ -19,7 +19,7 @@ import timber.log.Timber
  * Helper to install WireGuard tools to the system partition.
  */
 
-class ToolsInstaller @Inject constructor(val context: Context, val rootShell: RootShell) {
+class ToolsInstaller @Inject constructor(private val context: Context, private val rootShell: RootShell) : KoinComponent {
 
     private val localBinaryDir = File(context.codeCacheDir, "bin")
     private val magiskDir by lazy { getMagiskDirectory() }
