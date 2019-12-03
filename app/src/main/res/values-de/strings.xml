@@ -142,6 +142,10 @@
     <string name="transfer">Übertragen</string>
     <string name="transfer_rx_tx">rx: %1$s, tx: %2$s</string>
     <string name="transfer_bytes">%d B</string>
+    <string name="transfer_kibibytes">%.2f KB</string>
+    <string name="transfer_mibibytes">%.2f MB</string>
+    <string name="transfer_gibibytes">%.2f GB</string>
+    <string name="transfer_tibibytes">%.2f TB</string>
     <string name="tun_create_error">Konnte tun Gerät nicht erstellen</string>
     <string name="tunnel_config_error">Tunnel konnte nicht konfiguriert werden (wg-quick gab %d zurück)</string>
     <string name="tunnel_create_error">Kann Tunnel nicht erstellen: %s</string>
