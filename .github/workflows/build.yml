@@ -26,6 +26,12 @@ jobs:
       with:
         go-version: '1.13.4'
 
+    - name: Generate build number
+      id: buildnumber
+      uses: einaregilsson/build-number@v1
+      with:
+        token: ${{secrets.GITHUB_TOKEN}}
+
     - name: Clean Cache
       run: rm -rf ~/.gradle/caches
 
@@ -33,6 +39,11 @@ jobs:
       with:
           path: ~/.gradle/caches
           key: gradle-${{ runner.os }}-${{ hashFiles('**/build.gradle') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/dependencies.gradle') }}
+
+    - name: Decrypt secrets
+      run: release/signing-setup.sh "$ENCRYPT_KEY"
+      env:
+        ENCRYPT_KEY: ${{ secrets.ENCRYPT_KEY }}
 
     - name: Download gradle dependencies
       run: ./gradlew dependencies
@@ -42,6 +53,28 @@ jobs:
 
     - name: Build app
       run: ./gradlew :app:assembleDebug
+
+    - name: Clean secrets
+      run: release/signing-cleanup.sh
+
+    - name: Prepare for Telegram deployment
+      run: mv app/build/outputs/apk/debug/app-debug.apk Viscerion-ci_$BUILD_NUMBER.apk
+
+    - name: Deploy to Telegram
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        document: Viscerion-ci_$BUILD_NUMBER.apk
+        message: |
+          Changelog for build $BUILD_NUMBER:
+          - github.event.head_commit.message
+
+    - name: Archive debug APK
+      uses: actions/upload-artifact@master
+      with:
+        name: Viscerion-$BUILD_NUMBER-debug
+        path: Viscerion-ci_$BUILD_NUMBER.apk
 
     - name: Run unit tests
       run: ./gradlew testDebug
