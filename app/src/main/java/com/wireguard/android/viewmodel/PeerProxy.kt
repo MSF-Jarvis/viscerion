@@ -95,12 +95,12 @@ class PeerProxy : BaseObservable, Parcelable {
         isExcludingPrivateIps = !isExcludingPrivateIps
     }
 
-    private constructor(`in`: Parcel) {
-        allowedIps = `in`.readString()
-        endpoint = `in`.readString()
-        persistentKeepalive = `in`.readString()
-        preSharedKey = `in`.readString()
-        publicKey = `in`.readString()
+    private constructor(parcel: Parcel) {
+        allowedIps = parcel.readString()
+        endpoint = parcel.readString()
+        persistentKeepalive = parcel.readString()
+        preSharedKey = parcel.readString()
+        publicKey = parcel.readString()
     }
 
     constructor(other: Peer) {
@@ -120,13 +120,13 @@ class PeerProxy : BaseObservable, Parcelable {
     }
 
     fun bind(owner: ConfigProxy) {
-        val `interface` = owner.`interface`
+        val interfaze = owner.interfaze
         val peers = owner.peers
         if (interfaceDnsListener == null) {
             interfaceDnsListener = InterfaceDnsListener(this)
         }
-        `interface`.addOnPropertyChangedCallback(interfaceDnsListener!!)
-        setInterfaceDns(`interface`.dnsServers.get())
+        interfaze.addOnPropertyChangedCallback(interfaceDnsListener!!)
+        setInterfaceDns(interfaze.dnsServers.get())
         if (peerListListener == null) {
             peerListListener = PeerListListener(this)
         }
@@ -262,10 +262,10 @@ class PeerProxy : BaseObservable, Parcelable {
             return
         }
         owner?.let {
-            val `interface` = it.`interface`
+            val interfaze = it.interfaze
             val peers = it.peers
             interfaceDnsListener?.let { interfaceDnsListener ->
-                `interface`.removeOnPropertyChangedCallback(
+                interfaze.removeOnPropertyChangedCallback(
                         interfaceDnsListener
                 )
             }
@@ -358,8 +358,8 @@ class PeerProxy : BaseObservable, Parcelable {
     }
 
     private class PeerProxyCreator : Parcelable.Creator<PeerProxy> {
-        override fun createFromParcel(`in`: Parcel): PeerProxy {
-            return PeerProxy(`in`)
+        override fun createFromParcel(parcel: Parcel): PeerProxy {
+            return PeerProxy(parcel)
         }
 
         override fun newArray(size: Int): Array<PeerProxy?> {

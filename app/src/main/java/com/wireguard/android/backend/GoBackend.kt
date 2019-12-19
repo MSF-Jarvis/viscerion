@@ -188,20 +188,20 @@ class GoBackend(private val context: Context, private val prefs: ApplicationPref
             builder.setConfigureIntent(PendingIntent.getActivity(context, 0, configureIntent, 0))
 
             if (prefs.whitelistApps) {
-                (config.`interface`.excludedApplications + prefs.exclusions).forEach { excludedApplication ->
+                (config.interfaze.excludedApplications + prefs.exclusions).forEach { excludedApplication ->
                     builder.addAllowedApplication(excludedApplication)
                 }
             } else {
-                (config.`interface`.excludedApplications + prefs.exclusions).forEach { excludedApplication ->
+                (config.interfaze.excludedApplications + prefs.exclusions).forEach { excludedApplication ->
                     builder.addDisallowedApplication(excludedApplication)
                 }
             }
 
-            config.`interface`.addresses.forEach { addr ->
+            config.interfaze.addresses.forEach { addr ->
                 builder.addAddress(addr.address, addr.mask)
             }
 
-            config.`interface`.dnsServers.forEach { dns ->
+            config.interfaze.dnsServers.forEach { dns ->
                 builder.addDnsServer(dns.hostAddress)
             }
 
@@ -215,7 +215,7 @@ class GoBackend(private val context: Context, private val prefs: ApplicationPref
                 builder.setMetered(false)
             }
 
-            var mtu = config.`interface`.mtu
+            var mtu = config.interfaze.mtu
             if (mtu == null || mtu == 0) {
                 mtu = 1280
             }

@@ -272,9 +272,9 @@ class SettingsActivity : AppCompatActivity() {
                         val oldConfig = tunnel.getConfig()
                         if (oldConfig != null) {
                             prefs.exclusions.forEach {
-                                oldConfig.`interface`.excludedApplications.remove(it)
+                                oldConfig.interfaze.excludedApplications.remove(it)
                             }
-                            oldConfig.`interface`.excludedApplications.addAll(ArrayList(excludedApps))
+                            oldConfig.interfaze.excludedApplications.addAll(ArrayList(excludedApps))
                             tunnel.setConfig(oldConfig)
                         }
                     }
@@ -282,7 +282,7 @@ class SettingsActivity : AppCompatActivity() {
                 } else {
                     tunnels.forEach { tunnel ->
                         prefs.exclusions.forEach { exclusion ->
-                            tunnel.getConfig()?.`interface`?.excludedApplications?.remove(exclusion)
+                            tunnel.getConfig()?.interfaze?.excludedApplications?.remove(exclusion)
                         }
                     }
                     prefs.exclusions = emptySet()

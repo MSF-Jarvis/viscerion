@@ -309,7 +309,7 @@ class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener, Barco
             tunnels.forEach { tunnel ->
                 val oldConfig = tunnel.getConfig()
                 oldConfig?.let {
-                    it.`interface`.excludedApplications.addAll(excludedApps)
+                    it.interfaze.excludedApplications.addAll(excludedApps)
                     tunnel.setConfig(it)
                 }
             }
