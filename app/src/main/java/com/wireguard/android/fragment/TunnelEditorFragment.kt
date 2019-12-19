@@ -117,8 +117,9 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                 // TODO(smaeul): Remove this hack when fixing the Config ViewModel
                 // The selected tunnel has to actually change, but we have to remember this one.
                 val savedTunnel = tunnel
-                if (savedTunnel == selectedTunnel)
+                if (savedTunnel == selectedTunnel) {
                     selectedTunnel = null
+                }
                 selectedTunnel = savedTunnel
             }
         }
@@ -127,16 +128,17 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     override fun onResume() {
         super.onResume()
         if (!MainActivity.isTwoPaneLayout &&
-                resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             requireActivity().window?.apply {
                 val ctx = requireContext()
                 navigationBarColor = ContextCompat.getColor(ctx, R.color.secondary_dark_color)
                 if (Build.VERSION.SDK_INT >= 27 &&
-                        (!getPrefs().useDarkTheme && !ctx.isSystemDarkThemeEnabled())) {
+                    (!getPrefs().useDarkTheme && !ctx.isSystemDarkThemeEnabled())) {
                     // Clear window flags to let navigation bar be dark
                     decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                 }
             }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -188,8 +190,9 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
 
     override fun onSelectedTunnelChanged(oldTunnel: Tunnel?, newTunnel: Tunnel?) {
         tunnel = newTunnel
-        if (binding == null)
+        if (binding == null) {
             return
+        }
         binding?.config = ConfigProxy()
         if (tunnel != null) {
             binding?.name = tunnel?.name
@@ -236,8 +239,9 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        if (binding == null)
+        if (binding == null) {
             return
+        }
 
         binding?.fragment = this
 
@@ -247,10 +251,11 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             tunnel = selectedTunnel
             val config = savedInstanceState.getParcelable<ConfigProxy>(KEY_LOCAL_CONFIG)
             val originalName = savedInstanceState.getString(KEY_ORIGINAL_NAME)
-            if (tunnel != null && tunnel?.name != originalName)
+            if (tunnel != null && tunnel?.name != originalName) {
                 onSelectedTunnelChanged(null, tunnel)
-            else
+            } else {
                 binding?.config = config
+            }
         }
 
         super.onViewStateRestored(savedInstanceState)

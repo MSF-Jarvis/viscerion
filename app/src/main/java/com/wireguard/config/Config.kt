@@ -43,8 +43,9 @@ class Config private constructor(builder: Builder) {
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other !is Config)
+        if (other !is Config) {
             return false
+        }
         return `interface` == other.`interface` && peers == other.peers
     }
 
@@ -71,8 +72,9 @@ class Config private constructor(builder: Builder) {
     fun toWgQuickString(exporting: Boolean = false): String {
         val sb = StringBuilder()
         sb.append("[Interface]\n").append(`interface`.toWgQuickString(exporting))
-        for (peer in peers)
+        for (peer in peers) {
             sb.append("\n[Peer]\n").append(peer.toWgQuickString())
+        }
         return sb.toString()
     }
 
@@ -85,8 +87,9 @@ class Config private constructor(builder: Builder) {
         val sb = StringBuilder()
         sb.append(`interface`.toWgUserspaceString())
         sb.append("replace_peers=true\n")
-        for (peer in peers)
+        for (peer in peers) {
             sb.append(peer.toWgUserspaceString())
+        }
         return sb.toString()
     }
 
@@ -162,11 +165,13 @@ class Config private constructor(builder: Builder) {
             while (true) {
                 line = reader.readLine() ?: break
                 val commentIndex = line.indexOf('#')
-                if (commentIndex != -1)
+                if (commentIndex != -1) {
                     line = line.substring(0, commentIndex)
+                }
                 line = line.trim { it <= ' ' }
-                if (line.isEmpty())
+                if (line.isEmpty()) {
                     continue
+                }
                 when {
                     line.startsWith("[") -> {
                         // Consume all [Peer] lines read so far.
@@ -197,13 +202,14 @@ class Config private constructor(builder: Builder) {
                     )
                 }
             }
-            if (inPeerSection)
+            if (inPeerSection) {
                 builder.parsePeer(peerLines)
-            else if (!inInterfaceSection)
+            } else if (!inInterfaceSection) {
                 throw BadConfigException(
-                        Section.CONFIG, Location.TOP_LEVEL,
-                        Reason.MISSING_SECTION, null
+                    Section.CONFIG, Location.TOP_LEVEL,
+                    Reason.MISSING_SECTION, null
                 )
+            }
             // Combine all [Interface] sections in the file.
             builder.parseInterface(interfaceLines)
             return builder.build()
