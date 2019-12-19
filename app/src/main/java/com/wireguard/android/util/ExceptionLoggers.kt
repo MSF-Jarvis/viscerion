@@ -36,7 +36,7 @@ enum class ExceptionLoggers(private val priority: Int) : BiConsumer<Any, Throwab
 
         private fun unwrap(throwable: Throwable): Throwable {
             return if (throwable is CompletionException && throwable.cause != null) {
-                (throwable.cause ?: throwable)
+                throwable.cause ?: throwable
             } else {
                 throwable
             }
