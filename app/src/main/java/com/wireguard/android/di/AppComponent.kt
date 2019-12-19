@@ -58,28 +58,23 @@ interface AppComponent {
 object ApplicationModule {
     @get:Reusable
     @get:Provides
-    @get:JvmStatic
     val executor: Executor = AsyncTask.SERIAL_EXECUTOR
 
     @get:ApplicationHandler
     @get:Reusable
     @get:Provides
-    @get:JvmStatic
     val handler: Handler = Handler(Looper.getMainLooper())
 
     @Reusable
     @Provides
-    @JvmStatic
     fun getRootShell(context: Context): RootShell = RootShell(context)
 
     @Reusable
     @Provides
-    @JvmStatic
     fun getSharedPrefs(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     @Reusable
     @Provides
-    @JvmStatic
     fun getToolsInstaller(
         context: Context,
         rootShell: RootShell
@@ -87,12 +82,10 @@ object ApplicationModule {
 
     @Reusable
     @Provides
-    @JvmStatic
     fun getConfigStore(context: Context): ConfigStore = FileConfigStore(context, context.filesDir)
 
     @Reusable
     @Provides
-    @JvmStatic
     fun getTunnelManager(
         context: Context,
         configStore: ConfigStore,
@@ -101,7 +94,6 @@ object ApplicationModule {
 
     @Reusable
     @Provides
-    @JvmStatic
     fun getBackend(
         context: Context,
         rootShell: RootShell,
@@ -117,23 +109,19 @@ object ApplicationModule {
 
     @Reusable
     @Provides
-    @JvmStatic
     fun getBackendType(backend: Backend): Class<Backend> = backend.javaClass
 
     @Reusable
     @Provides
-    @JvmStatic
     fun getPreferences(sharedPrefs: SharedPreferences): ApplicationPreferences = ApplicationPreferences(sharedPrefs)
 
     @Reusable
     @Provides
-    @JvmStatic
     fun getAsyncWorker(executor: Executor, @ApplicationHandler handler: Handler): AsyncWorker =
         AsyncWorker(executor, handler)
 
     @Singleton
     @Provides
-    @JvmStatic
     fun getBackendAsync(backend: Backend): BackendAsync {
         val backendAsync = BackendAsync()
         backendAsync.complete(backend)
