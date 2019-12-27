@@ -5,6 +5,15 @@
         <item quantity="one">Det gick inte att ta bort %d tunnel: %s</item>
         <item quantity="other">Im going to use vpn how i cab</item>
     </plurals>
+    <plurals name="import_partial_success">
+        <item quantity="one">Https://t. me/proxy? server=Bazal. JimzBand. dynu. com&amp;port=9090&amp;secret=00000000000000000000000000000000
+
+
+🆔 @MyPoroxy ☜</item>
+        <item quantity="other">☑️ پروکسی ضد فیلتر و پر سرعت
+
+https://t. me/proxy? server=Bazal. JimzBand. dynu. com&amp;port=9090&amp;secret</item>
+    </plurals>
     <string name="cancel">Avbryt</string>
     <string name="delete">Radera</string>
     <string name="edit">Redigera</string>
