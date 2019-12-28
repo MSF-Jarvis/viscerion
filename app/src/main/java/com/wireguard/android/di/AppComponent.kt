@@ -67,30 +67,11 @@ object ApplicationModule {
 
     @Reusable
     @Provides
-    fun getRootShell(context: Context): RootShell = RootShell(context)
-
-    @Reusable
-    @Provides
     fun getSharedPrefs(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     @Reusable
     @Provides
-    fun getToolsInstaller(
-        context: Context,
-        rootShell: RootShell
-    ): ToolsInstaller = ToolsInstaller(context, rootShell)
-
-    @Reusable
-    @Provides
     fun getConfigStore(context: Context): ConfigStore = FileConfigStore(context, context.filesDir)
-
-    @Reusable
-    @Provides
-    fun getTunnelManager(
-        context: Context,
-        configStore: ConfigStore,
-        prefs: ApplicationPreferences
-    ): TunnelManager = TunnelManager(context, configStore, prefs)
 
     @Reusable
     @Provides
@@ -110,15 +91,6 @@ object ApplicationModule {
     @Reusable
     @Provides
     fun getBackendType(backend: Backend): Class<Backend> = backend.javaClass
-
-    @Reusable
-    @Provides
-    fun getPreferences(sharedPrefs: SharedPreferences): ApplicationPreferences = ApplicationPreferences(sharedPrefs)
-
-    @Reusable
-    @Provides
-    fun getAsyncWorker(executor: Executor, @ApplicationHandler handler: Handler): AsyncWorker =
-        AsyncWorker(executor, handler)
 
     @Singleton
     @Provides
