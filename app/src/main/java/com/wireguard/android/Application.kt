@@ -11,6 +11,9 @@ import android.os.Build
 import android.os.StrictMode
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
+import com.wireguard.android.di.AppComponent
+import com.wireguard.android.di.DaggerAppComponent
+import com.wireguard.android.di.InjectorProvider
 import com.wireguard.android.di.appModule
 import com.wireguard.android.di.ext.getPrefs
 import com.wireguard.android.model.TunnelManager
@@ -20,7 +23,11 @@ import org.koin.core.context.startKoin
 import timber.log.Timber
 
 @Suppress("Unused")
-class Application : android.app.Application() {
+class Application : android.app.Application(), InjectorProvider {
+
+    override val component: AppComponent by lazy {
+        DaggerAppComponent.factory().create(applicationContext)
+    }
 
     @RequiresApi(26)
     private fun createNotificationChannel() {
