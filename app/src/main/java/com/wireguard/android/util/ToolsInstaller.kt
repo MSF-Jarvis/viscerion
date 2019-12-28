@@ -12,6 +12,7 @@ import com.wireguard.android.util.RootShell.NoRootException
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import javax.inject.Inject
 import org.koin.core.KoinComponent
 import timber.log.Timber
 
@@ -19,7 +20,7 @@ import timber.log.Timber
  * Helper to install WireGuard tools to the system partition.
  */
 
-class ToolsInstaller(private val context: Context, private val rootShell: RootShell) : KoinComponent {
+class ToolsInstaller @Inject constructor(private val context: Context, private val rootShell: RootShell) : KoinComponent {
 
     private val localBinaryDir = File(context.codeCacheDir, "bin")
     private val magiskDir by lazy { getMagiskDirectory() }

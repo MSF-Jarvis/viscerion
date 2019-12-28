@@ -24,6 +24,7 @@ import com.wireguard.config.Config
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.charset.StandardCharsets
+import javax.inject.Inject
 import me.msfjarvis.viscerion.crypto.Key
 import timber.log.Timber
 
@@ -31,7 +32,11 @@ import timber.log.Timber
  * WireGuard backend that uses `wg-quick` to implement tunnel configuration.
  */
 
-class WgQuickBackend(private val context: Context, private val toolsInstaller: ToolsInstaller, private val rootShell: RootShell) : Backend {
+class WgQuickBackend @Inject constructor(
+    private val context: Context,
+    private val toolsInstaller: ToolsInstaller,
+    private val rootShell: RootShell
+) : Backend {
 
     private val localTemporaryDir: File = File(context.cacheDir, "tmp")
     private var notificationManager = NotificationManagerCompat.from(context)

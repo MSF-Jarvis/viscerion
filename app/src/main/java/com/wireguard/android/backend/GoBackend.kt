@@ -22,11 +22,15 @@ import com.wireguard.config.Config
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java9.util.concurrent.CompletableFuture
+import javax.inject.Inject
 import me.msfjarvis.viscerion.crypto.Key
 import me.msfjarvis.viscerion.crypto.KeyFormatException
 import timber.log.Timber
 
-class GoBackend(private val context: Context, private val prefs: ApplicationPreferences) : Backend {
+class GoBackend @Inject constructor(
+    private val context: Context,
+    private val prefs: ApplicationPreferences
+) : Backend {
 
     private var currentTunnel: Tunnel? = null
     private var currentTunnelHandle = -1

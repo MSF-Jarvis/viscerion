@@ -28,10 +28,11 @@ import com.wireguard.config.Config
 import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
+import javax.inject.Inject
 import org.koin.core.KoinComponent
 import timber.log.Timber
 
-class TunnelManager(
+class TunnelManager @Inject constructor(
     private val context: Context,
     private val configStore: ConfigStore,
     private val prefs: ApplicationPreferences

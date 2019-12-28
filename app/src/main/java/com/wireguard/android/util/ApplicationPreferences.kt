@@ -6,9 +6,10 @@
 package com.wireguard.android.util
 
 import android.content.SharedPreferences
+import javax.inject.Inject
 import kotlin.reflect.KProperty
 
-class ApplicationPreferences(val sharedPrefs: SharedPreferences) : SharedPreferences.OnSharedPreferenceChangeListener {
+class ApplicationPreferences @Inject constructor(val sharedPrefs: SharedPreferences) : SharedPreferences.OnSharedPreferenceChangeListener {
 
     init {
         // Bad, bad migration strategy

@@ -9,12 +9,13 @@ import android.os.Handler
 import java.util.concurrent.Executor
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
+import javax.inject.Inject
 
 /**
  * Helper class for running asynchronous tasks and ensuring they are completed on the main thread.
  */
 
-class AsyncWorker(private val executor: Executor, private val handler: Handler) {
+class AsyncWorker @Inject constructor(private val executor: Executor, private val handler: Handler) {
 
     fun runAsync(run: () -> Unit): CompletionStage<Void> {
         val future = CompletableFuture<Void>()
