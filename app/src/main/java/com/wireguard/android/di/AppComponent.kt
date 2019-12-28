@@ -29,11 +29,7 @@ import dagger.Provides
 import dagger.Reusable
 import java.io.File
 import java.util.concurrent.Executor
-import javax.inject.Qualifier
 import javax.inject.Singleton
-
-@Qualifier
-annotation class ApplicationHandler
 
 @Singleton
 @Component(modules = [ApplicationModule::class])
@@ -60,7 +56,6 @@ object ApplicationModule {
     @get:Provides
     val executor: Executor = AsyncTask.SERIAL_EXECUTOR
 
-    @get:ApplicationHandler
     @get:Reusable
     @get:Provides
     val handler: Handler = Handler(Looper.getMainLooper())
