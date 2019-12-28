@@ -25,6 +25,7 @@ import com.wireguard.android.util.KotlinCompanions
 import com.wireguard.android.util.ObservableSortedKeyedArrayList
 import com.wireguard.android.util.ObservableSortedKeyedList
 import com.wireguard.config.Config
+import dagger.Reusable
 import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
@@ -32,6 +33,7 @@ import javax.inject.Inject
 import org.koin.core.KoinComponent
 import timber.log.Timber
 
+@Reusable
 class TunnelManager @Inject constructor(
     private val context: Context,
     private val configStore: ConfigStore,
