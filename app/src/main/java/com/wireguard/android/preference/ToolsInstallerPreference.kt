@@ -9,9 +9,10 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.preference.Preference
 import com.wireguard.android.R
-import com.wireguard.android.di.ext.getAsyncWorker
-import com.wireguard.android.di.ext.getToolsInstaller
+import com.wireguard.android.di.injector
+import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.ToolsInstaller
+import javax.inject.Inject
 import org.koin.core.KoinComponent
 import timber.log.Timber
 
@@ -22,8 +23,8 @@ import timber.log.Timber
 
 class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), KoinComponent {
     private var state = State.INITIAL
-    private val asyncWorker = getAsyncWorker()
-    private val toolsInstaller = getToolsInstaller()
+    @Inject lateinit var asyncWorker: AsyncWorker
+    @Inject lateinit var toolsInstaller: ToolsInstaller
 
     override fun getSummary(): CharSequence {
         return context.getString(state.messageResourceId)
@@ -34,10 +35,11 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preferen
     }
 
     override fun onAttached() {
+        injector.inject(this)
         super.onAttached()
-        asyncWorker.supplyAsync<Int> {
+        asyncWorker.supplyAsync {
             toolsInstaller.areInstalled()
-        }.whenComplete(this::onCheckResult)
+        }.whenComplete(::onCheckResult)
     }
 
     private fun onCheckResult(state: Int, throwable: Throwable?) {

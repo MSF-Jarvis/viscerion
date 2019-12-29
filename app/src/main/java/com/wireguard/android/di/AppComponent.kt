@@ -28,6 +28,8 @@ import com.wireguard.android.fragment.TunnelDetailFragment
 import com.wireguard.android.fragment.TunnelEditorFragment
 import com.wireguard.android.fragment.TunnelListFragment
 import com.wireguard.android.model.TunnelManager
+import com.wireguard.android.preference.ToolsInstallerPreference
+import com.wireguard.android.preference.VersionPreference
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.BackendAsync
@@ -71,6 +73,8 @@ interface AppComponent {
     fun inject(fragment: TunnelDetailFragment)
     fun inject(fragment: TunnelEditorFragment)
     fun inject(fragment: TunnelListFragment)
+    fun inject(preference: ToolsInstallerPreference)
+    fun inject(preference: VersionPreference)
 }
 
 @Module
