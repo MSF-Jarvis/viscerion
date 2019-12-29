@@ -18,6 +18,7 @@ import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.State
 import com.wireguard.android.model.Tunnel.Statistics
 import com.wireguard.android.model.TunnelManager
+import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
 import com.wireguard.config.Config
@@ -34,8 +35,9 @@ import timber.log.Timber
 
 class WgQuickBackend @Inject constructor(
     private val context: Context,
-    private val toolsInstaller: ToolsInstaller,
-    private val rootShell: RootShell
+    private val prefs: ApplicationPreferences,
+    private val rootShell: RootShell,
+    private val toolsInstaller: ToolsInstaller
 ) : Backend {
 
     private val localTemporaryDir: File = File(context.cacheDir, "tmp")
@@ -173,6 +175,7 @@ class WgQuickBackend @Inject constructor(
     ) {
         requireNotNull(config) { "Trying to set state with a null config" }
 
+        config.interfaze.excludedApplications.addAll(prefs.exclusions)
         val tempFile = File(localTemporaryDir, tunnel.name + CONFIGURATION_FILE_SUFFIX)
         FileOutputStream(
                 tempFile,
