@@ -24,7 +24,6 @@
     <ID>TooManyFunctions:AppComponent.kt$AppComponent$AppComponent</ID>
     <ID>TooManyFunctions:GoBackend.kt$GoBackend$GoBackend</ID>
     <ID>TooManyFunctions:Interface.kt$Interface.Builder$Builder</ID>
-    <ID>TooManyFunctions:KoinExtensions.kt$com.wireguard.android.di.ext.KoinExtensions.kt</ID>
     <ID>TooManyFunctions:Peer.kt$Peer.Builder$Builder</ID>
     <ID>TooManyFunctions:PeerProxy.kt$PeerProxy$PeerProxy</ID>
     <ID>TooManyFunctions:TunnelEditorFragment.kt$TunnelEditorFragment$TunnelEditorFragment</ID>
