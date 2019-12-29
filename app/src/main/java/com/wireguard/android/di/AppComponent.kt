@@ -18,9 +18,9 @@ import com.wireguard.android.activity.SettingsActivity.SettingsFragment
 import com.wireguard.android.activity.TunnelToggleActivity
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
-import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.configStore.FileConfigStore
+import com.wireguard.android.di.factory.BackendFactory
 import com.wireguard.android.fragment.AppListDialogFragment
 import com.wireguard.android.fragment.BaseFragment
 import com.wireguard.android.fragment.ConfigNamingDialogFragment
@@ -45,7 +45,6 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
-import java.io.File
 import java.util.concurrent.Executor
 import javax.inject.Singleton
 
@@ -124,15 +123,11 @@ object ApplicationModule {
     @Provides
     fun getBackend(
         context: Context,
+        preferences: ApplicationPreferences,
         rootShell: RootShell,
-        toolsInstaller: ToolsInstaller,
-        preferences: ApplicationPreferences
+        toolsInstaller: ToolsInstaller
     ): Backend {
-        return if (File("/sys/module/wireguard").exists() && !preferences.forceUserspaceBackend) WgQuickBackend(
-            context,
-            toolsInstaller,
-            rootShell
-        ) else GoBackend(context, preferences)
+        return BackendFactory.getBackend(context, preferences, rootShell, toolsInstaller)
     }
 
     @Reusable
