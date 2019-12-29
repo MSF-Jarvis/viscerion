@@ -28,6 +28,7 @@ import com.wireguard.android.di.injector
 import com.wireguard.android.fragment.AppListDialogFragment
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ApplicationPreferences
+import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.AuthenticationResult
 import com.wireguard.android.util.Authenticator
 import com.wireguard.android.util.BackendAsync
@@ -72,8 +73,9 @@ class SettingsActivity : AppCompatActivity() {
 
     class SettingsFragment : PreferenceFragmentCompat(), AppListDialogFragment.AppExclusionListener {
         @Inject lateinit var prefs: ApplicationPreferences
-        @Inject lateinit var tunnelManager: TunnelManager
+        @Inject lateinit var asyncWorker: AsyncWorker
         @Inject lateinit var backendAsync: BackendAsync
+        @Inject lateinit var tunnelManager: TunnelManager
 
         override fun onAttach(context: Context) {
             injector.inject(this)
@@ -224,7 +226,7 @@ class SettingsActivity : AppCompatActivity() {
             val ctx = requireContext()
             val snackbarView = requireNotNull(requireActivity().findViewById<View>(android.R.id.content))
             tunnelManager.getTunnels().thenAccept { tunnels ->
-                ZipExporter.exportZip(ctx.contentResolver, fileUri, tunnels) { throwable ->
+                ZipExporter.exportZip(asyncWorker, ctx.contentResolver, fileUri, tunnels) { throwable ->
                     if (throwable != null) {
                         val error = ExceptionLoggers.unwrapMessage(throwable)
                         val message = ctx.getString(R.string.zip_export_error, error)

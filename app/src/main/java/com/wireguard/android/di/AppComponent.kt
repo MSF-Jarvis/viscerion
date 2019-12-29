@@ -39,6 +39,7 @@ import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.BackendAsync
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
+import com.wireguard.android.work.TunnelRestoreWorker
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -96,6 +97,9 @@ interface AppComponent {
     // Services
     fun inject(service: QuickTileService)
     fun inject(service: GoBackend.VpnService)
+
+    // And some other thingies
+    fun inject(worker: TunnelRestoreWorker)
 }
 
 @Module

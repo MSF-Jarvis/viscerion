@@ -16,7 +16,7 @@ import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.di.getInjector
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.BackendAsync
-import com.wireguard.android.work.TunnelRestoreWork
+import com.wireguard.android.work.TunnelRestoreWorker
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import timber.log.Timber
@@ -36,7 +36,7 @@ class BootShutdownReceiver : BroadcastReceiver() {
             val action = intent.action
             if (Intent.ACTION_BOOT_COMPLETED == action) {
                 Timber.i("Broadcast receiver attempting to restore state (boot)")
-                val restoreWork = OneTimeWorkRequestBuilder<TunnelRestoreWork>()
+                val restoreWork = OneTimeWorkRequestBuilder<TunnelRestoreWorker>()
                         .setBackoffCriteria(
                                 BackoffPolicy.LINEAR,
                                 OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
