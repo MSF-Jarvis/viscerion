@@ -14,12 +14,12 @@ import androidx.databinding.Bindable
 import com.wireguard.android.BR
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
+import com.wireguard.android.backend.Backend
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.di.ext.getTunnelManager
-import com.wireguard.android.di.ext.injectAsyncWorker
-import com.wireguard.android.di.ext.injectBackend
 import com.wireguard.android.model.Tunnel.Statistics
 import com.wireguard.android.util.ApplicationPreferences
+import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.KotlinCompanions
 import com.wireguard.android.util.ObservableSortedKeyedArrayList
@@ -35,10 +35,12 @@ import timber.log.Timber
 
 @Reusable
 class TunnelManager @Inject constructor(
+    private val asyncWorker: AsyncWorker,
+    private val backend: Backend,
     private val context: Context,
     private val configStore: ConfigStore,
     private val prefs: ApplicationPreferences
-) : BaseObservable(), KoinComponent {
+) : BaseObservable() {
 
     private val completableTunnels = CompletableFuture<ObservableSortedKeyedList<String, Tunnel>>()
     private val tunnels = ObservableSortedKeyedArrayList<String, Tunnel>(COMPARATOR)
@@ -276,7 +278,17 @@ class TunnelManager @Inject constructor(
         }
     }
 
-    class IntentReceiver : BroadcastReceiver() {
+    internal fun getTunnelState(tunnel: Tunnel): CompletionStage<Tunnel.State> {
+        return asyncWorker.supplyAsync { backend.getState(tunnel) }
+            .thenApply(tunnel::onStateChanged)
+    }
+
+    fun getTunnelStatistics(tunnel: Tunnel): CompletionStage<Statistics> {
+        return asyncWorker.supplyAsync { backend.getStatistics(tunnel) }
+            .thenApply(tunnel::onStatisticsChanged)
+    }
+
+    class IntentReceiver : BroadcastReceiver(), KoinComponent {
         private val tunnelManager = getTunnelManager()
 
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -293,27 +305,12 @@ class TunnelManager @Inject constructor(
         }
     }
 
-    companion object : KoinComponent {
+    companion object {
         const val NOTIFICATION_CHANNEL_ID = "wg-quick_tunnels"
         const val TUNNEL_NAME_INTENT_EXTRA = "tunnel_name"
         const val INTENT_INTEGRATION_SECRET_EXTRA = "integration_secret"
         const val TUNNEL_STATE_INTENT_EXTRA = "tunnel_state"
-        private val asyncWorker by injectAsyncWorker()
-        private val backend by injectBackend()
-
-        private val COMPARATOR = Comparators.thenComparing(
-                String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder()
-        )
+        private val COMPARATOR = Comparators.thenComparing(String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder())
         private var lastUsedTunnel: Tunnel? = null
-
-        internal fun getTunnelState(tunnel: Tunnel): CompletionStage<Tunnel.State> {
-            return asyncWorker.supplyAsync { backend.getState(tunnel) }
-                    .thenApply(tunnel::onStateChanged)
-        }
-
-        fun getTunnelStatistics(tunnel: Tunnel): CompletionStage<Statistics> {
-            return asyncWorker.supplyAsync { backend.getStatistics(tunnel) }
-                    .thenApply(tunnel::onStatisticsChanged)
-        }
     }
 }

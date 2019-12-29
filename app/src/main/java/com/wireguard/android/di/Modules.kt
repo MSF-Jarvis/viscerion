@@ -27,7 +27,7 @@ val appModule = module {
     single { RootShell(androidContext()) }
     single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
     single { ApplicationPreferences(get()) }
-    single { TunnelManager(androidContext(), get(), get()) }
+    single { TunnelManager(get(), get(), androidContext(), get(), get()) }
     single { BackendFactory.getBackend(androidContext(), get(), get(), get()) }
     single { CompletableBackendFactory.getBackendAsync(get()) }
     single { ToolsInstaller(androidContext(), get()) }
