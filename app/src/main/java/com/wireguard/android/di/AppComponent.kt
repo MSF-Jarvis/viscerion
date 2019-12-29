@@ -14,6 +14,8 @@ import androidx.preference.PreferenceManager
 import com.wireguard.android.activity.BaseActivity
 import com.wireguard.android.activity.LaunchActivity
 import com.wireguard.android.activity.MainActivity
+import com.wireguard.android.activity.SettingsActivity.SettingsFragment
+import com.wireguard.android.activity.TunnelToggleActivity
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
@@ -61,9 +63,11 @@ interface AppComponent {
     fun inject(activity: BaseActivity)
     fun inject(activity: LaunchActivity)
     fun inject(activity: MainActivity)
+    fun inject(activity: TunnelToggleActivity)
     fun inject(fragment: BaseFragment)
     fun inject(fragment: AppListDialogFragment)
     fun inject(fragment: ConfigNamingDialogFragment)
+    fun inject(fragment: SettingsFragment)
     fun inject(fragment: TunnelDetailFragment)
     fun inject(fragment: TunnelEditorFragment)
     fun inject(fragment: TunnelListFragment)

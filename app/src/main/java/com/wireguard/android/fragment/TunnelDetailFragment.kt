@@ -26,8 +26,8 @@ import com.wireguard.android.util.isSystemDarkThemeEnabled
 import com.wireguard.android.util.resolveAttribute
 import java.util.Timer
 import java.util.TimerTask
-import me.msfjarvis.viscerion.crypto.Key
 import javax.inject.Inject
+import me.msfjarvis.viscerion.crypto.Key
 
 /**
  * Fragment that shows details about a specific tunnel.

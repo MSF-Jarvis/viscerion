@@ -33,8 +33,8 @@ import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.isSystemDarkThemeEnabled
 import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.config.Config
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Fragment for editing a WireGuard configuration.

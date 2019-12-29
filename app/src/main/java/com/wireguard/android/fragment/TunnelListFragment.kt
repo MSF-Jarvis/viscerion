@@ -50,8 +50,8 @@ import java.util.Locale
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java9.util.concurrent.CompletableFuture
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class TunnelListFragment : BaseFragment(), SearchView.OnQueryTextListener, BarcodeResultListener {
 

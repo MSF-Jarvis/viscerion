@@ -25,8 +25,8 @@ import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.State
 import com.wireguard.android.util.BackendAsync
 import com.wireguard.android.util.ErrorMessages
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 /**
  * Base class for fragments that need to know the currently-selected tunnel. Only does anything when
