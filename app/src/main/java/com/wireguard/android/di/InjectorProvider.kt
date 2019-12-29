@@ -5,6 +5,7 @@
  */
 package com.wireguard.android.di
 
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 
 interface InjectorProvider {
@@ -12,3 +13,4 @@ interface InjectorProvider {
 }
 
 val FragmentActivity.injector get() = (application as InjectorProvider).component
+val Fragment.injector get() = (requireContext().applicationContext as InjectorProvider).component

@@ -19,6 +19,12 @@ import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.configStore.FileConfigStore
+import com.wireguard.android.fragment.AppListDialogFragment
+import com.wireguard.android.fragment.BaseFragment
+import com.wireguard.android.fragment.ConfigNamingDialogFragment
+import com.wireguard.android.fragment.TunnelDetailFragment
+import com.wireguard.android.fragment.TunnelEditorFragment
+import com.wireguard.android.fragment.TunnelListFragment
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
@@ -53,8 +59,14 @@ interface AppComponent {
     val preferences: ApplicationPreferences
 
     fun inject(activity: BaseActivity)
-    fun inject(activity: MainActivity)
     fun inject(activity: LaunchActivity)
+    fun inject(activity: MainActivity)
+    fun inject(fragment: BaseFragment)
+    fun inject(fragment: AppListDialogFragment)
+    fun inject(fragment: ConfigNamingDialogFragment)
+    fun inject(fragment: TunnelDetailFragment)
+    fun inject(fragment: TunnelEditorFragment)
+    fun inject(fragment: TunnelListFragment)
 }
 
 @Module
