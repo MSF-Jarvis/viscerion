@@ -7,6 +7,7 @@ package com.wireguard.android
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.os.Build
 import android.os.StrictMode
 import androidx.annotation.RequiresApi
@@ -14,11 +15,8 @@ import androidx.core.content.getSystemService
 import com.wireguard.android.di.AppComponent
 import com.wireguard.android.di.DaggerAppComponent
 import com.wireguard.android.di.InjectorProvider
-import com.wireguard.android.di.appModule
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.updateAppTheme
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
 import timber.log.Timber
 
 @Suppress("Unused")
@@ -46,11 +44,7 @@ class Application : android.app.Application(), InjectorProvider {
 
     override fun onCreate() {
         super.onCreate()
-
-        startKoin {
-            androidContext(this@Application)
-            modules(appModule)
-        }
+        INSTANCE = this
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
@@ -66,5 +60,9 @@ class Application : android.app.Application(), InjectorProvider {
         if (Build.VERSION.SDK_INT >= 26) {
             createNotificationChannel()
         }
+    }
+
+    companion object {
+        lateinit var INSTANCE: Context
     }
 }

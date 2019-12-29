@@ -6,8 +6,8 @@
 package com.wireguard.android.util
 
 import android.content.res.Resources
+import com.wireguard.android.Application
 import com.wireguard.android.R
-import com.wireguard.android.di.ext.getContext
 import com.wireguard.config.BadConfigException
 import com.wireguard.config.BadConfigException.Reason
 import com.wireguard.config.InetEndpoint
@@ -51,7 +51,7 @@ object ErrorMessages : KoinComponent {
     )
 
     operator fun get(throwable: Throwable?): String {
-        val resources = getContext().resources
+        val resources = Application.INSTANCE.resources
         if (throwable == null) {
             return resources.getString(R.string.unknown_error)
         }
