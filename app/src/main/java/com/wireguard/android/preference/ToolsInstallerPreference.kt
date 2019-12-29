@@ -13,7 +13,6 @@ import com.wireguard.android.di.injector
 import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.ToolsInstaller
 import javax.inject.Inject
-import org.koin.core.KoinComponent
 import timber.log.Timber
 
 /**
@@ -21,7 +20,7 @@ import timber.log.Timber
  * result as the preference summary.
  */
 
-class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), KoinComponent {
+class ToolsInstallerPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
     private var state = State.INITIAL
     @Inject lateinit var asyncWorker: AsyncWorker
     @Inject lateinit var toolsInstaller: ToolsInstaller

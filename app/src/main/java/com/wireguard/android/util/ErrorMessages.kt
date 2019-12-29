@@ -17,9 +17,8 @@ import java.net.InetAddress
 import me.msfjarvis.viscerion.crypto.Key.Format
 import me.msfjarvis.viscerion.crypto.KeyFormatException
 import me.msfjarvis.viscerion.crypto.KeyFormatException.Type
-import org.koin.core.KoinComponent
 
-object ErrorMessages : KoinComponent {
+object ErrorMessages {
     private val BCE_REASON_MAP = mapOf(
             Reason.INVALID_KEY to R.string.bad_config_reason_invalid_key,
             Reason.INVALID_NUMBER to R.string.bad_config_reason_invalid_number,

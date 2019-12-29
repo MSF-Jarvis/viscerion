@@ -18,9 +18,8 @@ import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.BackendAsync
 import java.util.Locale
 import javax.inject.Inject
-import org.koin.core.KoinComponent
 
-class VersionPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs), KoinComponent {
+class VersionPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
     private var versionSummary: String? = null
     @Inject lateinit var backendAsync: BackendAsync
     @Inject lateinit var asyncWorker: AsyncWorker

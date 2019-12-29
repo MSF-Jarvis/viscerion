@@ -13,13 +13,12 @@ import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.RootShell
 import javax.inject.Inject
-import org.koin.core.KoinComponent
 import timber.log.Timber
 
 class TunnelRestoreWorker(
     appContext: Context,
     workerParams: WorkerParameters
-) : Worker(appContext, workerParams), KoinComponent {
+) : Worker(appContext, workerParams) {
     @Inject lateinit var tunnelManager: TunnelManager
     @Inject lateinit var rootShell: RootShell
 

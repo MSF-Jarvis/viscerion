@@ -15,7 +15,6 @@ import java.util.Locale
 import me.msfjarvis.viscerion.crypto.Key
 import me.msfjarvis.viscerion.crypto.KeyFormatException
 import me.msfjarvis.viscerion.crypto.KeyPair
-import org.koin.core.KoinComponent
 
 /**
  * Represents the configuration for a WireGuard interface (an [Interface] block). Interfaces must
@@ -25,7 +24,7 @@ import org.koin.core.KoinComponent
  *
  * Instances of this class are immutable.
  */
-class Interface private constructor(builder: Builder) : KoinComponent {
+class Interface private constructor(builder: Builder) {
 
     /**
      * Returns the set of IP addresses assigned to the interface.
