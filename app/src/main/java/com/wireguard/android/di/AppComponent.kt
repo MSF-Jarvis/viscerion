@@ -30,6 +30,7 @@ import com.wireguard.android.fragment.TunnelListFragment
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.preference.ToolsInstallerPreference
 import com.wireguard.android.preference.VersionPreference
+import com.wireguard.android.providers.ViscerionSliceProvider
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.BackendAsync
@@ -62,10 +63,13 @@ interface AppComponent {
     val rootShell: RootShell
     val preferences: ApplicationPreferences
 
+    // Activities
     fun inject(activity: BaseActivity)
     fun inject(activity: LaunchActivity)
     fun inject(activity: MainActivity)
     fun inject(activity: TunnelToggleActivity)
+
+    // Fragments
     fun inject(fragment: BaseFragment)
     fun inject(fragment: AppListDialogFragment)
     fun inject(fragment: ConfigNamingDialogFragment)
@@ -73,8 +77,13 @@ interface AppComponent {
     fun inject(fragment: TunnelDetailFragment)
     fun inject(fragment: TunnelEditorFragment)
     fun inject(fragment: TunnelListFragment)
+
+    // Preferences
     fun inject(preference: ToolsInstallerPreference)
     fun inject(preference: VersionPreference)
+
+    // ContentProviders
+    fun inject(provider: ViscerionSliceProvider)
 }
 
 @Module
