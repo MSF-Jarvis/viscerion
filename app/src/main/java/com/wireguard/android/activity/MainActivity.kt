@@ -40,7 +40,6 @@ import timber.log.Timber
 class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener {
     private var actionBar: ActionBar? = null
     private var listFragment: TunnelListFragment? = null
-    private val prefCallback = ApplicationPreferencesChangeCallback(this)
     @Inject lateinit var prefs: ApplicationPreferences
 
     override fun onDestroy() {
@@ -106,7 +105,7 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         listFragment = supportFragmentManager.findFragmentByTag("LIST") as TunnelListFragment
         supportFragmentManager.addOnBackStackChangedListener(this)
         onBackStackChanged()
-        prefs.registerCallback(prefCallback)
+        prefs.registerCallback(ApplicationPreferencesChangeCallback(this, tunnelManager))
         // Dispatch insets on back stack changed
         findViewById<ViewGroup>(android.R.id.content).setOnApplyWindowInsetsListener { _, insets ->
             supportFragmentManager.let {

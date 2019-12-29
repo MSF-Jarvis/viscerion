@@ -12,9 +12,10 @@ import android.os.Build
 import androidx.collection.ArraySet
 import com.wireguard.android.R
 import com.wireguard.android.activity.MainActivity
-import com.wireguard.android.di.ext.getTunnelManager
+import com.wireguard.android.di.getInjector
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.Tunnel.Statistics
+import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.util.SharedLibraryLoader
@@ -262,13 +263,14 @@ class GoBackend @Inject constructor(
 
     class VpnService : android.net.VpnService() {
 
-        private val tunnelManager = getTunnelManager()
+        @Inject lateinit var tunnelManager: TunnelManager
 
         fun getBuilder(): Builder {
             return Builder()
         }
 
         override fun onCreate() {
+            getInjector(applicationContext).inject(this)
             vpnService.complete(this)
             super.onCreate()
         }

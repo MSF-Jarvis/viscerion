@@ -16,7 +16,7 @@ import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.configStore.ConfigStore
-import com.wireguard.android.di.ext.getTunnelManager
+import com.wireguard.android.di.getInjector
 import com.wireguard.android.model.Tunnel.Statistics
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
@@ -30,7 +30,6 @@ import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
 import javax.inject.Inject
-import org.koin.core.KoinComponent
 import timber.log.Timber
 
 @Reusable
@@ -288,13 +287,14 @@ class TunnelManager @Inject constructor(
             .thenApply(tunnel::onStatisticsChanged)
     }
 
-    class IntentReceiver : BroadcastReceiver(), KoinComponent {
-        private val tunnelManager = getTunnelManager()
+    class IntentReceiver : BroadcastReceiver() {
+        @Inject lateinit var tunnelManager: TunnelManager
 
-        override fun onReceive(context: Context?, intent: Intent?) {
+        override fun onReceive(context: Context, intent: Intent?) {
             if (intent == null || intent.action == null) {
                 return
             }
+            getInjector(context).inject(this)
             when (intent.action) {
                 "com.wireguard.android.action.REFRESH_TUNNEL_STATES" -> {
                     tunnelManager.refreshTunnelStates()

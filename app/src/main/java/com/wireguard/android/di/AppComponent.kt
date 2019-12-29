@@ -31,6 +31,9 @@ import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.preference.ToolsInstallerPreference
 import com.wireguard.android.preference.VersionPreference
 import com.wireguard.android.providers.ViscerionSliceProvider
+import com.wireguard.android.services.BootShutdownReceiver
+import com.wireguard.android.services.QuickTileService
+import com.wireguard.android.services.TaskerIntegrationReceiver
 import com.wireguard.android.util.ApplicationPreferences
 import com.wireguard.android.util.AsyncWorker
 import com.wireguard.android.util.BackendAsync
@@ -84,6 +87,15 @@ interface AppComponent {
 
     // ContentProviders
     fun inject(provider: ViscerionSliceProvider)
+
+    // BroadcastReceivers
+    fun inject(receiver: BootShutdownReceiver)
+    fun inject(receiver: TaskerIntegrationReceiver)
+    fun inject(receiver: TunnelManager.IntentReceiver)
+
+    // Services
+    fun inject(service: QuickTileService)
+    fun inject(service: GoBackend.VpnService)
 }
 
 @Module
