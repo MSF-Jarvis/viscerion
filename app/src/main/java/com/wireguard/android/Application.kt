@@ -15,7 +15,6 @@ import com.wireguard.android.di.AppComponent
 import com.wireguard.android.di.DaggerAppComponent
 import com.wireguard.android.di.InjectorProvider
 import com.wireguard.android.di.appModule
-import com.wireguard.android.di.ext.getPrefs
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.updateAppTheme
 import org.koin.android.ext.koin.androidContext
@@ -62,7 +61,7 @@ class Application : android.app.Application(), InjectorProvider {
             )
         }
 
-        updateAppTheme(getPrefs().useDarkTheme)
+        updateAppTheme(component.preferences.useDarkTheme)
 
         if (Build.VERSION.SDK_INT >= 26) {
             createNotificationChannel()

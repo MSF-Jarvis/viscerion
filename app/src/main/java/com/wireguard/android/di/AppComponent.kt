@@ -11,6 +11,9 @@ import android.os.AsyncTask
 import android.os.Handler
 import android.os.Looper
 import androidx.preference.PreferenceManager
+import com.wireguard.android.activity.BaseActivity
+import com.wireguard.android.activity.LaunchActivity
+import com.wireguard.android.activity.MainActivity
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
@@ -48,6 +51,10 @@ interface AppComponent {
     val tunnelManager: TunnelManager
     val rootShell: RootShell
     val preferences: ApplicationPreferences
+
+    fun inject(activity: BaseActivity)
+    fun inject(activity: MainActivity)
+    fun inject(activity: LaunchActivity)
 }
 
 @Module
