@@ -6,9 +6,7 @@
 package com.wireguard.android.di.ext
 
 import android.content.Context
-import com.wireguard.android.util.ApplicationPreferences
 import org.koin.core.KoinComponent
 import org.koin.core.get
 
 fun KoinComponent.getContext() = get<Context>()
-fun KoinComponent.getPrefs() = get<ApplicationPreferences>()
