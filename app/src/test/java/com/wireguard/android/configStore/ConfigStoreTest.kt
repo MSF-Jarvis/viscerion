@@ -9,17 +9,25 @@ import com.wireguard.config.Config
 import com.wireguard.config.InetAddressUtils
 import com.wireguard.config.InetNetwork
 import java.io.IOException
-import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 
 class ConfigStoreTest {
     private val testConfig = javaClass.classLoader!!.getResourceAsStream("working.conf")
     private val config: Config by lazy { Config.parse(testConfig) }
-    private val configStore = FakeConfigStore()
+    private lateinit var configStore: ConfigStore
+    @get:Rule val temporaryFolder = TemporaryFolder()
+
+    @Before
+    fun setupConfigStore() {
+        configStore = FakeConfigStore(temporaryFolder.newFolder())
+    }
 
     @Test
     fun `config creation succeeds`() {
@@ -94,10 +102,5 @@ class ConfigStoreTest {
     private fun emptyStore() {
         configStore.enumerate().asSequence().forEach(configStore::delete)
         checkStoreIsEmpty()
-    }
-
-    @After
-    fun cleanup() {
-        configStore.filesDir.delete()
     }
 }

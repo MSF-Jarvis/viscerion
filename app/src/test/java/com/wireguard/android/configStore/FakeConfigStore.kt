@@ -12,11 +12,8 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.charset.StandardCharsets
-import java.nio.file.Files
 
-class FakeConfigStore : ConfigStore {
-    private val tempDir = Files.createTempDirectory("viscerion-config.store")
-    val filesDir: File = tempDir.toFile()
+class FakeConfigStore(private val filesDir: File) : ConfigStore {
 
     override fun create(name: String, config: Config): Config {
         val file = fileFor(name)
