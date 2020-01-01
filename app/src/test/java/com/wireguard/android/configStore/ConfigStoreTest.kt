@@ -98,6 +98,6 @@ class ConfigStoreTest {
 
     @After
     fun cleanup() {
-        configStore.filesDir.deleteOnExit()
+        configStore.filesDir.delete()
     }
 }
