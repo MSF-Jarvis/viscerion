@@ -5,25 +5,21 @@
  */
 package com.wireguard.android.configStore
 
-import android.content.Context
 import com.wireguard.config.Config
 import com.wireguard.config.InetAddressUtils
 import com.wireguard.config.InetNetwork
 import java.io.IOException
-import java.nio.file.Files
 import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.mockito.Mockito.mock
 
 class ConfigStoreTest {
     private val testConfig = javaClass.classLoader!!.getResourceAsStream("working.conf")
-    private val tempDir = Files.createTempDirectory("viscerion").toFile()
     private val config: Config by lazy { Config.parse(testConfig) }
-    private val configStore = FileConfigStore(mock(Context::class.java), tempDir)
+    private val configStore = FakeConfigStore()
 
     @Test
     fun `config creation succeeds`() {
@@ -102,6 +98,6 @@ class ConfigStoreTest {
 
     @After
     fun cleanup() {
-        tempDir.deleteOnExit()
+        configStore.filesDir.deleteOnExit()
     }
 }
