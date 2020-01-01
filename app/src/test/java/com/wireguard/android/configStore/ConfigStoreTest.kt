@@ -26,7 +26,7 @@ class ConfigStoreTest {
         val configStore = FakeConfigStore(tempDir)
         configStore.create("test-1", config)
         assertTrue("config store must have one config", configStore.enumerate().isNotEmpty())
-        tempDir.delete()
+        assertTrue(tempDir.deleteRecursively())
     }
 
     @Test
@@ -36,7 +36,7 @@ class ConfigStoreTest {
         configStore.create("test-1", config)
         configStore.rename("test-1", "test-2")
         validateConfig(configStore.load("test-2"))
-        tempDir.delete()
+        assertTrue(tempDir.deleteRecursively())
     }
 
     @Test
@@ -45,7 +45,7 @@ class ConfigStoreTest {
         val configStore = FakeConfigStore(tempDir)
         configStore.create("test-1", config)
         assertThrows(IOException::class.java) { configStore.create("test-1", config) }
-        tempDir.delete()
+        assertTrue(tempDir.deleteRecursively())
     }
 
     @Test
@@ -58,7 +58,7 @@ class ConfigStoreTest {
         configCopy.interfaze.excludedApplications.add("me.msfjarvis.viscerion")
         configStore.save("test-1", configCopy)
         assertTrue("updated config must have 'me.msfjarvis.viscerion' excluded", configStore.load("test-1").interfaze.excludedApplications.contains("me.msfjarvis.viscerion"))
-        tempDir.delete()
+        assertTrue(tempDir.deleteRecursively())
     }
 
     @Test
@@ -69,7 +69,7 @@ class ConfigStoreTest {
         configStore.create("test-1", config)
         val loadedConfig = configStore.load("test-1")
         validateConfig(loadedConfig)
-        tempDir.delete()
+        assertTrue(tempDir.deleteRecursively())
     }
 
     private fun validateConfig(configuration: Config) {
