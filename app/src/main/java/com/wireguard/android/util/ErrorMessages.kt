@@ -88,12 +88,12 @@ object ErrorMessages {
         bce: BadConfigException
     ): String {
         if (bce.cause is KeyFormatException) {
-            val kfe = bce.cause
+            val kfe = bce.cause as KeyFormatException
             if (kfe.type == Type.LENGTH) {
                 return resources.getString(KFE_FORMAT_MAP[kfe.format] as Int)
             }
         } else if (bce.cause is ParseException) {
-            val pe = bce.cause
+            val pe = bce.cause as ParseException
             if (pe.message != null) {
                 return ": " + pe.message
             }
@@ -112,10 +112,10 @@ object ErrorMessages {
         bce: BadConfigException
     ): String {
         if (bce.cause is KeyFormatException) {
-            val kfe = bce.cause
+            val kfe = bce.cause as KeyFormatException
             return resources.getString(KFE_TYPE_MAP[kfe.type] as Int)
         } else if (bce.cause is ParseException) {
-            val pe = bce.cause
+            val pe = bce.cause as ParseException
             val type = resources.getString(
                     if (PE_CLASS_MAP.containsKey(pe.parsingClass)) {
                         PE_CLASS_MAP[pe.parsingClass] as Int
