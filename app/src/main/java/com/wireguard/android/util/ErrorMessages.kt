@@ -8,12 +8,12 @@ package com.wireguard.android.util
 import android.content.res.Resources
 import com.wireguard.android.Application
 import com.wireguard.android.R
-import com.wireguard.config.BadConfigException
-import com.wireguard.config.BadConfigException.Reason
-import com.wireguard.config.InetEndpoint
-import com.wireguard.config.InetNetwork
-import com.wireguard.config.ParseException
 import java.net.InetAddress
+import me.msfjarvis.viscerion.config.BadConfigException
+import me.msfjarvis.viscerion.config.BadConfigException.Reason
+import me.msfjarvis.viscerion.config.InetEndpoint
+import me.msfjarvis.viscerion.config.InetNetwork
+import me.msfjarvis.viscerion.config.ParseException
 import me.msfjarvis.viscerion.crypto.Key.Format
 import me.msfjarvis.viscerion.crypto.KeyFormatException
 import me.msfjarvis.viscerion.crypto.KeyFormatException.Type
