@@ -27,10 +27,10 @@ import com.wireguard.android.fragment.ConfigNamingDialogFragment
 import com.wireguard.android.fragment.TunnelDetailFragment
 import com.wireguard.android.fragment.TunnelEditorFragment
 import com.wireguard.android.fragment.TunnelListFragment
-import com.wireguard.android.providers.OneTapWidget
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.preference.ToolsInstallerPreference
 import com.wireguard.android.preference.VersionPreference
+import com.wireguard.android.providers.OneTapWidget
 import com.wireguard.android.providers.ViscerionSliceProvider
 import com.wireguard.android.services.BootShutdownReceiver
 import com.wireguard.android.services.QuickTileService

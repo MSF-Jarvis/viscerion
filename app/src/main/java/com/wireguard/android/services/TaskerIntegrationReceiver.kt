@@ -13,9 +13,9 @@ import android.content.Intent
 import android.os.Handler
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.di.getInjector
-import com.wireguard.android.providers.OneTapWidget
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.TunnelManager
+import com.wireguard.android.providers.OneTapWidget
 import com.wireguard.android.util.ApplicationPreferences
 import javax.inject.Inject
 import timber.log.Timber
