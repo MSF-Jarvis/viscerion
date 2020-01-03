@@ -23,6 +23,7 @@ import timber.log.Timber
 class TaskerIntegrationReceiver : BroadcastReceiver() {
     @Inject lateinit var manager: TunnelManager
     @Inject lateinit var prefs: ApplicationPreferences
+    @Inject lateinit var handler: Handler
 
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent == null || intent.action == null) {
@@ -78,7 +79,7 @@ class TaskerIntegrationReceiver : BroadcastReceiver() {
                 manager.setTunnelState(it, state)
             }
         }
-        Handler().postDelayed({
+        handler.postDelayed({
             context.sendBroadcast(Intent(context, OneTapWidget::class.java).apply {
                 val ids = AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, OneTapWidget::class.java))
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
