@@ -27,6 +27,7 @@ import com.wireguard.android.fragment.ConfigNamingDialogFragment
 import com.wireguard.android.fragment.TunnelDetailFragment
 import com.wireguard.android.fragment.TunnelEditorFragment
 import com.wireguard.android.fragment.TunnelListFragment
+import com.wireguard.android.providers.OneTapWidget
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.preference.ToolsInstallerPreference
 import com.wireguard.android.preference.VersionPreference
@@ -90,6 +91,7 @@ interface AppComponent {
 
     // BroadcastReceivers
     fun inject(receiver: BootShutdownReceiver)
+    fun inject(receiver: OneTapWidget)
     fun inject(receiver: TaskerIntegrationReceiver)
     fun inject(receiver: TunnelManager.IntentReceiver)
 
