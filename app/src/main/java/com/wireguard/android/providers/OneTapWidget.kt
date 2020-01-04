@@ -54,10 +54,11 @@ class OneTapWidget : AppWidgetProvider() {
         val views = RemoteViews(context.packageName, R.layout.one_tap_widget)
         views.setTextViewText(R.id.appwidget_text, lastUsedTunnel.name)
         views.setTextViewText(R.id.appwidget_button, context.getString(
-            if (lastUsedTunnel.state == Tunnel.State.UP)
+            if (lastUsedTunnel.state == Tunnel.State.UP) {
                 R.string.disable
-            else
+            } else {
                 R.string.enable
+            }
         ))
         views.setOnClickPendingIntent(R.id.appwidget_button, pendingIntent)
         appWidgetManager.updateAppWidget(appWidgetId, views)
