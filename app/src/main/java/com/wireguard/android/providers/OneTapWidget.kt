@@ -8,6 +8,7 @@ package com.wireguard.android.providers
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
@@ -42,6 +43,9 @@ class OneTapWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         getInjector(context).inject(this)
         super.onReceive(context, intent)
+        val widgetManager = AppWidgetManager.getInstance(context)
+        val ids = widgetManager.getAppWidgetIds(ComponentName(context, this::class.java))
+        onUpdate(context, widgetManager, ids)
     }
 
     private fun updateAppWidget(
