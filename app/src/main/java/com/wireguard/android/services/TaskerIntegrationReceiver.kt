@@ -5,17 +5,13 @@
  */
 package com.wireguard.android.services
 
-import android.appwidget.AppWidgetManager
 import android.content.BroadcastReceiver
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.di.getInjector
 import com.wireguard.android.model.Tunnel
 import com.wireguard.android.model.TunnelManager
-import com.wireguard.android.providers.OneTapWidget
 import com.wireguard.android.util.ApplicationPreferences
 import javax.inject.Inject
 import timber.log.Timber
@@ -23,7 +19,6 @@ import timber.log.Timber
 class TaskerIntegrationReceiver : BroadcastReceiver() {
     @Inject lateinit var manager: TunnelManager
     @Inject lateinit var prefs: ApplicationPreferences
-    @Inject lateinit var handler: Handler
 
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent == null || intent.action == null) {
@@ -59,11 +54,11 @@ class TaskerIntegrationReceiver : BroadcastReceiver() {
 
         if (tunnelName != null && state != null) {
             if (isSelfPackage) {
-                toggleTunnelState(context, tunnelName, state, manager)
+                toggleTunnelState(tunnelName, state, manager)
                 return
             }
             when (integrationSecret) {
-                prefs.taskerIntegrationSecret -> toggleTunnelState(context, tunnelName, state, manager)
+                prefs.taskerIntegrationSecret -> toggleTunnelState(tunnelName, state, manager)
                 else -> Timber.e("Intent integration secret mis-match! Exiting...")
             }
         } else if (tunnelName == null) {
@@ -71,7 +66,7 @@ class TaskerIntegrationReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun toggleTunnelState(context: Context, tunnelName: String, state: Tunnel.State, manager: TunnelManager) {
+    private fun toggleTunnelState(tunnelName: String, state: Tunnel.State, manager: TunnelManager) {
         Timber.d("Setting $tunnelName's state to $state")
         manager.getTunnels().thenAccept { tunnels ->
             val tunnel = tunnels[tunnelName]
@@ -79,13 +74,6 @@ class TaskerIntegrationReceiver : BroadcastReceiver() {
                 manager.setTunnelState(it, state)
             }
         }
-        handler.postDelayed({
-            context.sendBroadcast(Intent(context, OneTapWidget::class.java).apply {
-                val ids = AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, OneTapWidget::class.java))
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-                action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-            })
-        }, 1000L)
     }
 
     companion object {
