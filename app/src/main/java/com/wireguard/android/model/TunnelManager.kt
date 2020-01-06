@@ -11,7 +11,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Handler
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.wireguard.android.BR
@@ -42,7 +41,6 @@ class TunnelManager @Inject constructor(
     private val backend: Backend,
     private val context: Context,
     private val configStore: ConfigStore,
-    private val handler: Handler,
     private val prefs: ApplicationPreferences
 ) : BaseObservable() {
 
@@ -194,10 +192,6 @@ class TunnelManager @Inject constructor(
     }
 
     fun saveState() {
-        context.contentResolver.notifyChange(
-                Uri.parse("content://${BuildConfig.APPLICATION_ID}/vpn"),
-                null
-        )
         prefs.runningTunnels =
                 tunnels.asSequence().filter { it.state == Tunnel.State.UP }.map { it.name }.toSet()
     }
@@ -279,13 +273,15 @@ class TunnelManager @Inject constructor(
                 setLastUsedTunnel(tunnel)
             }
             saveState()
-            handler.postDelayed({
-                context.sendBroadcast(Intent(context, OneTapWidget::class.java).apply {
-                    val ids = AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, OneTapWidget::class.java))
-                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-                    action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-                })
-            }, 1000L)
+            context.contentResolver.notifyChange(
+                Uri.parse("content://${BuildConfig.APPLICATION_ID}/vpn"),
+                null
+            )
+            context.sendBroadcast(Intent(context, OneTapWidget::class.java).apply {
+                val ids = AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, OneTapWidget::class.java))
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+                action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            })
         }
     }
 
