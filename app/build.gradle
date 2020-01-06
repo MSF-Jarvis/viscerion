@@ -3,6 +3,9 @@
  * Copyright © 2018-2020 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
+import dev.msfjarvis.buildsrc.Libs
+import dev.msfjarvis.buildsrc.ProjectConfig
+
 plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
@@ -38,9 +41,9 @@ android {
         }
     }
     defaultConfig {
-        applicationId versions.packageName
+        applicationId ProjectConfig.packageName
         resConfigs 'de', 'en', 'fr', 'pt-rBR', 'ru'
-        testApplicationId "${versions.packageName}.test"
+        testApplicationId "${ProjectConfig.packageName}.test"
         testFunctionalTest true
         testHandleProfiling true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -87,31 +90,31 @@ dependencies {
     implementation project(':native')
     implementation project(':util')
 
-    implementation deps.androidx.annotation
-    implementation deps.androidx.appcompat
-    implementation deps.androidx.biometric
-    implementation deps.androidx.constraint_layout
-    implementation deps.androidx.core_ktx
-    implementation deps.androidx.fragment_ktx
-    implementation deps.androidx.material
-    implementation deps.androidx.preference
+    implementation Libs.AndroidX.annotation
+    implementation Libs.AndroidX.appcompat
+    implementation Libs.AndroidX.biometric
+    implementation Libs.AndroidX.constraint_layout
+    implementation Libs.AndroidX.coreKtx
+    implementation Libs.AndroidX.fragmentKtx
+    implementation Libs.AndroidX.material
+    implementation Libs.AndroidX.preference
     constraints {
-        implementation(deps.androidx.recycler_view) {
+        implementation(Libs.AndroidX.recyclerview) {
             because 'versions above 1.0.0 have an accessibility related bug that causes crashes'
         }
     }
-    implementation deps.androidx.slice_builders
-    implementation deps.androidx.slice_builders_ktx
-    implementation deps.androidx.slice_core
-    implementation deps.androidx.work_ktx
+    implementation Libs.AndroidX.sliceBuilders
+    implementation Libs.AndroidX.sliceBuildersKtx
+    implementation Libs.AndroidX.sliceCore
+    implementation Libs.AndroidX.workKtx
 
-    implementation deps.third_party.barcode
-    implementation deps.third_party.dagger
-    implementation deps.third_party.retrofuture
-    implementation deps.third_party.timber
+    implementation Libs.ThirdParty.barcode
+    implementation Libs.ThirdParty.dagger
+    implementation Libs.ThirdParty.retrofuture
+    implementation Libs.ThirdParty.timber
 
-    kapt deps.third_party.dagger_compiler
+    kapt Libs.ThirdParty.daggerCompiler
 
-    testImplementation deps.testing.junit
+    testImplementation Libs.Testing.junit
     testImplementation project(path: ':test-resources', configuration: 'testRes')
 }

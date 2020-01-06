@@ -3,17 +3,20 @@
  * Copyright © 2018-2020 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import dev.msfjarvis.buildsrc.Libs
+import dev.msfjarvis.buildsrc.ProjectConfig
+
 buildscript {
-    apply from: rootProject.file('dependencies.gradle')
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath deps.gradle_plugin.android
-        classpath deps.gradle_plugin.detekt
-        classpath deps.gradle_plugin.kotlin
-        classpath deps.gradle_plugin.spotless
+        classpath Libs.Plugins.android
+        classpath Libs.Plugins.detekt
+        classpath Libs.Plugins.kotlin
+        classpath Libs.Plugins.spotless
     }
 }
 
@@ -22,8 +25,6 @@ plugins {
 }
 
 subprojects {
-    apply from: rootProject.file('dependencies.gradle')
-    apply from: rootProject.file('spotless.gradle')
     apply plugin: 'io.gitlab.arturbosch.detekt'
 
     repositories {
@@ -33,7 +34,7 @@ subprojects {
 
     pluginManager.withPlugin('kotlin-android') {
         dependencies {
-            implementation deps.kotlin.stdlib8
+            implementation(Libs.Kotlin.stdlib8)
         }
     }
 
@@ -58,13 +59,13 @@ subprojects {
     }
 
     android {
-        compileSdkVersion versions.compileSdk
-        buildToolsVersion = versions.buildTools
+        compileSdkVersion ProjectConfig.compileSdk
+        buildToolsVersion = ProjectConfig.buildTools
         defaultConfig {
-            minSdkVersion versions.minSdk
-            targetSdkVersion versions.targetSdk
-            versionCode versions.versionCode
-            versionName versions.versionName
+            minSdkVersion ProjectConfig.minSdk
+            targetSdkVersion ProjectConfig.targetSdk
+            versionCode ProjectConfig.versionCode
+            versionName ProjectConfig.versionName
         }
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_1_8
@@ -82,7 +83,7 @@ subprojects {
         options.deprecation = true
     }
 
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    tasks.withType(KotlinCompile).all {
         kotlinOptions {
             jvmTarget = '1.8'
         }
@@ -104,8 +105,6 @@ project(':app') {
         maven { url 'https://jitpack.io' }
     }
 }
-
-apply from: rootProject.file('spotless.root.gradle')
 
 tasks {
     wrapper {

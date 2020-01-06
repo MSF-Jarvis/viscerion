@@ -3,9 +3,6 @@
  * Copyright © 2018-2020 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
-include ':app'
-include ':config'
-include ':crypto'
-include ':native'
-include ':test-resources'
-include ':util'
+plugins {
+    kotlin("android")
+}

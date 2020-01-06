@@ -3,26 +3,29 @@
  * Copyright © 2018-2020 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
+import dev.msfjarvis.buildsrc.ProjectConfig
+
 android {
     buildTypes {
-        release {
+        named("release") {
             externalNativeBuild {
                 cmake {
-                    arguments "-DANDROID_PACKAGE_NAME=${versions.packageName}"
+                    arguments += "-DANDROID_PACKAGE_NAME=${ProjectConfig.packageName}"
                 }
             }
         }
-        debug {
+        named("debug") {
             externalNativeBuild {
                 cmake {
-                    arguments "-DANDROID_PACKAGE_NAME=${versions.packageName}.debug"
+                    arguments += "-DANDROID_PACKAGE_NAME=${ProjectConfig.packageName}.debug"
                 }
             }
         }
     }
+
     externalNativeBuild {
         cmake {
-            path 'tools/CMakeLists.txt'
+            setPath("tools/CMakeLists.txt")
         }
     }
 }
