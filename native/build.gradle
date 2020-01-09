@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 android {
+    ndkVersion "20.1.5948944"
     buildTypes {
         release {
             externalNativeBuild {

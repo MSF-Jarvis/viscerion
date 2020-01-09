@@ -29,7 +29,7 @@ scabbard {
 }
 
 android {
-    dataBinding.enabled = true
+    android.buildFeatures.dataBinding = true
     if (isNotCi()) {
         applicationVariants.all { final variant ->
             variant.outputs.all {
