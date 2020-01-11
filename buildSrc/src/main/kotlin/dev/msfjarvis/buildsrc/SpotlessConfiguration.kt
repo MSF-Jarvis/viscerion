@@ -11,7 +11,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 
-val kotlinLicenseHeader = """/*
+private val kotlinLicenseHeader = """/*
  * Copyright © 2017-2020 WireGuard LLC.
  * Copyright © 2018-2020 Harsh Shandilya <msfjarvis@gmail.com>. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0

@@ -5,8 +5,6 @@
  */
 package dev.msfjarvis.buildsrc
 
-import org.gradle.api.Project
-
 object ProjectConfig {
     const val buildTools = "29.0.2"
     const val compileSdk = 29
