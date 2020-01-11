@@ -16,6 +16,7 @@ import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.di.getInjector
 import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.BackendAsync
+import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.work.TunnelRestoreWorker
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
