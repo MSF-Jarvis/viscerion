@@ -1,11 +1,16 @@
 # Release Notes
 
 ### [Unreleased]
+
+### [5.2.8] - 2019-01-11
 - Workaround background service restrictions on Android 10
 - Fix occasional crash with search/detail view
 - Update library dependencies
 - Handle case when user removes all fingerprints with biometric authentication enabled
 - Match some UI aspects to the Material Design specification
+- Switch completely to the new icon and remove the toggle
+- Update Polish translations
+- Rewrite global exclusions implementation
 
 ### [5.2.7] - 2019-12-13
 - Require unlocking for using Quick Settings tile.
@@ -128,7 +133,8 @@ the only ones which use the tunnel for networking.
 - Ensure command line tools know the correct paths to probe for config files
 - Update userspace implementation to work with Android 9's bionic restrictions
 
-[Unreleased]: https://github.com/msfjarvis/viscerion/compare/5.2.7...HEAD
+[Unreleased]: https://github.com/msfjarvis/viscerion/compare/5.2.8...HEAD
+[5.2.8]: https://github.com/msfjarvis/viscerion/releases/5.2.8
 [5.2.7]: https://github.com/msfjarvis/viscerion/releases/5.2.7
 [5.2.6]: https://github.com/msfjarvis/viscerion/releases/5.2.6
 [5.2.5]: https://github.com/msfjarvis/viscerion/releases/5.2.5
