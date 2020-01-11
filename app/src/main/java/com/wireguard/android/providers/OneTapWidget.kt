@@ -36,16 +36,18 @@ class OneTapWidget : AppWidgetProvider() {
         }
     }
 
-    override fun onEnabled(context: Context) {}
+    override fun onEnabled(context: Context) {
+        val widgetManager = AppWidgetManager.getInstance(context)
+        val ids = widgetManager.getAppWidgetIds(ComponentName(context, this::class.java))
+        onUpdate(context, widgetManager, ids)
+    }
 
     override fun onDisabled(context: Context) {}
 
     override fun onReceive(context: Context, intent: Intent) {
         getInjector(context).inject(this)
         super.onReceive(context, intent)
-        val widgetManager = AppWidgetManager.getInstance(context)
-        val ids = widgetManager.getAppWidgetIds(ComponentName(context, this::class.java))
-        onUpdate(context, widgetManager, ids)
+        onEnabled(context)
     }
 
     private fun updateAppWidget(
