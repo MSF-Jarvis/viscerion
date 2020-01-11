@@ -6,6 +6,7 @@
 
 import dev.msfjarvis.buildsrc.configureAndroid
 import dev.msfjarvis.buildsrc.configureSpotless
+import dev.msfjarvis.buildsrc.Libs
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -34,7 +35,6 @@ subprojects {
         jcenter()
     }
 
-    /*
     pluginManager.withPlugin("kotlin-android") {
         dependencies {
             implementation(Libs.Kotlin.stdlib8)
@@ -47,12 +47,11 @@ subprojects {
             useBuildCache = true
             // https://github.com/google/dagger/issues/1449#issuecomment-495404186
             javacOptions {
-                option +"-source", "8"
-                option "-target", "8"
+                option("-source", "8")
+                option("-target", "8")
             }
         }
     }
-     */
 
     if (name == "app") {
         apply(plugin = "com.android.application")
@@ -60,12 +59,9 @@ subprojects {
         apply(plugin = "com.android.library")
     }
 
-
-    /*
     android {
         configureAndroid(this)
     }
-    */
 
     tasks.withType<JavaCompile> {
         options.compilerArgs.add("-Xlint:unchecked")
@@ -78,13 +74,11 @@ subprojects {
         }
     }
 
-    /*
     detekt {
         config = rootProject.files("detekt-config.yml")
         baseline = project.file("detekt-baseline.xml")
         parallel = true
     }
-    */
 
     afterEvaluate {
         tasks.getByName(":check") {
