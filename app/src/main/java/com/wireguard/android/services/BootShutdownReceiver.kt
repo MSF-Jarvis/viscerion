@@ -30,21 +30,23 @@ class BootShutdownReceiver : BroadcastReceiver() {
         if (intent.action == null) return
         getInjector(context).inject(this)
         backendAsync.thenAccept { backend ->
-            if (backend !is WgQuickBackend) {
-                return@thenAccept
-            }
             val action = intent.action
             if (Intent.ACTION_BOOT_COMPLETED == action) {
                 Timber.i("Broadcast receiver attempting to restore state (boot)")
-                val restoreWork = OneTimeWorkRequestBuilder<TunnelRestoreWorker>()
-                        .setBackoffCriteria(
-                                BackoffPolicy.LINEAR,
-                                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
-                                TimeUnit.MILLISECONDS
-                        )
-                        .addTag("restore_work")
-                        .build()
-                WorkManager.getInstance(context).enqueue(restoreWork)
+                if (backend is WgQuickBackend) {
+                    val restoreWork = OneTimeWorkRequestBuilder<TunnelRestoreWorker>()
+                            .setBackoffCriteria(
+                                    BackoffPolicy.LINEAR,
+                                    OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                                    TimeUnit.MILLISECONDS
+                            )
+                            .addTag("restore_work")
+                            .build()
+                    WorkManager.getInstance(context).enqueue(restoreWork)
+                } else {
+                    Timber.d("Restoring tunnel state")
+                    tunnelManager.restoreState(false).whenComplete(ExceptionLoggers.D)
+                }
             } else if (Intent.ACTION_SHUTDOWN == action) {
                 Timber.i("Broadcast receiver saving state (shutdown)")
                 tunnelManager.saveState()
