@@ -167,7 +167,7 @@
     <string name="key_contents_error">密钥中含有错误的字符</string>
     <string name="notification_channel_wgquick_title">wg-quick 隧道已启用</string>
     <string name="notification_channel_wgquick_desc">永久、可禁用的通知以表示当wg-快速隧道已经运行时</string>
-    <string name="global_exclusions_title">全局代理</string>
+    <string name="global_exclusions_title">全局绕行应用</string>
     <string name="global_exclusions_summary">默认情况下选择要排除在所有Wire护卫隧道中的应用程序</string>
     <string name="applist_dialog_success">保存成功</string>
     <string name="force_userspace_backend_title">强制用户空间后端</string>
