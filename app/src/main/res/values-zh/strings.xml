@@ -181,13 +181,13 @@
     <string name="preference_category_misc">其他​​</string>
     <string name="tasker_integration_title">启用 Tasker 自动化集成</string>
     <string name="tasker_integration_enable_or_disable_tunnel">开启 / 关闭隧道</string>
-    <string name="tasker_integration_summary">警告：这是一个潜在的安全风险！ 避免在已根设备上使用此应用，恶意应用可以很容易地绕过Viscerion设置的保护！</string>
+    <string name="tasker_integration_summary">警告：这是一个潜在的安全风险！恶意程序能够轻易绕过 Viscerion 的保护机制，请勿在已经 root 的设备上启用此功能！</string>
     <string name="tasker_integration_secret">Tasker 密钥</string>
     <string name="tasker_integration_secret_title">外部私信</string>
-    <string name="tasker_integration_secret_summary">保密以确保只有受信任的客户端能够控制隧道。这不能为空！</string>
-    <string name="tasker_integration_summary_empty_secret">在这里设置一个密钥是强制性的！</string>
+    <string name="tasker_integration_secret_summary">安全密钥确保只有受信任的用户才能控制隧道。此项不能为空！</string>
+    <string name="tasker_integration_summary_empty_secret">必须配置一个密钥！</string>
     <string name="create">创建</string>
-    <string name="log_viewer">日志查看器</string>
+    <string name="log_viewer">查看日志</string>
     <string name="pref_alt_icon_title">使用替代图标</string>
     <string name="pref_alt_icon_summary">切换到正在进行中的新工作，刷新视觉图标</string>
     <string name="pref_alt_icon_apply_message">图标已成功切换。这可能需要一些时间才能反映在您的启动器中。</string>
