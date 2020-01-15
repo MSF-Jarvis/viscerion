@@ -166,7 +166,7 @@
     <string name="key_length_error">密钥长度不正确</string>
     <string name="key_contents_error">密钥中含有错误的字符</string>
     <string name="notification_channel_wgquick_title">wg-quick 隧道已启用</string>
-    <string name="notification_channel_wgquick_desc">永久、可禁用的通知以表示当wg-快速隧道已经运行时</string>
+    <string name="notification_channel_wgquick_desc">永久、可禁用的通知以表示当wg-quick隧道已经运行时</string>
     <string name="global_exclusions_title">全局绕行应用</string>
     <string name="global_exclusions_summary">选择不通过 WireGuard 代理的应用，默认对所有隧道生效</string>
     <string name="applist_dialog_success">保存成功</string>
@@ -188,9 +188,9 @@
     <string name="tasker_integration_summary_empty_secret">必须配置一个密钥！</string>
     <string name="create">创建</string>
     <string name="log_viewer">查看日志</string>
-    <string name="pref_alt_icon_title">使用替代图标</string>
-    <string name="pref_alt_icon_summary">切换到正在进行中的新工作，刷新视觉图标</string>
-    <string name="pref_alt_icon_apply_message">图标已成功切换。这可能需要一些时间才能反映在您的启动器中。</string>
+    <string name="pref_alt_icon_title">使用备选图标</string>
+    <string name="pref_alt_icon_summary">切换至尚未完成设计的新图标</string>
+    <string name="pref_alt_icon_apply_message">成功切换图标。可能需要一些时间才能在您的启动器中反映。</string>
     <string name="pref_dark_theme_title">启用暗色主题</string>
     <string name="pref_dark_theme_summary">对于 AMOLED 显示屏，切换至暗色主题能够节省一些电量</string>
     <string name="dark_theme_summary_auto">黑暗模式</string>
