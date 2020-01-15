@@ -153,7 +153,7 @@
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">内核模块</string>
     <string name="unknown_error">未知错误</string>
-    <string name="version_summary">%1$s 后端v%2$s</string>
+    <string name="version_summary">%1$s 后端 v%2$s</string>
     <string name="version_summary_checking">正在检查最新版本</string>
     <string name="version_summary_unknown">未知的 %s 版本</string>
     <string name="version_title">版本 v%s</string>
