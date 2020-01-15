@@ -175,7 +175,7 @@
     <string name="whitelist_exclusions_title">白名单应用</string>
     <string name="whitelist_exclusions_summary">与排除应用不同，白名单中的应用将强制通过隧道代理，而其余的应用则无视当前的 VPN 连接。</string>
     <string name="preference_category_about">关于</string>
-    <string name="preference_category_config">隧道配置</string>
+    <string name="preference_category_config">隧道</string>
     <string name="preference_category_debugging">调试</string>
     <string name="preference_category_theming">主题</string>
     <string name="preference_category_misc">其他​​</string>
@@ -183,13 +183,13 @@
     <string name="tasker_integration_enable_or_disable_tunnel">开启 / 关闭隧道</string>
     <string name="tasker_integration_summary">警告：这是一个潜在的安全风险！恶意程序能够轻易绕过 Viscerion 的保护机制，请勿在已经 root 的设备上启用此功能！</string>
     <string name="tasker_integration_secret">Tasker 密钥</string>
-    <string name="tasker_integration_secret_title">外部私信</string>
+    <string name="tasker_integration_secret_title">外部 intent 密钥</string>
     <string name="tasker_integration_secret_summary">安全密钥确保只有受信任的用户才能控制隧道。此项不能为空！</string>
     <string name="tasker_integration_summary_empty_secret">必须配置一个密钥！</string>
     <string name="create">创建</string>
     <string name="log_viewer">查看日志</string>
     <string name="pref_alt_icon_title">使用备选图标</string>
-    <string name="pref_alt_icon_summary">切换至尚未完成设计的新图标</string>
+    <string name="pref_alt_icon_summary">切换至正在设计中的新图标</string>
     <string name="pref_alt_icon_apply_message">成功切换图标。可能需要一些时间才能在您的启动器中反映。</string>
     <string name="pref_dark_theme_title">启用暗色主题</string>
     <string name="pref_dark_theme_summary">对于 AMOLED 显示屏，切换至暗色主题能够节省一些电量</string>
