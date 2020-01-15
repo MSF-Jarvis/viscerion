@@ -30,7 +30,7 @@
     <string name="bad_config_error">在 %2$s 发生了%1$s的错误</string>
     <string name="bad_config_explanation_pka">：必须为正整数且不超过 65535</string>
     <string name="bad_config_explanation_positive_number">：必须为正整数</string>
-    <string name="bad_config_explanation_udp_port">: 必须是一个有效的 UDP 端口号</string>
+    <string name="bad_config_explanation_udp_port">：必须是一个有效的 UDP 端口号</string>
     <string name="bad_config_reason_invalid_key">无效的密钥</string>
     <string name="bad_config_reason_invalid_number">无效的数字</string>
     <string name="bad_config_reason_invalid_value">无效值</string>
