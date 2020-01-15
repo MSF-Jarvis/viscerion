@@ -64,11 +64,11 @@
     <string name="dns_servers">DNS 服务器</string>
     <string name="edit">编辑</string>
     <string name="enable_tunnel">开启隧道：%s</string>
-    <string name="endpoint">终端</string>
-    <string name="error_down">关闭隧道时出错： %s</string>
-    <string name="error_fetching_apps">获取应用列表时出错： %s</string>
-    <string name="error_root">请获取root权限并重试</string>
-    <string name="error_up">生成隧道时出错： %s</string>
+    <string name="endpoint">对端</string>
+    <string name="error_down">断开隧道时出错：%s</string>
+    <string name="error_fetching_apps">获取应用列表时出错：%s</string>
+    <string name="error_root">请获取 root 权限并重试</string>
+    <string name="error_up">建立隧道时出错：%s</string>
     <string name="exclude_private_ips_on">包括私有IP</string>
     <string name="exclude_private_ips_off">排除私有IP地址</string>
     <string name="excluded_applications">例外的应用程序</string>
