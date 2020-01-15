@@ -173,7 +173,7 @@
     <string name="force_userspace_backend_title">强制用户空间后端</string>
     <string name="force_userspace_backend_summary">当设备安装了内核模块时，此项有助于调试 Go userspace 问题。启用或禁用将会使应用重启。仅供开发者使用！</string>
     <string name="whitelist_exclusions_title">白名单应用</string>
-    <string name="whitelist_exclusions_summary">不允许选定的应用绕过隧道，而是强制它们穿过隧道。 让所有其他应用的行为都好像没有活动的 VPN 连接。</string>
+    <string name="whitelist_exclusions_summary">与排除应用不同，白名单中的应用将强制通过隧道代理，而其余的应用则无视当前的 VPN 连接。</string>
     <string name="preference_category_about">关于</string>
     <string name="preference_category_config">隧道配置</string>
     <string name="preference_category_debugging">调试</string>
