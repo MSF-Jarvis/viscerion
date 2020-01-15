@@ -168,7 +168,7 @@
     <string name="notification_channel_wgquick_title">wg-quick 隧道已启用</string>
     <string name="notification_channel_wgquick_desc">永久、可禁用的通知以表示当wg-快速隧道已经运行时</string>
     <string name="global_exclusions_title">全局绕行应用</string>
-    <string name="global_exclusions_summary">默认情况下选择要排除在所有Wire护卫隧道中的应用程序</string>
+    <string name="global_exclusions_summary">选择不通过 WireGuard 代理的应用，默认对所有隧道生效</string>
     <string name="applist_dialog_success">保存成功</string>
     <string name="force_userspace_backend_title">强制用户空间后端</string>
     <string name="force_userspace_backend_summary">当设备安装了内核模块时，对调试Go 用户空间问题很有用。切换后应用程序将重新启动。仅开发！</string>
@@ -176,11 +176,11 @@
     <string name="whitelist_exclusions_summary">不允许选定的应用绕过隧道，而是强制它们穿过隧道。 让所有其他应用的行为都好像没有活动的 VPN 连接。</string>
     <string name="preference_category_about">关于</string>
     <string name="preference_category_config">隧道配置</string>
-    <string name="preference_category_debugging">调试中</string>
+    <string name="preference_category_debugging">调试</string>
     <string name="preference_category_theming">主题</string>
     <string name="preference_category_misc">其他​​</string>
-    <string name="tasker_integration_title">启用Tasker集成</string>
-    <string name="tasker_integration_enable_or_disable_tunnel">允许/禁止代理</string>
+    <string name="tasker_integration_title">启用 Tasker 自动化集成</string>
+    <string name="tasker_integration_enable_or_disable_tunnel">开启 / 关闭隧道</string>
     <string name="tasker_integration_summary">警告：这是一个潜在的安全风险！ 避免在已根设备上使用此应用，恶意应用可以很容易地绕过Viscerion设置的保护！</string>
     <string name="tasker_integration_secret">Tasker 密钥</string>
     <string name="tasker_integration_secret_title">外部私信</string>
