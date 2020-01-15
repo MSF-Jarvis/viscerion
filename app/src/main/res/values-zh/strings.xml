@@ -139,7 +139,7 @@
     <string name="transfer_mibibytes">%.2f MiB</string>
     <string name="transfer_gibibytes">%.2f GiB</string>
     <string name="transfer_tibibytes">%.2f TiB</string>
-    <string name="tun_create_error">无法创建tun 设备</string>
+    <string name="tun_create_error">无法创建 tun 设备</string>
     <string name="tunnel_config_error">无法配置隧道(wg快速返回 %d)</string>
     <string name="tunnel_create_error">无法创建文件 %s</string>
     <string name="tunnel_create_success">成功创建隧道“%s”</string>
