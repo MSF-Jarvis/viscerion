@@ -28,6 +28,7 @@
     <string name="bad_config_reason_invalid_key">无效的密钥</string>
     <string name="bad_config_reason_invalid_number">无效的数字</string>
     <string name="bad_config_reason_invalid_value">无效值</string>
+    <string name="bad_config_reason_missing_attribute">缺少属性</string>
     <string name="create_output_dir_error">无法创建输出目录</string>
     <string name="create_temp_dir_error">无法创建本地临时目录</string>
     <string name="delete">删除</string>
@@ -37,4 +38,12 @@
     <string name="listen_port">监听端口</string>
     <string name="log_export_error">无法导出日志：%s</string>
     <string name="log_export_title">导出日志文件</string>
+    <string name="parse_error_inet_address">IP 地址</string>
+    <string name="private_key">私钥</string>
+    <string name="public_key">公钥</string>
+    <string name="public_key_description">公钥</string>
+    <string name="save">保存</string>
+    <string name="settings">设置</string>
+    <string name="tools_installer_failure">无法安装命令行工具（设备未 root？）</string>
+    <string name="unknown_error">未知错误</string>
 </resources>
