@@ -22,13 +22,13 @@
     <plurals name="confirm_tunnel_deletion">
         <item quantity="other">删除选中的条目</item>
     </plurals>
-    <string name="add_peer">添加对等点</string>
+    <string name="add_peer">添加节点</string>
     <string name="addresses">内网IP地址</string>
     <string name="allowed_ips">允许的 IP 地址</string>
     <string name="bad_config_context">%1$s的 %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s于%2$s</string>
-    <string name="bad_config_explanation_pka">: 必须大于0, 且不超过65535</string>
+    <string name="bad_config_explanation_pka">: 必须为正整数且不超过 65535</string>
     <string name="bad_config_explanation_positive_number">必须大于0</string>
     <string name="bad_config_explanation_udp_port">: 必须是一个有效的 UDP 端口号</string>
     <string name="bad_config_reason_invalid_key">无效的密钥</string>
@@ -165,7 +165,7 @@
     <string name="zip_export_title">导出配置到 zip 文件daochu</string>
     <string name="key_length_error">密钥长度不正确</string>
     <string name="key_contents_error">密钥中含有错误的字符</string>
-    <string name="notification_channel_wgquick_title">wg快速隧道已启用</string>
+    <string name="notification_channel_wgquick_title">wg-quick 隧道已启用</string>
     <string name="notification_channel_wgquick_desc">永久、可禁用的通知以表示当wg-快速隧道已经运行时</string>
     <string name="global_exclusions_title">全局代理</string>
     <string name="global_exclusions_summary">默认情况下选择要排除在所有Wire护卫隧道中的应用程序</string>
