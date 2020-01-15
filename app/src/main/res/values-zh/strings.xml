@@ -34,4 +34,7 @@
     <string name="deselect_all">取消所有选择</string>
     <string name="dns_servers">DNS服务器</string>
     <string name="edit">编辑</string>
+    <string name="listen_port">监听端口</string>
+    <string name="log_export_error">无法导出日志：%s</string>
+    <string name="log_export_title">导出日志文件</string>
 </resources>
