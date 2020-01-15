@@ -71,7 +71,7 @@
     <string name="error_up">建立隧道时出错：%s</string>
     <string name="exclude_private_ips_on">包含局域网 IP</string>
     <string name="exclude_private_ips_off">排除局域网 IP</string>
-    <string name="excluded_applications">例外的应用程序</string>
+    <string name="excluded_applications">排除的应用</string>
     <string name="generate">生成</string>
     <string name="generic_error">未知的 “%s” 错误</string>
     <string name="hint_automatic">（自动）</string>
@@ -106,13 +106,13 @@
     <string name="parse_error_integer">数字</string>
     <string name="parse_error_reason">无法解析 %1$s “%2$s”</string>
     <string name="peer">节点</string>
-    <string name="persistent_keepalive">持久连接保活</string>
+    <string name="persistent_keepalive">连接保活</string>
     <string name="pre_shared_key">预共享密钥</string>
     <string name="private_key">私钥</string>
     <string name="public_key">公钥</string>
     <string name="public_key_description">公钥</string>
-    <string name="qr_code_hint">提示：使用 `qrencode -t ansiutf8 &lt; tunnel.conf` 生成</string>
-    <string name="restore_on_boot_summary">启动时使用先前的配置文件</string>
+    <string name="qr_code_hint">提示：使用命令 `qrencode -t ansiutf8 &lt; tunnel.conf` 进行生成。</string>
+    <string name="restore_on_boot_summary">在设备启动时开启上一次建立的隧道</string>
     <string name="restore_on_boot_title">开机自启动</string>
     <string name="save">保存</string>
     <string name="select_all">全选</string>
