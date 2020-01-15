@@ -20,12 +20,12 @@
         <item quantity="other">%d 例外应用程序</item>
     </plurals>
     <plurals name="confirm_tunnel_deletion">
-        <item quantity="other">删除选中的条目</item>
+        <item quantity="other">删除选中的隧道？</item>
     </plurals>
     <string name="add_peer">添加节点</string>
     <string name="addresses">内网IP地址</string>
     <string name="allowed_ips">允许的 IP 地址</string>
-    <string name="bad_config_context">%1$s的 %2$s</string>
+    <string name="bad_config_context">%1$s 的 %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s于%2$s</string>
     <string name="bad_config_explanation_pka">: 必须为正整数且不超过 65535</string>
@@ -193,11 +193,11 @@
     <string name="pref_alt_icon_apply_message">成功切换图标。可能需要一些时间才能在您的启动器中反映。</string>
     <string name="pref_dark_theme_title">启用暗色主题</string>
     <string name="pref_dark_theme_summary">对于 AMOLED 显示屏，切换至暗色主题能够节省一些电量</string>
-    <string name="dark_theme_summary_auto">黑暗模式</string>
+    <string name="dark_theme_summary_auto">暗色主题已手动启用，或由省电模式自动启用</string>
     <string name="biometric_auth_title">启用生物识别认证</string>
     <string name="biometric_auth_summary">如果启用，Viscerion 在启动时将会提示您进行指纹验证</string>
     <string name="biometric_auth_summary_error">指纹传感器调用失败或不存在</string>
-    <string name="biometric_prompt_title">生物计提示</string>
+    <string name="biometric_prompt_title">生物识别认证</string>
     <string name="biometric_prompt_retry">重试</string>
     <string name="biometric_prompt_no_hardware">没有找到指纹传感器</string>
     <string name="search">搜索</string>
