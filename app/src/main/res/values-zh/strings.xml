@@ -11,16 +11,16 @@
         <item quantity="other">已选择 %d 项</item>
     </plurals>
     <plurals name="import_partial_success">
-        <item quantity="other">导入 %d 个中的%d 隧道</item>
+        <item quantity="other">导入了 %d 项，共 %d 项</item>
     </plurals>
     <plurals name="import_total_success">
-        <item quantity="other">导入配置文件 %d</item>
+        <item quantity="other">导入了 %d 项</item>
     </plurals>
     <plurals name="set_excluded_applications">
-        <item quantity="other">%d 例外应用程序</item>
+        <item quantity="other">排除 %d 个应用</item>
     </plurals>
     <plurals name="confirm_tunnel_deletion">
-        <item quantity="other">删除选中的隧道？</item>
+        <item quantity="other">删除选中的项目？</item>
     </plurals>
     <string name="add_peer">添加节点</string>
     <string name="addresses">内网IP地址</string>
