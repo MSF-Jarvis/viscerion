@@ -59,7 +59,7 @@
     <string name="create_temp_dir_error">无法创建本地临时目录</string>
     <string name="create_tunnel">创建隧道</string>
     <string name="delete">删除</string>
-    <string name="deselect_all">取消所有选择</string>
+    <string name="deselect_all">取消全选</string>
     <string name="disable_tunnel">关闭隧道：%s</string>
     <string name="dns_servers">DNS 服务器</string>
     <string name="edit">编辑</string>
@@ -75,7 +75,7 @@
     <string name="generate">生成</string>
     <string name="generic_error">未知的 “%s” 错误</string>
     <string name="hint_automatic">（自动）</string>
-    <string name="hint_generated">(生成)</string>
+    <string name="hint_generated">（生成）</string>
     <string name="hint_optional">（可选）</string>
     <string name="hint_random">（随机）</string>
     <string name="hint_search">搜索隧道</string>
