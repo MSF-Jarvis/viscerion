@@ -25,9 +25,9 @@
     <string name="add_peer">添加节点</string>
     <string name="addresses">局域网 IP 地址</string>
     <string name="allowed_ips">允许的 IP 地址</string>
-    <string name="bad_config_context">%1$s 的 %2$s</string>
+    <string name="bad_config_context">%1$s 的 %2$s 字段</string>
     <string name="bad_config_context_top_level">%s</string>
-    <string name="bad_config_error">在 %2$s 发生了%1$s的问题</string>
+    <string name="bad_config_error">在 %2$s发生了%1$s的问题</string>
     <string name="bad_config_explanation_pka">：必须为正整数且不超过 65535</string>
     <string name="bad_config_explanation_positive_number">：必须为正整数</string>
     <string name="bad_config_explanation_udp_port">：必须是一个有效的 UDP 端口号</string>
