@@ -181,7 +181,7 @@
     <string name="preference_category_misc">其他​​</string>
     <string name="tasker_integration_title">启用 Tasker 自动化集成</string>
     <string name="tasker_integration_enable_or_disable_tunnel">开启 / 关闭隧道</string>
-    <string name="tasker_integration_summary">警告：这是一个潜在的安全风险！恶意程序能够轻易绕过 Viscerion 的保护机制，请勿在已获取 root 权限的设备上启用此功能！</string>
+    <string name="tasker_integration_summary">警告：这是一个潜在的安全风险！恶意程序能够轻易绕过 Viscerion 的保护机制，因此您应尽量避免在已获取 root 权限的设备上启用此功能！</string>
     <string name="tasker_integration_secret">Tasker 密钥</string>
     <string name="tasker_integration_secret_title">外部 intent 密钥</string>
     <string name="tasker_integration_secret_summary">安全密钥确保只有受信任的用户才能控制隧道。此项不能为空！</string>
