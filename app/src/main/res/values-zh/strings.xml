@@ -119,7 +119,7 @@
     <string name="set_exclusions">排除</string>
     <string name="settings">设置</string>
     <string name="shell_exit_status_read_error">Shell 无法读取退出状态</string>
-    <string name="shell_marker_count_error">Shell 应获取 4 个标记，接收到 %d 个</string>
+    <string name="shell_marker_count_error">Shell 需要 4 个标记，获取到 %d 个</string>
     <string name="shell_start_error">Shell 启动失败：%d</string>
     <string name="toggle_error">切换 WireGuard 隧道时出错：%s</string>
     <string name="tools_installer_already">wg 与 wg-quick 已安装</string>
