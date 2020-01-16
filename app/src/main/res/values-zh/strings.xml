@@ -151,10 +151,10 @@
     <string name="tunnel_rename_error">无法重命名隧道：%s</string>
     <string name="tunnel_rename_success">成功地将隧道重命名为“%s”</string>
     <string name="type_name_go_userspace">Go userspace</string>
-    <string name="type_name_kernel_module">内核模块</string>
+    <string name="type_name_kernel_module">Kernel module</string>
     <string name="unknown_error">未知错误</string>
     <string name="version_summary">%1$s backend v%2$s</string>
-    <string name="version_summary_checking">正在检查 %s 后端版本</string>
+    <string name="version_summary_checking">正在检查 %s backend 版本</string>
     <string name="version_summary_unknown">未知的 %s 版本</string>
     <string name="version_title">Viscerion v%s</string>
     <string name="vpn_not_authorized_error">用户未授权 VPN 服务</string>
@@ -165,9 +165,9 @@
     <string name="zip_export_title">将隧道导出为 zip 文件</string>
     <string name="key_length_error">密钥长度不正确</string>
     <string name="key_contents_error">密钥中含有错误的字符</string>
-    <string name="notification_channel_wgquick_title">wg-quick 隧道已启用</string>
+    <string name="notification_channel_wgquick_title">wg-quick 隧道已开启</string>
     <string name="notification_channel_wgquick_desc">当 wg-quick 隧道建立后，状态栏将始终显示此通知。可以禁用。</string>
-    <string name="global_exclusions_title">全局绕行应用</string>
+    <string name="global_exclusions_title">全局排除应用</string>
     <string name="global_exclusions_summary">选择不通过 WireGuard 代理的应用，默认对所有隧道生效</string>
     <string name="applist_dialog_success">保存成功</string>
     <string name="force_userspace_backend_title">强制用户空间后端</string>
