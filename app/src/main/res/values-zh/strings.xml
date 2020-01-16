@@ -33,10 +33,10 @@
     <string name="bad_config_explanation_udp_port">：必须是一个有效的 UDP 端口号</string>
     <string name="bad_config_reason_invalid_key">无效的密钥</string>
     <string name="bad_config_reason_invalid_number">无效的数字</string>
-    <string name="bad_config_reason_invalid_value">无效的数值</string>
+    <string name="bad_config_reason_invalid_value">数值无效</string>
     <string name="bad_config_reason_missing_attribute">属性缺失</string>
-    <string name="bad_config_reason_missing_section">缺少部分</string>
-    <string name="bad_config_reason_missing_value">缺少值</string>
+    <string name="bad_config_reason_missing_section">节缺失</string>
+    <string name="bad_config_reason_missing_value">数值缺失</string>
     <string name="bad_config_reason_syntax_error">语法错误</string>
     <string name="bad_config_reason_unknown_attribute">未知属性</string>
     <string name="bad_config_reason_unknown_section">未知版块</string>
