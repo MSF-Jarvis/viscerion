@@ -27,7 +27,7 @@
     <string name="allowed_ips">允许的 IP 地址</string>
     <string name="bad_config_context">%1$s 的 %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
-    <string name="bad_config_error">在 %2$s 发生了 %1$s 的问题</string>
+    <string name="bad_config_error">在 %2$s 发生了%1$s的问题</string>
     <string name="bad_config_explanation_pka">：必须为正整数且不超过 65535</string>
     <string name="bad_config_explanation_positive_number">：必须为正整数</string>
     <string name="bad_config_explanation_udp_port">：必须是一个有效的 UDP 端口号</string>
@@ -64,7 +64,7 @@
     <string name="dns_servers">DNS 服务器</string>
     <string name="edit">编辑</string>
     <string name="enable_tunnel">开启隧道：%s</string>
-    <string name="endpoint">对端</string>
+    <string name="endpoint">对端 IP 地址</string>
     <string name="error_down">断开隧道时出错：%s</string>
     <string name="error_fetching_apps">获取应用列表时出错：%s</string>
     <string name="error_root">请获取 root 权限并重试</string>
@@ -72,7 +72,7 @@
     <string name="exclude_private_ips_on">包含局域网 IP</string>
     <string name="exclude_private_ips_off">排除局域网 IP</string>
     <string name="excluded_applications">排除的应用</string>
-    <string name="generate">生成</string>
+    <string name="generate">生成公／私钥</string>
     <string name="generic_error">未知的 “%s” 错误</string>
     <string name="hint_automatic">（自动）</string>
     <string name="hint_generated">（生成）</string>
@@ -101,7 +101,7 @@
     <string name="no_tunnels_error">没有配置任何隧道</string>
     <string name="parse_error_generic">字符串</string>
     <string name="parse_error_inet_address">IP 地址</string>
-    <string name="parse_error_inet_endpoint">对端</string>
+    <string name="parse_error_inet_endpoint">对端 IP 地址</string>
     <string name="parse_error_inet_network">IP 网络</string>
     <string name="parse_error_integer">数字</string>
     <string name="parse_error_reason">无法解析 %1$s “%2$s”</string>
