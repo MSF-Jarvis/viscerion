@@ -123,7 +123,7 @@
     <string name="shell_start_error">Shell 启动失败：%d</string>
     <string name="toggle_error">切换 WireGuard 隧道时出错：%s</string>
     <string name="tools_installer_already">wg 与 wg-quick 已安装</string>
-    <string name="tools_installer_failure">无法安装命令行工具（设备未 root？）</string>
+    <string name="tools_installer_failure">无法安装命令行工具（尚未获取 root 权限？）</string>
     <string name="tools_installer_initial">安装脚本工具（非必须）</string>
     <string name="tools_installer_initial_magisk">以 Magisk 模块的形式安装脚本工具（非必须）</string>
     <string name="tools_installer_initial_system">安装脚本工具至系统分区（非必须）</string>
