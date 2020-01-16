@@ -40,7 +40,7 @@
     <string name="bad_config_reason_syntax_error">语法错误</string>
     <string name="bad_config_reason_unknown_attribute">属性未知</string>
     <string name="bad_config_reason_unknown_section">未知版块</string>
-    <string name="bad_config_reason_value_out_of_range">值超出范围。</string>
+    <string name="bad_config_reason_value_out_of_range">数值超出范围</string>
     <string name="bad_extension_error">文件扩展名必须是 .conf 或 .zip</string>
     <string name="cancel">取消</string>
     <string name="config_delete_error">无法删除配置文件 %s</string>
