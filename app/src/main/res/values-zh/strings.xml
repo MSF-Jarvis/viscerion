@@ -132,7 +132,7 @@
     <string name="tools_installer_title">安装命令行工具</string>
     <string name="tools_installer_working">正在安装 wg 与 wg-quick</string>
     <string name="tools_unavailable_error">所需工具不可用</string>
-    <string name="transfer">切换</string>
+    <string name="transfer">流量</string>
     <string name="transfer_rx_tx">接收：%1$s，发送：%2$s</string>
     <string name="transfer_bytes">%d B</string>
     <string name="transfer_kibibytes">%.2f KiB</string>
@@ -153,7 +153,7 @@
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">内核模块</string>
     <string name="unknown_error">未知错误</string>
-    <string name="version_summary">%1$s 后端 v%2$s</string>
+    <string name="version_summary">%1$s backend v%2$s</string>
     <string name="version_summary_checking">正在检查 %s 后端版本</string>
     <string name="version_summary_unknown">未知的 %s 版本</string>
     <string name="version_title">Viscerion v%s</string>
