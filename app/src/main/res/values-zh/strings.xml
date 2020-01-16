@@ -59,7 +59,7 @@
     <string name="create_temp_dir_error">无法创建本地临时目录</string>
     <string name="create_tunnel">创建隧道</string>
     <string name="delete">删除</string>
-    <string name="deselect_all">取消全选</string>
+    <string name="deselect_all">全部取消</string>
     <string name="disable_tunnel">关闭隧道：%s</string>
     <string name="dns_servers">DNS 服务器</string>
     <string name="edit">编辑</string>
@@ -116,7 +116,7 @@
     <string name="restore_on_boot_title">开机自动运行</string>
     <string name="save">保存</string>
     <string name="select_all">全选</string>
-    <string name="set_exclusions">排除</string>
+    <string name="set_exclusions">确定</string>
     <string name="settings">设置</string>
     <string name="shell_exit_status_read_error">Shell 无法读取退出状态</string>
     <string name="shell_marker_count_error">Shell 需要 4 个标记，获取到 %d 个</string>
@@ -173,7 +173,7 @@
     <string name="force_userspace_backend_title">强制使用用户空间后端</string>
     <string name="force_userspace_backend_summary">当设备安装了内核模块时，此项有助于调试 Go userspace 问题。启用或禁用将会使应用重启。仅供开发者使用！</string>
     <string name="whitelist_exclusions_title">白名单应用</string>
-    <string name="whitelist_exclusions_summary">与排除应用不同，白名单中的应用将强制通过隧道代理，而其余的应用则无视当前的 VPN 连接。</string>
+    <string name="whitelist_exclusions_summary">与排除应用相反，白名单中的应用将强制通过隧道代理，而其余的应用则无视当前的 VPN 连接。</string>
     <string name="preference_category_about">关于</string>
     <string name="preference_category_config">隧道</string>
     <string name="preference_category_debugging">调试</string>
