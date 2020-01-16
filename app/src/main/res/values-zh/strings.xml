@@ -113,10 +113,10 @@
     <string name="public_key_description">公钥</string>
     <string name="qr_code_hint">提示：使用命令 `qrencode -t ansiutf8 &lt; tunnel.conf` 进行生成。</string>
     <string name="restore_on_boot_summary">在设备启动时自动建立上一次使用的隧道</string>
-    <string name="restore_on_boot_title">开机自启动</string>
+    <string name="restore_on_boot_title">开机自动运行</string>
     <string name="save">保存</string>
     <string name="select_all">全选</string>
-    <string name="set_exclusions">排除内容</string>
+    <string name="set_exclusions">排除</string>
     <string name="settings">设置</string>
     <string name="shell_exit_status_read_error">Shell 无法读取退出状态</string>
     <string name="shell_marker_count_error">Shell 应获取 4 个标记，接收到 %d 个</string>
