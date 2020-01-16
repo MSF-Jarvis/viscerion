@@ -83,7 +83,7 @@
     <string name="import_error">无法导入隧道：%s</string>
     <string name="import_from_qr_code">从二维码导入配置</string>
     <string name="import_success">导入了 “%s”</string>
-    <string name="interface_title">本地接口</string>
+    <string name="interface_title">接口／Interface</string>
     <string name="key_length_explanation_base64">：WireGuard 的 Base64 密钥长度必须为 44 个字符（32 字节）</string>
     <string name="key_length_explanation_binary">：WireGuard 密钥大小必须为 32 字节</string>
     <string name="key_length_explanation_hex">：WireGuard 的十六进制密钥长度必须为 64 个字符（32 字节）</string>
@@ -105,7 +105,7 @@
     <string name="parse_error_inet_network">IP 网络</string>
     <string name="parse_error_integer">数字</string>
     <string name="parse_error_reason">无法解析 %1$s “%2$s”</string>
-    <string name="peer">节点</string>
+    <string name="peer">节点／Peer</string>
     <string name="persistent_keepalive">连接保活间隔（秒）</string>
     <string name="pre_shared_key">预共享密钥</string>
     <string name="private_key">私钥</string>
