@@ -170,7 +170,7 @@
     <string name="global_exclusions_title">全局排除应用</string>
     <string name="global_exclusions_summary">选择不通过 WireGuard 代理的应用，默认对所有隧道生效</string>
     <string name="applist_dialog_success">保存成功</string>
-    <string name="force_userspace_backend_title">强制用户空间后端</string>
+    <string name="force_userspace_backend_title">强制使用用户空间后端</string>
     <string name="force_userspace_backend_summary">当设备安装了内核模块时，此项有助于调试 Go userspace 问题。启用或禁用将会使应用重启。仅供开发者使用！</string>
     <string name="whitelist_exclusions_title">白名单应用</string>
     <string name="whitelist_exclusions_summary">与排除应用不同，白名单中的应用将强制通过隧道代理，而其余的应用则无视当前的 VPN 连接。</string>
@@ -181,7 +181,7 @@
     <string name="preference_category_misc">其他​​</string>
     <string name="tasker_integration_title">启用 Tasker 自动化集成</string>
     <string name="tasker_integration_enable_or_disable_tunnel">开启 / 关闭隧道</string>
-    <string name="tasker_integration_summary">警告：这是一个潜在的安全风险！恶意程序能够轻易绕过 Viscerion 的保护机制，请勿在已经 root 的设备上启用此功能！</string>
+    <string name="tasker_integration_summary">警告：这是一个潜在的安全风险！恶意程序能够轻易绕过 Viscerion 的保护机制，请勿在已获取 root 权限的设备上启用此功能！</string>
     <string name="tasker_integration_secret">Tasker 密钥</string>
     <string name="tasker_integration_secret_title">外部 intent 密钥</string>
     <string name="tasker_integration_secret_summary">安全密钥确保只有受信任的用户才能控制隧道。此项不能为空！</string>
@@ -201,6 +201,6 @@
     <string name="biometric_prompt_retry">重试</string>
     <string name="biometric_prompt_no_hardware">没有找到指纹传感器</string>
     <string name="search">搜索</string>
-    <string name="enable">启用</string>
-    <string name="disable">禁用</string>
+    <string name="enable">开启</string>
+    <string name="disable">关闭</string>
 </resources>
