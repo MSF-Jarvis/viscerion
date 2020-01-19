@@ -5,13 +5,13 @@
  */
 package me.msfjarvis.viscerion.config
 
+import java.io.InputStream
 import me.msfjarvis.viscerion.config.BadConfigException.Location
 import me.msfjarvis.viscerion.config.BadConfigException.Reason
 import org.junit.Assert.assertEquals
 import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
-import java.io.InputStream
 
 class BadConfigExceptionTest {
 
